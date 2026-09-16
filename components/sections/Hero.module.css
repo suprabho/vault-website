@@ -1,0 +1,30 @@
+.hero { isolation: isolate; }
+.shot { object-position: 50% 62%; }
+@media (max-width: 767px) {
+  .shot { object-position: 50% 58%; }
+}
+/* a soft pool of night behind the copy so the type reads over the aura */
+.vignette {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(880px, 104%);
+  height: calc(100% + 96px);
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(1, 0, 22, 0.66) 0%, rgba(1, 0, 22, 0.38) 54%, rgba(1, 0, 22, 0) 100%);
+}
+@media (max-width: 767px) {
+  .vignette {
+    width: 118%;
+    height: calc(100% + 64px);
+    background: radial-gradient(closest-side, rgba(1, 0, 22, 0.72) 0%, rgba(1, 0, 22, 0.44) 56%, rgba(1, 0, 22, 0) 100%);
+  }
+}
+.lead {
+  font-size: clamp(18px, 1.55vw, 21px);
+  letter-spacing: 0.002em;
+  color: #d3d1db;
+  max-width: 660px;
+}

@@ -1,0 +1,262 @@
+@import "tailwindcss";
+
+/* ══════════════════════════════════════════════════════
+   THE VAULT — design tokens
+   Palette scales come from vault-color-palette.json; the brand
+   surface/ink tokens come from the Concept 05 wireframe.
+   ══════════════════════════════════════════════════════ */
+@theme {
+  --color-black: #000;
+  --color-white: #fff;
+
+  --color-red-50: oklch(0.980 0.006 31.054);
+  --color-red-100: oklch(0.951 0.015 27.283);
+  --color-red-200: oklch(0.900 0.031 27.767);
+  --color-red-300: oklch(0.830 0.056 26.587);
+  --color-red-400: oklch(0.729 0.087 25.630);
+  --color-red-500: oklch(0.592 0.103 25.222);
+  --color-red-600: oklch(0.499 0.108 24.658);
+  --color-red-700: oklch(0.420 0.099 24.691);
+  --color-red-800: oklch(0.349 0.083 24.343);
+  --color-red-900: oklch(0.299 0.067 23.297);
+  --color-red-950: oklch(0.221 0.046 23.672);
+
+  --color-blue-50: oklch(0.979 0.003 264.542);
+  --color-blue-100: oklch(0.949 0.008 271.327);
+  --color-blue-200: oklch(0.900 0.017 267.780);
+  --color-blue-300: oklch(0.829 0.031 267.163);
+  --color-blue-400: oklch(0.730 0.048 264.814);
+  --color-blue-500: oklch(0.643 0.056 264.578);
+  --color-blue-600: oklch(0.542 0.059 264.401);
+  --color-blue-700: oklch(0.464 0.053 263.855);
+  --color-blue-800: oklch(0.393 0.044 262.417);
+  --color-blue-900: oklch(0.344 0.036 262.998);
+  --color-blue-950: oklch(0.263 0.025 261.098);
+
+  --color-amber-50: oklch(0.979 0.003 84.559);
+  --color-amber-100: oklch(0.950 0.009 84.573);
+  --color-amber-200: oklch(0.899 0.017 84.589);
+  --color-amber-300: oklch(0.830 0.032 84.586);
+  --color-amber-400: oklch(0.731 0.050 83.849);
+  --color-amber-500: oklch(0.759 0.058 82.809);
+  --color-amber-600: oklch(0.659 0.061 83.196);
+  --color-amber-700: oklch(0.578 0.055 82.397);
+  --color-amber-800: oklch(0.510 0.047 83.529);
+  --color-amber-900: oklch(0.460 0.038 80.611);
+  --color-amber-950: oklch(0.379 0.027 83.076);
+
+  --color-slate-50: oklch(0.981 0.007 286.277);
+  --color-slate-100: oklch(0.951 0.023 285.959);
+  --color-slate-200: oklch(0.899 0.046 285.430);
+  --color-slate-300: oklch(0.829 0.084 285.186);
+  --color-slate-400: oklch(0.731 0.128 284.315);
+  --color-slate-500: oklch(0.590 0.152 283.823);
+  --color-slate-600: oklch(0.501 0.158 283.434);
+  --color-slate-700: oklch(0.420 0.143 283.299);
+  --color-slate-800: oklch(0.351 0.120 283.239);
+  --color-slate-900: oklch(0.301 0.098 282.730);
+  --color-slate-950: oklch(0.210 0.068 282.608);
+
+  --color-stone-50: oklch(0.980 0.007 277.165);
+  --color-stone-100: oklch(0.950 0.021 274.038);
+  --color-stone-200: oklch(0.900 0.041 273.335);
+  --color-stone-300: oklch(0.831 0.073 273.573);
+  --color-stone-400: oklch(0.729 0.115 273.318);
+  --color-stone-500: oklch(0.474 0.134 272.607);
+  --color-stone-600: oklch(0.501 0.142 272.202);
+  --color-stone-700: oklch(0.420 0.128 272.549);
+  --color-stone-800: oklch(0.349 0.109 272.124);
+  --color-stone-900: oklch(0.301 0.087 271.426);
+  --color-stone-950: oklch(0.094 0.061 271.526);
+
+  --color-emerald-50: oklch(0.980 0.002 165.076);
+  --color-emerald-100: oklch(0.950 0.008 151.887);
+  --color-emerald-200: oklch(0.900 0.015 151.751);
+  --color-emerald-300: oklch(0.831 0.027 152.288);
+  --color-emerald-400: oklch(0.731 0.042 151.866);
+  --color-emerald-500: oklch(0.656 0.049 150.831);
+  --color-emerald-600: oklch(0.556 0.051 150.544);
+  --color-emerald-700: oklch(0.476 0.046 150.210);
+  --color-emerald-800: oklch(0.407 0.040 149.825);
+  --color-emerald-900: oklch(0.357 0.032 148.270);
+  --color-emerald-950: oklch(0.276 0.021 147.685);
+
+  /* brand surfaces + inks (wireframe) */
+  --color-night: #010016;
+  --color-deep: #151326;
+  --color-raised: #1e1b31;
+  --color-brass: #c3ae87;
+  --color-brass-2: #d2c1a0;
+  --color-brass-3: #ad9970;
+  --color-brass-ink: #8a7754;
+  --color-brass-lo: rgba(195, 174, 135, 0.55);
+  --color-arc: rgba(195, 174, 135, 0.16);
+  --color-arc-strong: rgba(195, 174, 135, 0.34);
+  --color-cream: #f2f1f3;
+  --color-cream-2: #bebbc6;
+  --color-cream-3: #9999a2;
+  --color-quiet: #9999a2;
+  --color-signal: #6b687c;
+  --color-light: #f2f1f3;
+  --color-light-2: #f6f6f8;
+  --color-on-light: #111024;
+  --color-on-light-2: #4a485e;
+  --color-ink-2: #3e3c52;
+
+  --ease-editorial: cubic-bezier(0.2, 0.75, 0.2, 1);
+  --ease-rise: cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+@theme inline {
+  --font-display: var(--font-familjen), system-ui, sans-serif;
+  --font-body: var(--font-new-york), ui-serif, Georgia, serif;
+  --font-mono: var(--font-new-york), ui-serif, Georgia, serif;
+}
+
+/* ── layout rhythm ── */
+:root {
+  --gutter: 20px;
+  --pad: 72px;
+  --navh: 72px;
+  --hair: rgba(195, 174, 135, 0.16);
+  --hair2: rgba(195, 174, 135, 0.32);
+  --hair-w: rgba(242, 241, 243, 0.08);
+  --glass: rgba(21, 19, 38, 0.55);
+  --glass-edge: rgba(242, 241, 243, 0.1);
+  --shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+  --fast: 220ms;
+  --slow: 900ms;
+  --r-s: 12px;
+  /* the closing stage and footer can carry an ambient field; the wireframe leaves it unset */
+  --aura: none;
+}
+@media (min-width: 768px) {
+  :root { --gutter: 40px; --pad: 96px; }
+}
+@media (min-width: 1024px) {
+  :root { --navh: 88px; }
+}
+@media (min-width: 1440px) {
+  :root { --gutter: 72px; --pad: 144px; }
+}
+
+@layer base {
+  html { scroll-behavior: smooth; overflow-x: clip; }
+  body {
+    margin: 0;
+    background: var(--color-night);
+    color: var(--color-cream);
+    font-family: var(--font-body);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  ::selection { background: var(--color-brass); color: var(--color-night); }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--color-brass); outline-offset: 3px; }
+  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; margin: 0; letter-spacing: -0.03em; }
+  p { margin: 0; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+}
+
+@layer components {
+  .canvas { max-width: 1280px; margin-inline: auto; padding-inline: var(--gutter); }
+  .section-pad { padding-block: var(--pad); position: relative; }
+
+  /* type scale */
+  .h1 { font-size: clamp(48px, 7vw, 104px); line-height: 1; letter-spacing: -0.038em; }
+  .h2 { font-size: clamp(36px, 5vw, 72px); line-height: 1.04; letter-spacing: -0.034em; }
+  .h3 { font-size: clamp(24px, 2.4vw, 34px); line-height: 1.12; letter-spacing: -0.025em; }
+  .h4 { font-size: 20px; line-height: 1.25; letter-spacing: -0.018em; }
+  .lead { font-size: clamp(18px, 1.5vw, 20px); line-height: 1.58; color: #c7c5d2; max-width: 680px; }
+  .body { font-size: 16px; line-height: 1.62; color: var(--color-quiet); max-width: 680px; }
+  .meta { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-brass-lo); }
+  .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-brass); }
+
+  /* light surfaces */
+  .light { background: var(--color-light); color: var(--color-on-light); }
+  .light .body, .light .lead { color: var(--color-on-light-2); }
+  .light .eyebrow, .light .meta { color: #7a6a48; }
+  .light-2 { background: var(--color-light-2); color: var(--color-on-light); }
+
+  /* buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    height: 48px; padding: 0 24px; border-radius: 999px;
+    font-family: var(--font-body); font-weight: 500; font-size: 14px; text-decoration: none;
+    border: 1px solid transparent; cursor: pointer; white-space: nowrap;
+    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+  }
+  .btn-primary { background: var(--color-cream); color: var(--color-night); }
+  .btn-primary:hover { background: var(--color-brass); }
+  .btn-brass { background: var(--color-brass); color: var(--color-night); border-color: var(--color-brass); }
+  .btn-brass:hover { background: var(--color-brass-2); border-color: var(--color-brass-2); color: var(--color-night); }
+  .btn-brass:active { background: var(--color-brass-3); border-color: var(--color-brass-3); }
+  .btn-ghost { background: transparent; color: var(--color-cream); border-color: var(--color-arc-strong); }
+  .btn-ghost:hover { border-color: var(--color-brass); color: var(--color-brass); }
+  .btn-ghost-brass { background: transparent; color: var(--color-brass); border-color: rgba(195, 174, 135, 0.3); }
+  .btn-ghost-brass:hover { background: rgba(195, 174, 135, 0.07); border-color: rgba(195, 174, 135, 0.55); color: var(--color-brass); }
+  .btn-onlight { background: var(--color-night); color: var(--color-cream); }
+  .btn-onlight:hover { background: var(--color-deep); }
+  .btn-sm { height: 40px; font-size: 13px; padding: 0 18px; }
+
+  /* cards + rules */
+  .card { border: 1px solid var(--color-arc); border-radius: 16px; padding: 28px; background: transparent; transition: border-color 200ms ease, background-color 200ms ease; }
+  .card:hover { border-color: var(--color-arc-strong); background: rgba(195, 174, 135, 0.03); }
+  .light .card { border-color: rgba(17, 16, 36, 0.14); }
+  .light .card:hover { border-color: rgba(17, 16, 36, 0.3); background: rgba(17, 16, 36, 0.02); }
+
+  /* Concept 01 reveals */
+  .enter { opacity: 0; animation: riseIn 700ms var(--ease-rise) forwards; }
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 650ms var(--ease-rise), transform 650ms var(--ease-rise); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ── Concept 05 ledger language ── */
+  .c5 { padding-block: clamp(88px, 12vw, 168px); color: var(--color-cream); position: relative; }
+  .c5-sheet { position: relative; max-width: 1280px; margin-inline: auto; padding-inline: var(--gutter); }
+  .c5-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 0 clamp(16px, 2vw, 32px); }
+  .c5c { grid-column: var(--c); }
+  .c5-h2 { margin: 0; font-family: var(--font-display); font-weight: 500; letter-spacing: -0.035em; font-size: clamp(30px, 3.9vw, 58px); line-height: 1; color: var(--color-cream); }
+  .c5-h3 { margin: 0; font-family: var(--font-body); font-weight: 600; font-size: clamp(22px, 2.3vw, 32px); line-height: 1.15; letter-spacing: -0.02em; }
+  .c5-lab { font-family: var(--font-body); font-weight: 600; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-brass); }
+  .c5-folio { font-family: var(--font-body); font-size: 12px; letter-spacing: 0.04em; color: var(--color-cream-3); }
+  .c5-copy { font-family: var(--font-body); font-size: clamp(15px, 1.15vw, 17px); line-height: 1.65; color: var(--color-cream-2); max-width: 52ch; margin: 0; }
+  .c5-small { font-size: 14px; line-height: 1.6; color: var(--color-cream-3); margin: 0; }
+
+  /* editorial reveals: line, fade, rule, drawn path */
+  .c5-ln { display: block; overflow: hidden; }
+  .c5-ln > span { display: block; transform: translateY(105%); transition: transform 900ms var(--ease-editorial); }
+  .in .c5-ln > span, .c5-h2.in .c5-ln > span { transform: none; }
+  .in .c5-ln:nth-child(2) > span { transition-delay: 80ms; }
+  .in .c5-ln:nth-child(3) > span { transition-delay: 160ms; }
+  .c5-fade { opacity: 0; transform: translateY(14px); transition: opacity 800ms var(--ease-editorial), transform 800ms var(--ease-editorial); }
+  .in .c5-fade, .c5-fade.in { opacity: 1; transform: none; }
+  .c5-fade.d1 { transition-delay: 120ms; }
+  .c5-fade.d2 { transition-delay: 240ms; }
+  .c5-fade.d3 { transition-delay: 360ms; }
+  .c5-rule { height: 1px; background: var(--color-brass); transform: scaleX(0); transform-origin: left; transition: transform 1100ms var(--ease-editorial); }
+  .in .c5-rule, .c5-rule.in { transform: scaleX(1); }
+  .ap { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1400ms var(--ease-editorial); }
+  .in .ap, .ap.in { stroke-dashoffset: 0; }
+
+  /* the light ground variant of the ledger: rows adapt their inks */
+  .light-c5 {
+    background: #f2f1f3; color: #010016;
+    --color-cream: #010016; --color-cream-2: #3e3c52; --color-cream-3: #5a5870;
+    --hair-w: rgba(1, 0, 22, 0.1); --hair: rgba(138, 119, 84, 0.22); --hair2: rgba(138, 119, 84, 0.42);
+    --color-brass: #8a7754;
+  }
+}
+
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter, .reveal { opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important; }
+  .c5-ln > span, .c5-fade, .c5-rule, .ap { transition: none !important; transform: none !important; opacity: 1 !important; stroke-dashoffset: 0 !important; }
+}

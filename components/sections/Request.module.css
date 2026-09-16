@@ -1,0 +1,24 @@
+.request { --grid-a: 0.025; padding: 0; }
+.track { height: 360vh; }
+.stage { position: sticky; top: 0; height: 100svh; box-sizing: border-box; padding-top: var(--navh); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.field { position: absolute; inset: 0; background-image: var(--aura); background-size: cover; background-position: 50% 55%; opacity: 0.5; }
+.field::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13, 11, 31, 0.75), rgba(13, 11, 31, 0.35) 40%, rgba(13, 11, 31, 0.55) 75%, var(--color-night)); }
+.art { position: absolute; left: 50%; top: 50%; height: min(96svh, 900px); width: auto; transform: translate(-50%, -48%); overflow: visible; pointer-events: none; z-index: 1; opacity: 0; }
+.rp { transform-box: fill-box; transform-origin: 50% 50%; will-change: transform; }
+.rl { fill: none; stroke: var(--color-brass); stroke-width: 2.2; stroke-linejoin: round; stroke-opacity: 0.42; }
+.rqImg { opacity: 0; }
+.copy { position: relative; z-index: 3; text-align: center; width: min(560px, 80vw); opacity: 0; }
+.copy :global(.c5-lab) { display: block; margin-bottom: 22px; }
+.h2 { font-size: clamp(30px, 3.8vw, 54px); line-height: 0.98; }
+.copy :global(.c5-copy) { margin: 24px auto 0; max-width: 44ch; }
+.cta { margin-top: 34px; height: 54px; padding: 0 30px; font-size: 14.5px; transform: translateY(8px); opacity: 0; transition: none; }
+@media (max-width: 899px) {
+  .art { height: 70svh; }
+  .h2 { font-size: clamp(30px, 8vw, 44px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .track { height: auto; }
+  .stage { position: static; height: auto; min-height: 88svh; padding-block: 120px; }
+  .copy, .cta, .art { opacity: 1; transform: none; }
+  .rqImg { opacity: 0.18; }
+}

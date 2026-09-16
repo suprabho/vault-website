@@ -1,0 +1,60 @@
+.between { --grid-a: 0.025; }
+.head { --c: 1 / span 7; }
+.co { --c: 8 / span 5; align-self: start; margin-top: 58px; }
+.rhy {
+  --c: 1 / span 12;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(96px, 13vh, 160px) clamp(16px, 2vw, 32px);
+  margin-top: clamp(80px, 12vh, 160px);
+  padding-top: 32px;
+  padding-bottom: 24px;
+}
+.rhyPath { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 0; }
+.rhyPath path { stroke-opacity: 0.28; }
+.rm { z-index: 1; grid-column: var(--c); margin-top: var(--o); position: relative; padding-top: 30px; }
+.rmN {
+  position: absolute; left: 0; top: 0;
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--font-mono); font-weight: 500;
+  font-size: clamp(16px, 1.4vw, 19px); letter-spacing: 0.06em; line-height: 1;
+  color: var(--color-brass);
+}
+.rmN i { display: block; width: 8px; height: 8px; border: 1px solid var(--color-brass); background: var(--color-night); }
+.rm :global(.c5-lab) { display: block; margin: 14px 0 10px; }
+.rm p {
+  margin: 0; font-family: var(--font-body); font-weight: 500;
+  font-size: clamp(16px, 1.35vw, 19px); line-height: 1.4; letter-spacing: -0.012em;
+  color: var(--color-cream); max-width: 24ch;
+  transition: transform 420ms var(--ease-editorial);
+}
+.rmLast :global(.c5-lab) { margin-top: 18px; }
+.rmLast { padding-right: 8%; }
+.rmLast p { font-family: var(--font-display); font-weight: 500; font-size: clamp(24px, 2.6vw, 38px); line-height: 1.06; letter-spacing: -0.03em; max-width: 16ch; }
+.rm:hover p { transform: translateX(4px); }
+/* sequence: marker → label → line, item by item; the path draws underneath first */
+.rmN, .rm :global(.c5-lab), .rm p { opacity: 0; transform: translateY(10px); transition: opacity 800ms var(--ease-editorial), transform 800ms var(--ease-editorial); }
+.rhy:global(.in) .rmN, .rhy:global(.in) .rm :global(.c5-lab), .rhy:global(.in) .rm p { opacity: 1; transform: none; }
+.rhy:global(.in) .rm:nth-of-type(1) .rmN { transition-delay: 400ms; } .rhy:global(.in) .rm:nth-of-type(1) :global(.c5-lab) { transition-delay: 550ms; } .rhy:global(.in) .rm:nth-of-type(1) p { transition-delay: 700ms; }
+.rhy:global(.in) .rm:nth-of-type(2) .rmN { transition-delay: 700ms; } .rhy:global(.in) .rm:nth-of-type(2) :global(.c5-lab) { transition-delay: 850ms; } .rhy:global(.in) .rm:nth-of-type(2) p { transition-delay: 1000ms; }
+.rhy:global(.in) .rm:nth-of-type(3) .rmN { transition-delay: 1000ms; } .rhy:global(.in) .rm:nth-of-type(3) :global(.c5-lab) { transition-delay: 1150ms; } .rhy:global(.in) .rm:nth-of-type(3) p { transition-delay: 1300ms; }
+.rhy:global(.in) .rm:nth-of-type(4) .rmN { transition-delay: 1300ms; } .rhy:global(.in) .rm:nth-of-type(4) :global(.c5-lab) { transition-delay: 1450ms; } .rhy:global(.in) .rm:nth-of-type(4) p { transition-delay: 1600ms; }
+.rhy:global(.in) .rm:nth-of-type(5) .rmN { transition-delay: 1700ms; } .rhy:global(.in) .rm:nth-of-type(5) :global(.c5-lab) { transition-delay: 1850ms; } .rhy:global(.in) .rm:nth-of-type(5) p { transition-delay: 2000ms; }
+.rhy:global(.in) .rm:hover p { transition-delay: 0ms; }
+
+.promiseWrap { --c: 1 / span 8; margin-top: clamp(120px, 17vh, 220px); transition-delay: 2300ms; }
+.promiseRule { display: block; width: 56px; height: 1px; background: var(--color-brass); margin-bottom: 28px; }
+.promise { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(24px, 2.6vw, 38px); letter-spacing: -0.03em; line-height: 1.04; color: var(--color-cream); max-width: 22ch; }
+
+@media (max-width: 899px) {
+  .rhy { grid-template-columns: 1fr; gap: 40px; }
+  .rm { grid-column: 1 !important; margin-top: 0 !important; padding-left: 22px; padding-top: 0; border-left: 1px solid var(--hair); }
+  .rmN { top: 2px; }
+  .rmN i { margin-left: -26px; }
+  .rm :global(.c5-lab) { margin-top: 0; }
+  .rhyPath { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rmN, .rm :global(.c5-lab), .rm p { opacity: 1; transform: none; transition: none; }
+}

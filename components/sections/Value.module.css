@@ -1,0 +1,8 @@
+/* icon is permanent card furniture — same treatment as Decision Context */
+.vcard { position: relative; border-color: rgba(195, 174, 135, 0.38); transition: border-color 260ms ease, background-color 260ms ease; }
+.vcard:hover, .vcard:focus-within { border-color: rgba(195, 174, 135, 0.85); background: rgba(195, 174, 135, 0.045); }
+.badge { display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 50%; margin-bottom: 20px; background: rgba(195, 174, 135, 0.14); }
+.outcome { margin: 16px 0 0; font-size: 14px; line-height: 1.5; color: #7a6a48; opacity: 0; transform: translateY(3px); transition: opacity 240ms ease, transform 240ms ease; }
+.vcard:hover .outcome, .vcard:focus-within .outcome { opacity: 1; transform: none; }
+@media (hover: none) { .outcome { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .outcome { transition: none; } }

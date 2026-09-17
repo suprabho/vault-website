@@ -15,7 +15,8 @@
 
 /* the closing line and the room message share the centre of the stage */
 .close, .roomMsg {
-  position: absolute; left: 50%; top: calc(50% + var(--navh) / 2);
+  /* 57% is the motif keyframes' sy: the text is centred on the mark, not on the stage */
+  position: absolute; left: 50%; top: 57%;
   transform: translate(-50%, -50%);
   text-align: center; opacity: 0; pointer-events: none;
 }
@@ -24,13 +25,15 @@
   margin: 0; font-family: var(--font-display); font-weight: 500;
   font-size: clamp(26px, 3vw, 42px); letter-spacing: -0.03em; line-height: 1.05; color: var(--color-cream);
 }
-.roomMsg { width: min(340px, 27vw); color: #010016; }
-.roomMsg :global(.c5-lab) { display: block; margin-bottom: 12px; color: #8a7754; }
+/* the ellipse is ~51vh wide, so the copy inside it is measured in vh too */
+.roomMsg { width: min(420px, 40vh); color: #010016; }
+/* the type inside the ellipse is measured in vh for the same reason as its width */
+.roomMsg :global(.c5-lab) { display: block; margin-bottom: 1.4vh; color: #8a7754; }
 .roomH2 {
   margin: 0; font-family: var(--font-display); font-weight: 500;
-  font-size: clamp(20px, 2.1vw, 30px); letter-spacing: -0.03em; line-height: 1.04; color: #010016;
+  font-size: clamp(17px, 3.1vh, 30px); letter-spacing: -0.03em; line-height: 1.04; color: #010016;
 }
-.roomCopy { margin: 12px auto 0; font-size: clamp(12.5px, 0.95vw, 14px); line-height: 1.5; color: #3e3c52; max-width: 34ch; }
+.roomCopy { margin: 1.4vh auto 0; font-size: clamp(11.5px, 1.6vh, 14px); line-height: 1.5; color: #3e3c52; max-width: 34ch; }
 
 /* the three convenings, placed where the storyboard puts them over each photograph */
 .cap {

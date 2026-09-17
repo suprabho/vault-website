@@ -1,8 +1,4 @@
 .hero { isolation: isolate; }
-.shot { object-position: 50% 62%; }
-@media (max-width: 767px) {
-  .shot { object-position: 50% 58%; }
-}
 /* a soft pool of night behind the copy so the type reads over the aura */
 .vignette {
   content: "";

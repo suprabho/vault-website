@@ -1,6 +1,16 @@
-.between { --grid-a: 0.025; }
-.head { --c: 1 / span 7; }
-.co { --c: 8 / span 5; align-self: start; margin-top: 58px; }
+.between { --grid-a: 0.025; overflow: clip; }
+/* the sheet paints above the motif layer; the right of the stage stays clear for the mark */
+.between :global(.c5-sheet) { z-index: 2; }
+.head { --c: 1 / span 6; }
+.co { --c: 1 / span 5; margin-top: 36px; }
+/* the outline at the right, only when the motif layer is not running on a wide viewport */
+.stillGlyph { display: none; }
+@media (prefers-reduced-motion: reduce) and (min-width: 900px) {
+  .stillGlyph {
+    display: block; position: absolute; pointer-events: none; opacity: 0.7;
+    height: 120vh; width: auto; left: 79%; top: 0; transform: translate(-50%, -12vh);
+  }
+}
 .rhy {
   --c: 1 / span 12;
   position: relative;
@@ -48,6 +58,8 @@
 .promise { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(24px, 2.6vw, 38px); letter-spacing: -0.03em; line-height: 1.04; color: var(--color-cream); max-width: 22ch; }
 
 @media (max-width: 899px) {
+  .head, .co { --c: 1 / span 12; }
+  .co { margin-top: 28px; }
   .rhy { grid-template-columns: 1fr; gap: 40px; }
   .rm { grid-column: 1 !important; margin-top: 0 !important; padding-left: 22px; padding-top: 0; border-left: 1px solid var(--hair); }
   .rmN { top: 2px; }

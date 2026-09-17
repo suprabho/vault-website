@@ -1,85 +1,69 @@
-.continuation { --grid-a: 0.045; padding: 0; overflow: visible; }
-.track { height: 900vh; }
+/* 03 → 04 · a pinned track; the ground turns cream once the ellipse has covered the stage */
+.continuation { --grid-a: 0.045; padding: 0; background: var(--color-night); }
+.continuation[data-ground="cream"] { background: #f2f1f3; }
+.track { height: 1000vh; }
 .stage {
-  position: sticky; top: 0; height: 100svh; box-sizing: border-box;
-  padding-top: var(--navh); overflow: hidden; display: flex; align-items: center;
+  position: sticky; top: 0; height: 100svh; box-sizing: border-box; z-index: 2;
+  padding-top: var(--navh); overflow: clip; display: flex; align-items: center;
 }
 .roomAnchor { position: absolute; top: 42%; }
-.c3 { width: 100%; position: relative; align-items: start; }
-.st { --c: 1 / span 7; }
-.slot { --c: 1 / span 5; position: relative; margin-top: 44px; min-height: 200px; }
-.slot :global(.c5-copy) { margin: 0; }
-.close { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
-.close p {
-  font-family: var(--font-display); font-size: clamp(26px, 3vw, 44px);
-  letter-spacing: -0.03em; line-height: 1.02; color: var(--color-cream); max-width: 14ch;
-}
-.ph {
-  --c: 8 / span 5; position: relative; align-self: start; margin-top: -30%;
-  aspect-ratio: 4 / 5; max-height: calc(100svh - var(--navh) - 80px);
-  border-radius: var(--r-s); overflow: visible; background: transparent; will-change: transform;
-}
-.phImg {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; object-position: 50% 40%; display: block;
-  border-radius: var(--r-s); box-shadow: var(--shadow);
-}
-.phPat { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.piece { transform-box: fill-box; transform-origin: 50% 50%; will-change: transform; }
-.pimg, .pgold { opacity: 0; }
-/* section 03's own entrance: outline draws, then the letter fills black over the photograph */
-.outline { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1500ms var(--ease-editorial); }
-.piece:nth-of-type(1) .outline { transition-delay: 200ms; }
-.piece:nth-of-type(2) .outline { transition-delay: 420ms; }
-.piece:nth-of-type(3) .outline { transition-delay: 640ms; }
-.piece:nth-of-type(4) .outline { transition-delay: 860ms; }
-.nfill { opacity: 0; transition: opacity 1400ms var(--ease-editorial) 1500ms; }
-.ph:global(.in) .outline { stroke-dashoffset: 0; }
-.ph:global(.in) .nfill { opacity: var(--nf, 1); }
-/* 04 · centre message and annotations live on the stage, not the grid */
-.roomMsg {
-  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  width: min(520px, 44vw); text-align: center; opacity: 0; z-index: 3; pointer-events: none;
-}
-.roomMsg :global(.c5-lab) { display: block; margin-bottom: 16px; }
-.roomH2 { font-family: var(--font-display); font-weight: 500; font-size: clamp(24px, 2.8vw, 44px); letter-spacing: -0.035em; line-height: 1; }
-.roomMsg :global(.c5-copy) { margin: 16px auto 0; max-width: 40ch; font-size: clamp(13.5px, 1vw, 15.5px); }
-.callout { position: absolute; width: max-content; max-width: 22vw; opacity: 0; z-index: 3; pointer-events: none; }
-.coT { margin: 0; font-family: var(--font-body); font-weight: 600; font-size: clamp(14px, 1.15vw, 17px); letter-spacing: -0.01em; color: var(--color-cream); white-space: nowrap; }
-.coArrow { position: absolute; top: 9px; height: 1px; width: 44px; background: var(--color-brass); }
-.coArrow::after { content: ""; position: absolute; top: -3px; width: 6px; height: 6px; border-top: 1px solid var(--color-brass); border-right: 1px solid var(--color-brass); }
-.coA { right: calc(100% - 4%); top: 12%; padding-right: 58px; text-align: right; }
-.coA .coArrow { right: 0; }
-.coA .coArrow::after { right: 0; transform: rotate(45deg); }
-.coC { right: calc(100% - 2%); top: 66%; padding-right: 58px; text-align: right; }
-.coC .coArrow { right: 0; }
-.coC .coArrow::after { right: 0; transform: rotate(45deg); }
-.coD { left: calc(100% - 3%); top: 58%; padding-left: 58px; }
-.coD .coArrow { left: 0; }
-.coD .coArrow::after { left: 0; transform: rotate(-135deg); }
 
-@media (max-width: 899px) {
+/* 03 · headline and copy in the left column; the mark answers on the right */
+.sheet { width: 100%; will-change: opacity, transform; }
+.st { --c: 1 / span 6; }
+.co { margin-top: 36px; max-width: 44ch; }
+
+/* the closing line and the room message share the centre of the stage */
+.close, .roomMsg {
+  position: absolute; left: 50%; top: calc(50% + var(--navh) / 2);
+  transform: translate(-50%, -50%);
+  text-align: center; opacity: 0; pointer-events: none;
+}
+.close { width: min(620px, 80vw); }
+.close p {
+  margin: 0; font-family: var(--font-display); font-weight: 500;
+  font-size: clamp(26px, 3vw, 42px); letter-spacing: -0.03em; line-height: 1.05; color: var(--color-cream);
+}
+.roomMsg { width: min(340px, 27vw); color: #010016; }
+.roomMsg :global(.c5-lab) { display: block; margin-bottom: 12px; color: #8a7754; }
+.roomH2 {
+  margin: 0; font-family: var(--font-display); font-weight: 500;
+  font-size: clamp(20px, 2.1vw, 30px); letter-spacing: -0.03em; line-height: 1.04; color: #010016;
+}
+.roomCopy { margin: 12px auto 0; font-size: clamp(12.5px, 0.95vw, 14px); line-height: 1.5; color: #3e3c52; max-width: 34ch; }
+
+/* the three convenings, placed where the storyboard puts them over each photograph */
+.cap {
+  position: absolute; margin: 0; opacity: 0; pointer-events: none; white-space: nowrap;
+  font-family: var(--font-display); font-weight: 500;
+  font-size: clamp(22px, 2.6vw, 36px); letter-spacing: -0.03em; color: #010016;
+}
+.cap0 { left: 15%; top: 21%; }
+.cap1 { left: 63%; top: 31%; }
+.cap2 { left: 13%; top: 82%; }
+
+.still { display: none; }
+
+/* still: no pin, the beats stack, the photographs come as one picture */
+@media (max-width: 899px), (prefers-reduced-motion: reduce) {
   .continuation { padding-block: 88px; }
+  .continuation[data-ground="cream"] { background: var(--color-night); }
   .track { height: auto; }
   .stage { position: static; height: auto; padding-top: 0; overflow: visible; display: block; }
-  .st, .slot { --c: 1 / span 12; }
-  .slot { min-height: 0; }
-  .close { position: static; opacity: 1; margin-top: 32px; }
-  .ph { --c: 1 / span 12; margin-top: 36px; max-height: none; --nf: 0; }
-  .pimg, .pgold { opacity: 1; }
-  .roomMsg { position: static; transform: none; width: auto; text-align: left; opacity: 1; margin-top: 56px; padding: 0 var(--gutter); }
-  .callout { position: static; width: auto; max-width: none; opacity: 1; padding: 14px 0 0 !important; text-align: left; margin-top: 6px; }
-  .coArrow { display: none; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .track { height: auto; }
-  .stage { position: static; height: auto; display: block; }
-  .slot { min-height: 0; }
-  .close { position: static; opacity: 1; margin-top: 32px; }
-  .ph { max-height: none; --nf: 0; }
-  .outline { transition: none; stroke-dashoffset: 0; }
-  .pimg, .pgold { opacity: 1; }
-  .roomMsg { position: static; transform: none; opacity: 1; text-align: left; margin-top: 56px; padding: 0 var(--gutter); }
-  .callout { position: static; opacity: 1; padding: 18px var(--gutter) 0 !important; text-align: left; }
-  .coArrow { display: none; }
+  .sheet { opacity: 1 !important; transform: none !important; }
+  .st { --c: 1 / span 12; }
+  .close, .roomMsg, .still, .cap {
+    position: static; transform: none !important; opacity: 1 !important; pointer-events: auto;
+    width: auto; max-width: 1280px; margin: 40px auto 0; padding-inline: var(--gutter); text-align: left;
+    box-sizing: border-box;
+  }
+  .close p { max-width: 16ch; }
+  .roomMsg, .roomH2 { color: var(--color-cream); }
+  .roomMsg :global(.c5-lab) { color: var(--color-brass); }
+  .roomCopy { margin-inline: 0; color: var(--color-cream-2); font-size: clamp(15px, 1.15vw, 17px); max-width: 52ch; }
+  .roomH2 { font-size: clamp(24px, 2.8vw, 44px); }
+  .still { display: block; margin-top: 56px; }
+  .stillGlyph { display: block; width: min(100%, 520px); height: auto; }
+  .cap { color: var(--color-cream); white-space: normal; font-size: clamp(18px, 2vw, 24px); margin-top: 18px; }
+  .cap0 { margin-top: 32px; }
 }

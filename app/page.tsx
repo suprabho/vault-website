@@ -1,5 +1,6 @@
 import Header from "@/components/layout/Header";
 import ProgressArcs from "@/components/layout/ProgressArcs";
+import MotifLayer from "@/components/motif/MotifLayer";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/sections/Hero";
 import Problem from "@/components/sections/Problem";
@@ -19,6 +20,7 @@ export default function Home() {
       <Header />
       <ProgressArcs />
       <main>
+        <MotifLayer />
         <Hero />
         <Problem />
         <Continuation />

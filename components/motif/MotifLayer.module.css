@@ -1,0 +1,27 @@
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+  visibility: hidden;
+}
+.svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.ellipse {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 35vw;
+  height: 35vh;
+  border-radius: 50%;
+  background: #f2f1f3;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}

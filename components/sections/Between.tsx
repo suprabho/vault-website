@@ -1,3 +1,4 @@
+import MotifGlyph from "@/components/motif/MotifGlyph";
 import RhythmPath from "./RhythmPath";
 import styles from "./Between.module.css";
 
@@ -9,9 +10,11 @@ const RHYTHM = [
   { n: "05", when: "Always available", what: "Playbooks, recordings, tools and trusted introductions.", c: "7 / span 6", o: "40px", last: true },
 ];
 
+/** 05 · the mark arrives upright at the right of the headline (motif layer), then the rhythm follows. */
 export default function Between() {
   return (
-    <section id="between" className={`c5 ${styles.between}`}>
+    <section id="between" data-motif-track="between" className={`c5 ${styles.between}`}>
+      <MotifGlyph className={styles.stillGlyph} />
       <div className="c5-sheet c5-grid" data-reveal>
         <div className={`c5c ${styles.head}`}>
           <span className="c5-lab">05 — Between the rooms</span>

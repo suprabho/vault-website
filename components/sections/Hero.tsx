@@ -1,17 +1,14 @@
-import Image from "next/image";
 import styles from "./Hero.module.css";
 
 export default function Hero() {
   return (
     <section id="top" className={`${styles.hero} relative flex min-h-svh items-center overflow-hidden pt-[104px] md:pt-[120px]`}>
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-night" aria-hidden="true">
-        <Image
-          src="/images/hero-aura.webp"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className={`object-cover ${styles.shot}`}
+        <iframe
+          title="Dark Gold Background – Elegant Header for Modern Websites"
+          src="https://aura.promad.design/embed/dark-gold-background-elegant-header-for-modern-websites?hideText=true&hideIcons=true&theme=dark"
+          className="absolute inset-0 h-full w-full border-0"
+          allowFullScreen
         />
       </div>
       <div className="canvas relative z-[3] text-center">

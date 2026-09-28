@@ -1,36 +1,55 @@
-/* 05 · a pinned track inside the mark: the motif layer holds the outline, this stage draws the cadence on it */
+/* 05 · a pinned track inside the mark: the motif layer holds the outline, this stage turns its edge into a ruler */
 .between { --grid-a: 0.025; padding: 0; overflow: clip; }
 .track { height: 500vh; }
 .stage { position: sticky; top: 0; height: 100svh; z-index: 2; overflow: clip; }
 
 .measure { position: absolute; width: 0; height: 0; overflow: hidden; visibility: hidden; }
 .curve { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-.curve path { fill: none; stroke: var(--color-brass); stroke-width: 1.25; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.line { fill: none; stroke: var(--color-brass); stroke-width: 1.25; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+
+/* the ruler: five runs of week ticks between the line and the outline.
+   Waiting runs are short and faint; the active run lights its weeks at full length, tick by tick. */
+.run path { fill: none; stroke: var(--color-brass); stroke-linecap: round; }
+.tickOn, .tickOff {
+  stroke-width: 1.2; opacity: 0.3;
+  stroke-dasharray: calc(var(--reach, 16) * 0.35px) 100px;
+  transition: stroke-dasharray 520ms var(--ease-editorial), opacity 520ms var(--ease-editorial);
+}
+.run[data-state="active"] .tickOn { stroke-dasharray: calc(var(--reach, 16) * 1px) 100px; opacity: 1; }
+.run[data-state="active"] .tickOff { opacity: 0.4; }
+.run[data-state="past"] .tickOn { stroke-dasharray: calc(var(--reach, 16) * 1px) 100px; opacity: 0.38; }
+.run[data-state="past"] .tickOff { opacity: 0.18; }
+.alwaysRun { stroke-width: 1.2; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 1; transition: stroke-dashoffset 900ms var(--ease-editorial) 360ms, opacity 520ms; }
+.run[data-state="active"] .alwaysRun { stroke-dashoffset: 0; }
+.run[data-state="past"] .alwaysRun { stroke-dashoffset: 0; opacity: 0.38; }
+
+/* rides the tip of the line */
+.marker {
+  position: absolute; left: 0; top: 0; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px;
+  border: 1px solid var(--color-brass); background: var(--color-night); opacity: 0; pointer-events: none;
+}
 
 /* the headline, centred in the counter until the line takes over */
 .head { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center; }
 .head :global(.c5-lab) { display: block; }
 .head h2 { font-size: clamp(30px, 3.4vw, 52px); line-height: 1; }
 
-/* the stops, right-aligned against the line so the copy follows the curve */
-.rhy { list-style: none; margin: 0; padding: 0; }
-.rm { position: absolute; margin-top: -9px; max-width: min(340px, 30vw); text-align: right; opacity: 0; will-change: opacity, transform; }
-.rmHead { display: flex; align-items: center; justify-content: flex-end; gap: 14px; margin: 0; line-height: 18px; }
+/* one place for the copy: each stop takes it in turn */
+.box {
+  position: absolute; display: grid; width: min(400px, 32vw); transform: translateY(-50%);
+  list-style: none; margin: 0; padding: 0; text-align: right;
+}
+.rm { grid-area: 1 / 1; align-self: center; opacity: 0; visibility: hidden; will-change: opacity, transform; }
+.rmHead { display: flex; align-items: baseline; justify-content: flex-start; flex-direction: row-reverse; gap: 16px; margin: 0; }
 .rmN { font-family: var(--font-mono); font-weight: 500; font-size: 15px; letter-spacing: 0.06em; color: var(--color-brass); }
-.beat { display: block; margin: 10px 0 10px auto; overflow: visible; }
+.rmOf { color: var(--color-brass-lo); }
+.beat { display: none; }
 .beatOn { stroke: var(--color-brass); stroke-width: 1.4; stroke-linecap: round; }
 .beatOff { stroke: var(--color-brass); stroke-opacity: 0.28; stroke-width: 1; stroke-linecap: round; }
 .rmWhat {
-  margin: 0; font-family: var(--font-body); font-weight: 500;
-  font-size: clamp(14px, 1.9vh, 17.5px); line-height: 1.4; letter-spacing: -0.01em; color: var(--color-cream);
+  margin: 20px 0 0; font-family: var(--font-display); font-weight: 500;
+  font-size: clamp(22px, 3.3vh, 34px); line-height: 1.12; letter-spacing: -0.025em; color: var(--color-cream);
   text-wrap: balance;
-}
-.rmLast .rmWhat { font-family: var(--font-display); font-size: clamp(17px, 2.5vh, 24px); line-height: 1.12; letter-spacing: -0.02em; }
-
-/* where each stop meets the line */
-.mark {
-  position: absolute; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px;
-  border: 1px solid var(--color-brass); background: var(--color-night); opacity: 0;
 }
 
 /* the outline at the right, only when the motif layer is not running on a wide viewport */
@@ -42,19 +61,23 @@
   }
 }
 
-/* still: no pin, the headline and then the cadence as a list with a rule down its left */
+/* still: no pin, the headline and then the cadence as a list, each stop with its own week ticks */
 @media (max-width: 899px), (prefers-reduced-motion: reduce) {
   .between { padding-block: clamp(88px, 12vw, 168px); }
   .track { height: auto; }
   .stage { position: static; height: auto; overflow: visible; max-width: 1280px; margin-inline: auto; padding-inline: var(--gutter); }
-  .curve, .mark { display: none; }
+  .curve, .marker { display: none; }
   .head { position: static; transform: none; text-align: left; width: auto !important; }
   .head h2 { font-size: clamp(30px, 3.9vw, 58px); }
-  .rhy { display: grid; gap: 40px; max-width: 560px; margin-top: 64px; padding-left: 6px; }
-  .rm { position: relative; margin: 0; max-width: none; text-align: left; opacity: 1; padding-left: 22px; border-left: 1px solid var(--hair); }
+  .box { position: static; display: grid; gap: 40px; width: auto; max-width: 560px; transform: none; margin-top: 64px; padding-left: 6px; text-align: left; }
+  .rm { grid-area: auto; position: relative; opacity: 1; visibility: visible; padding-left: 22px; border-left: 1px solid var(--hair); }
   .rm::before { content: ""; position: absolute; left: -5px; top: 4px; width: 8px; height: 8px; border: 1px solid var(--color-brass); background: var(--color-night); }
-  .rmHead { flex-direction: row-reverse; justify-content: flex-end; }
-  .beat { margin: 12px 0 14px; }
-  .rmWhat { font-size: clamp(16px, 1.35vw, 19px); }
-  .rmLast .rmWhat { font-size: clamp(22px, 2.6vw, 32px); }
+  .rmHead { flex-direction: row; justify-content: flex-start; gap: 14px; }
+  .rmOf { display: none; }
+  .beat { display: block; margin: 12px 0 14px; }
+  .rmWhat { margin: 0; font-family: var(--font-body); font-size: clamp(16px, 1.35vw, 19px); line-height: 1.4; letter-spacing: -0.01em; }
+  .rm:last-child .rmWhat { font-family: var(--font-display); font-size: clamp(22px, 2.6vw, 32px); line-height: 1.1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tickOn, .tickOff, .alwaysRun { transition: none; }
 }

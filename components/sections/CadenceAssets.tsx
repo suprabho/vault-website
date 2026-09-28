@@ -1,3 +1,6 @@
+"use client";
+
+import type { PointerEvent } from "react";
 import { Icon, type IconName } from "@/lib/icons";
 import styles from "./CadenceAssets.module.css";
 
@@ -7,11 +10,36 @@ import styles from "./CadenceAssets.module.css";
  * screenshot or rendering when the product has one.
  */
 
-/** the slot the preview scales to: every size inside is in container units of this */
+/** how far the card leans towards the pointer, in degrees */
+const TILT = { x: 10, y: 14 };
+
+/** lean the card towards the pointer and move the glare with it (CSS vars read by the stylesheet) */
+function tilt(e: PointerEvent<HTMLDivElement>) {
+  if (e.pointerType !== "mouse") return;
+  const el = e.currentTarget, r = el.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+  el.style.setProperty("--rx", `${((0.5 - y) * TILT.x).toFixed(2)}deg`);
+  el.style.setProperty("--ry", `${((x - 0.5) * TILT.y).toFixed(2)}deg`);
+  el.style.setProperty("--gx", `${(x * 100).toFixed(1)}%`);
+  el.style.setProperty("--gy", `${(y * 100).toFixed(1)}%`);
+  el.dataset.tilt = "on";
+}
+function untilt(e: PointerEvent<HTMLDivElement>) {
+  const el = e.currentTarget;
+  ["--rx", "--ry", "--gx", "--gy"].forEach((v) => el.style.removeProperty(v));
+  delete el.dataset.tilt;
+}
+
+/**
+ * The slot the preview scales to (every size inside is in container units of it): a glass card
+ * that floats, and tilts towards the pointer with a glare that follows it.
+ */
 function Paper({ className = "", children }: { className?: string; children: React.ReactNode }) {
   return (
-    <div className={styles.frame}>
-      <div className={`${styles.paper} ${className}`}>{children}</div>
+    <div className={styles.frame} onPointerMove={tilt} onPointerLeave={untilt}>
+      <div className={styles.float}>
+        <div className={`${styles.paper} ${className}`}>{children}</div>
+      </div>
     </div>
   );
 }

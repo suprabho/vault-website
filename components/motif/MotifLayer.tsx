@@ -6,9 +6,9 @@ import { useStillMedia } from "@/hooks/useStillMedia";
 import {
   ELLIPSE,
   GLYPH_CENTRE,
-  MOTIF_KEYFRAMES,
   camera,
   ellipseRadii,
+  motifKeyframes,
   resolve,
   sample,
   type Piece,
@@ -70,7 +70,7 @@ export default function MotifLayer() {
         const b = p.getBBox();
         pieces[k] = b.width ? { x: b.x + b.width / 2, y: b.y + b.height / 2 } : GLYPH_CENTRE;
       }
-      frames = resolve(MOTIF_KEYFRAMES, tracks, window.innerHeight, pieces);
+      frames = resolve(motifKeyframes(window.innerWidth, window.innerHeight), tracks, window.innerHeight, pieces);
     };
 
     const draw = () => {

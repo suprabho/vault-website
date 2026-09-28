@@ -139,6 +139,12 @@ export const ICONS = {
       <path d="M8.8 16.6h6.4" />
     </>
   ),
+  play: (
+    <>
+      <circle cx="12" cy="12" r="8.6" />
+      <path d="M10.2 8.8v6.4l5.2-3.2Z" />
+    </>
+  ),
   link: (
     <>
       <circle cx="7.2" cy="7.6" r="3" />

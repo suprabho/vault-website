@@ -27,13 +27,15 @@ components/
   forms/RequestForm.tsx the invitation request form
   type/Lines.tsx        masked headline lines for the .c5-ln reveal, with the spaces kept between them
   motif/MotifLayer.tsx  the mark as one fixed layer travelling through sections 01–05 (see below)
-                        (lib/motif.ts also holds INNER_RIGHT + BETWEEN_POSE, which the cadence line is drawn from)
+                        (lib/motif.ts also holds INNER_LOOP + betweenPose(), which the cadence dial is drawn from)
   motif/MotifGlyph.tsx  the mark as a static picture, for narrow viewports and reduced motion
   sections/             one component (+ CSS module) per section:
     Hero            01  pinned: the copy over the aura, then the mark alone
     Problem         02  pinned, inside the mark: headline, the promise, the three themes (light ground)
     Continuation    03→04  pinned: the introduction/relationship line, the room on a cream ellipse, the three convenings
-    Between         05  pinned, inside the mark held large: the cadence draws down its inside right edge, stop by stop
+    Between         05  pinned: the mark at the left, its counter a 365-day dial; each stop lights its days
+                        (52 Mondays, signals, 12 months, 4 quarters, every day) with a preview in the middle
+    CadenceAssets       placeholder previews for the five stops (swap for real renders)
     Intelligence    06  the weekly briefing: one item open, four out of focus
     Pulse           07  vault pulse: this week's intelligence, the next table, the newest resource
     People          08  the amphitheatre, and the seats the room is built for
@@ -83,5 +85,6 @@ public/fonts            New York (Apple) subset, 400/500/600
   portal link appear once they are set.
 - `VAULT_REQUEST_WEBHOOK_URL` — where invitation requests are sent (any endpoint accepting a JSON POST).
 - `lib/briefing.ts`, `Pulse.tsx` — sample briefing, next table and resource are illustrative placeholders.
+- `CadenceAssets.tsx` — the five cadence previews are placeholder mock-ups.
 - `People.tsx` — `APPROVED_LOGOS` stays empty until organisations approve the use of their marks.
 - `app/privacy`, `app/terms` — plain-language summaries; have them reviewed before launch.

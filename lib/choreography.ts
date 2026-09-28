@@ -49,10 +49,10 @@ export const CONTINUATION = {
 };
 
 export const BETWEEN = {
-  /** the headline gives way to the line */
-  headOut: [0.08, 0.16] as Window,
-  /** the line draws down the inside of the mark; each stop lands as the line reaches it */
-  draw: [0.16, 0.88] as Window,
-  /** how long a stop takes to settle once the line has reached it */
-  stopIn: 0.07,
+  /** the rim draws round the counter and the 365 days appear */
+  dialIn: [0.02, 0.14] as Window,
+  /** the headline gives way to the first stop */
+  headOut: [0.14, 0.2] as Window,
+  /** the five stops share this window equally, one at a time */
+  stops: [0.2, 0.94] as Window,
 };

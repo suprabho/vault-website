@@ -9,8 +9,8 @@
 
 export type Window = readonly [number, number];
 
-/** Pinned track heights, in vh. Between is not pinned. */
-export const TRACK_VH = { hero: 200, problem: 400, continuation: 1000 } as const;
+/** Pinned track heights, in vh. */
+export const TRACK_VH = { hero: 200, problem: 400, continuation: 1000, between: 500 } as const;
 
 export const HERO = {
   /** headline, lead and buttons fade and lift away */
@@ -20,13 +20,13 @@ export const HERO = {
 export const PROBLEM = {
   /** headline moves from the centre of the stage to its resting place above the copy */
   headUp: [0.28, 0.5] as Window,
-  /** body copy fades in under the headline */
+  /** the promise fades in under the headline */
   copyIn: [0.34, 0.52] as Window,
   /** headline + copy fade while the cards stack */
   textOut: [0.55, 0.68] as Window,
-  /** first card lands; each following card starts `cardStep` later */
+  /** first theme lands; each following theme starts `cardStep` later */
   cardsIn: [0.55, 0.69] as Window,
-  cardStep: 0.06,
+  cardStep: 0.08,
 };
 
 export const CONTINUATION = {
@@ -49,6 +49,10 @@ export const CONTINUATION = {
 };
 
 export const BETWEEN = {
-  /** the mark fades before the intelligence section arrives */
-  fadeOut: [0.2, 0.45] as Window,
+  /** the rim draws round the counter and the 365 days appear */
+  dialIn: [0.02, 0.14] as Window,
+  /** the headline gives way to the first stop */
+  headOut: [0.14, 0.2] as Window,
+  /** the five stops share this window equally, one at a time */
+  stops: [0.2, 0.94] as Window,
 };

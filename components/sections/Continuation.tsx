@@ -6,9 +6,27 @@ import { useStillMedia } from "@/hooks/useStillMedia";
 import { useTrackScrub } from "@/hooks/useTrackScrub";
 import { CONTINUATION } from "@/lib/choreography";
 import { easeQuad, t } from "@/lib/scrub";
+import Lines from "@/components/type/Lines";
 import styles from "./Continuation.module.css";
 
-const CAPTIONS = ["Private dinners", "Executive breakfasts", "Closed-door roundtables"];
+/** the three convenings. Settings are described, never named: no venues, no guests. */
+const CONVENINGS = [
+  {
+    name: "Private dinners",
+    setting: "Invitation-only supper · Chef-led table",
+    text: "Twelve seats. A private table. One topic everyone in the room has a reason to care about.",
+  },
+  {
+    name: "Executive breakfasts",
+    setting: "Private dining room · Before nine",
+    text: "Small morning sessions with senior operators before the day starts.",
+  },
+  {
+    name: "Closed-door roundtables",
+    setting: "Closed-door setting · One issue",
+    text: "A confidential room built around one regulatory, enforcement or financial crime issue.",
+  },
+];
 
 /**
  * 03 → 04 · one pinned track. The mark itself is drawn by the motif layer; this stage carries
@@ -23,7 +41,7 @@ export default function Continuation() {
   const sheet = useRef<HTMLDivElement>(null);
   const close = useRef<HTMLDivElement>(null);
   const msg = useRef<HTMLDivElement>(null);
-  const caps = useRef<(HTMLParagraphElement | null)[]>([]);
+  const caps = useRef<(HTMLDivElement | null)[]>([]);
 
   const at = useCallback((p: number) => {
     const win = (a: readonly [number, number], b: readonly [number, number]) =>
@@ -69,40 +87,28 @@ export default function Continuation() {
           {/* 03 · the continuation */}
           <div className={`c5-sheet c5-grid ${styles.sheet}`} ref={sheet} data-reveal>
             <div className={`c5c ${styles.st}`}>
-              <span className="c5-lab">03 — The continuation</span>
+              <span className="c5-lab">03 — After the event</span>
               <h2 className="c5-h2 mt-[22px]" data-reveal>
-                <span className="c5-ln"><span>The event ends.</span></span>
-                <span className="c5-ln"><span>The conversation should not.</span></span>
+                <Lines lines={["The event ends.", "The conversation should not."]} />
               </h2>
-              <p className={`c5-copy c5-fade d1 ${styles.co}`}>
-                The industry already has places to meet. Vault is built for what happens next: the follow-up question,
-                the trusted introduction, the context shared in confidence and the relationship that remains useful
-                long after the badge comes off.
-              </p>
             </div>
           </div>
 
-          {/* the closing line, inside the turned mark */}
+          {/* the one idea: conferences introduce, Vault continues — inside the turned mark */}
           <div className={styles.close} ref={close}>
             <p>
-              Conferences create introductions.
-              <br />
-              Vault creates relationships.
+              <span className={styles.closeA}>Conferences make the introduction.</span>{" "}
+              <span className={styles.closeB}>Vault is where the real relationship begins.</span>
             </p>
           </div>
 
           {/* 04 · inside the room, on the cream ellipse */}
           <div className={styles.roomMsg} ref={msg}>
-            <span className="c5-lab">04 — Inside the room</span>
+            <span className="c5-lab">04 — Private convenings</span>
             <h2 className={styles.roomH2}>
-              Small by design.
-              <br />
-              Relevant by construction.
+              A community of pioneers, brought together in exceptional rooms for a reason.
             </h2>
-            <p className={styles.roomCopy}>
-              Vault convenings are curated around who would genuinely benefit from knowing one another. The objective
-              is not attendance. It is the quality of the conversation.
-            </p>
+            <p className={styles.roomCopy}>Every table is built around people who should genuinely know one another.</p>
           </div>
 
           {/* still mode only: the photographs in the mark, as one picture */}
@@ -115,10 +121,12 @@ export default function Continuation() {
           </figure>
 
           {/* the three convenings, as the camera reaches each photograph */}
-          {CAPTIONS.map((c, i) => (
-            <p key={c} className={`${styles.cap} ${styles[`cap${i}`]}`} ref={(el) => { caps.current[i] = el; }}>
-              {c}
-            </p>
+          {CONVENINGS.map((c, i) => (
+            <div key={c.name} className={`${styles.cap} ${styles[`cap${i}`]}`} ref={(el) => { caps.current[i] = el; }}>
+              <p className={styles.capSetting}>{c.setting}</p>
+              <h3 className={styles.capName}>{c.name}</h3>
+              <p className={styles.capText}>{c.text}</p>
+            </div>
           ))}
         </div>
       </div>

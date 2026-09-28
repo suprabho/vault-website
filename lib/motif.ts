@@ -1,5 +1,4 @@
 import { easeCubic } from "@/lib/scrub";
-import { BETWEEN } from "@/lib/choreography";
 
 /**
  * The motif camera. The monogram lives in its 662 × 827 viewBox; the fixed layer shows a
@@ -22,6 +21,39 @@ export const GLYPH_CENTRE: Point = { x: 331, y: 413.5 };
  * mark. Kept in glyph space so it scales and sits with the mark instead of with the viewport.
  */
 export const ELLIPSE = { rx: 283.7, ry: 196.6 } as const;
+
+/**
+ * The inside of the mark as one closed loop, clockwise from the top: B's inner curve, the gap to
+ * D, D's inner curve, across to C, C's inner curve, the gap to A, A's inner curve, and back across
+ * the top gap (glyph units, lifted from MONOGRAM). The cadence dial runs round it, pulled in
+ * towards the counter's centre by RHYTHM_INSET so the rim sits just inside the outline.
+ */
+export const INNER_LOOP =
+  "M396.647 146.5C431.647 160.5 505.647 218.6 521.647 337L528 387.5C536.453 624.5 410 722.525 274.955 683" +
+  "L238.767 670C173.767 630.5 140.5 485.5 140.5 436.5L140.095 387.501C141.695 157.101 286.095 125.501 358.095 138.501Z";
+export const COUNTER_CENTRE: Point = { x: 334, y: 412 };
+/** the counter's extent around its centre, in glyph units */
+export const COUNTER = { left: 140, right: 528, top: 138, bottom: 690 } as const;
+export const RHYTHM_INSET = 0.94;
+
+export type Pose = { anchor: Point; sx: number; sy: number; h: number };
+
+/**
+ * 05 · the mark to the left, sized so the whole counter sits below the header with room to spare,
+ * and far enough in that the counter is never cut by the left edge; the copy takes the right.
+ */
+export function betweenPose(vw: number, vh: number, nav = vw >= 1024 ? 88 : 72): Pose {
+  const px = (vh - nav - vh * 0.1) / (COUNTER.bottom - COUNTER.top);
+  const cx = Math.max((COUNTER_CENTRE.x - COUNTER.left) * px + 32, vw * 0.33);
+  const cy = nav + (vh - nav) / 2;
+  return { anchor: COUNTER_CENTRE, sx: cx / vw, sy: cy / vh, h: ((px * GLYPH_H) / vh) * 100 };
+}
+
+/** A glyph point on screen for a rotation-free pose. */
+export function glyphToScreen(p: Point, pose: Pose, vw: number, vh: number) {
+  const px = ((pose.h / 100) * vh) / GLYPH_H;
+  return { x: pose.sx * vw + (p.x - pose.anchor.x) * px, y: pose.sy * vh + (p.y - pose.anchor.y) * px, px };
+}
 
 export type MotifState = {
   /** anchor in glyph units */
@@ -66,42 +98,49 @@ const ON_A: Point = { x: 105, y: 250 };
 const ON_D: Point = { x: 430, y: 720 };
 const ON_C: Point = { x: 95, y: 620 };
 
-export const MOTIF_KEYFRAMES: Keyframe[] = [
-  // 01 · hero: the mark surfaces once the copy has gone
-  { track: "hero", at: 0, ...HOME, h: 50, outline: 0, photo: 0, gold: 0, ellipse: 0, ellipseCover: 0 },
-  { track: "hero", at: 0.3, ...HOME, h: 50, outline: 0 },
-  { track: "hero", at: 0.65, ...HOME, outline: 1 },
-  { track: "hero", at: 1, ...HOME },
-  // 02 · problem: it swells to frame the headline while the cream sheet slides up
-  { track: "problem", at: 0, ...CENTRE, sx: 0.5, sy: 0.61, h: 142 },
-  { track: "problem", at: 1, ...CENTRE, sx: 0.5, sy: 0.61, h: 146 },
-  // 03 · continuation: it withdraws to the right of the headline
-  { track: "continuation", at: 0, ...CENTRE, sx: 0.71, sy: 0.57, h: 49 },
-  { track: "continuation", at: 0.1, ...CENTRE, sx: 0.71, sy: 0.57, h: 49 },
-  // turns on its side and grows around the closing line
-  { track: "continuation", at: 0.18, ...CENTRE, sx: 0.5, sy: 0.57, h: 89, rot: 90 },
-  { track: "continuation", at: 0.3, ...CENTRE, sx: 0.5, sy: 0.57, h: 89 },
-  // 04 · settles a little so the ellipse can sit in its centre
-  { track: "continuation", at: 0.36, ...CENTRE, sx: 0.5, sy: 0.57, h: 74 },
-  { track: "continuation", at: 0.4, ...CENTRE, sx: 0.5, sy: 0.57, h: 74, ellipse: 1, ellipseCover: 0 },
-  { track: "continuation", at: 0.52, ...CENTRE, sx: 0.5, sy: 0.57, h: 74, ellipse: 1, ellipseCover: 0 },
-  // the ellipse becomes the ground; the photographs arrive
-  { track: "continuation", at: 0.58, ...CENTRE, sx: 0.5, sy: 0.57, h: 74, ellipseCover: 1, photo: 1, gold: 1 },
-  // the camera dives into the photographs: each one framed off-centre so the caption sits on cream;
-  // between pieces it pulls back a little so the move reads as one camera, not a cut
-  { track: "continuation", at: 0.7, anchor: ON_A, sx: 0.78, sy: 0.72, h: ZOOM, ellipse: 0, outline: 0 },
-  { track: "continuation", at: 0.76, anchor: ON_A, sx: 0.78, sy: 0.72, h: ZOOM },
-  { track: "continuation", at: 0.79, ...CENTRE, sx: 0.5, sy: 0.5, h: 150, ease: linear },
-  { track: "continuation", at: 0.82, anchor: ON_D, sx: 0.3, sy: 0.56, h: ZOOM, ease: linear },
-  { track: "continuation", at: 0.88, anchor: ON_D, sx: 0.3, sy: 0.56, h: ZOOM },
-  { track: "continuation", at: 0.91, ...CENTRE, sx: 0.5, sy: 0.5, h: 150, ease: linear },
-  { track: "continuation", at: 0.94, anchor: ON_C, sx: 0.74, sy: 0.3, h: ZOOM, ease: linear },
-  { track: "continuation", at: 1, anchor: ON_C, sx: 0.74, sy: 0.3, h: ZOOM },
-  // 05 · between: upright again, outline only, at the right of the headline
-  { track: "between", at: 0, ...CENTRE, sx: 0.79, sy: 0.58, h: 120, rot: 0, outline: 1, photo: 0, gold: 0, ellipseCover: 0 },
-  { track: "between", at: BETWEEN.fadeOut[0], ...CENTRE, sx: 0.79, sy: 0.58, h: 120, outline: 1 },
-  { track: "between", at: BETWEEN.fadeOut[1], ...CENTRE, sx: 0.79, sy: 0.58, h: 120, outline: 0 },
-];
+/** The storyboard for a viewport: 05 depends on its size; everything else is in viewport fractions. */
+export const motifKeyframes = (vw: number, vh: number): Keyframe[] => {
+  const between = betweenPose(vw, vh);
+  const BETWEEN_KEY = { anchor: between.anchor, sx: between.sx, sy: between.sy, h: between.h };
+  return [
+    // 01 · hero: the mark surfaces once the copy has gone
+    { track: "hero", at: 0, ...HOME, h: 50, outline: 0, photo: 0, gold: 0, ellipse: 0, ellipseCover: 0 },
+    { track: "hero", at: 0.3, ...HOME, h: 50, outline: 0 },
+    { track: "hero", at: 0.65, ...HOME, outline: 1 },
+    { track: "hero", at: 1, ...HOME },
+    // 02 · problem: it swells to frame the headline while the cream sheet slides up
+    { track: "problem", at: 0, ...CENTRE, sx: 0.5, sy: 0.61, h: 142 },
+    { track: "problem", at: 1, ...CENTRE, sx: 0.5, sy: 0.61, h: 146 },
+    // 03 · continuation: it withdraws to the right of the headline
+    { track: "continuation", at: 0, ...CENTRE, sx: 0.71, sy: 0.57, h: 49 },
+    { track: "continuation", at: 0.1, ...CENTRE, sx: 0.71, sy: 0.57, h: 49 },
+    // turns on its side and grows around the closing line
+    { track: "continuation", at: 0.18, ...CENTRE, sx: 0.5, sy: 0.57, h: 89, rot: 90 },
+    { track: "continuation", at: 0.3, ...CENTRE, sx: 0.5, sy: 0.57, h: 89 },
+    // 04 · settles a little so the ellipse can sit in its centre
+    { track: "continuation", at: 0.36, ...CENTRE, sx: 0.5, sy: 0.57, h: 74 },
+    { track: "continuation", at: 0.4, ...CENTRE, sx: 0.5, sy: 0.57, h: 74, ellipse: 1, ellipseCover: 0 },
+    { track: "continuation", at: 0.52, ...CENTRE, sx: 0.5, sy: 0.57, h: 74, ellipse: 1, ellipseCover: 0 },
+    // the ellipse becomes the ground; the photographs arrive
+    { track: "continuation", at: 0.58, ...CENTRE, sx: 0.5, sy: 0.57, h: 74, ellipseCover: 1, photo: 1, gold: 1 },
+    // the camera dives into the photographs: each one framed off-centre so the caption sits on cream;
+    // between pieces it pulls back a little so the move reads as one camera, not a cut
+    { track: "continuation", at: 0.7, anchor: ON_A, sx: 0.78, sy: 0.72, h: ZOOM, ellipse: 0, outline: 0 },
+    { track: "continuation", at: 0.76, anchor: ON_A, sx: 0.78, sy: 0.72, h: ZOOM },
+    { track: "continuation", at: 0.79, ...CENTRE, sx: 0.5, sy: 0.5, h: 150, ease: linear },
+    { track: "continuation", at: 0.82, anchor: ON_D, sx: 0.3, sy: 0.56, h: ZOOM, ease: linear },
+    { track: "continuation", at: 0.88, anchor: ON_D, sx: 0.3, sy: 0.56, h: ZOOM },
+    { track: "continuation", at: 0.91, ...CENTRE, sx: 0.5, sy: 0.5, h: 150, ease: linear },
+    { track: "continuation", at: 0.94, anchor: ON_C, sx: 0.74, sy: 0.3, h: ZOOM, ease: linear },
+    { track: "continuation", at: 1, anchor: ON_C, sx: 0.74, sy: 0.3, h: ZOOM },
+    // 05 · between: upright again, outline only, at the left, framing the cadence dial
+    { track: "between", at: 0, ...BETWEEN_KEY, rot: 0, outline: 1, photo: 0, gold: 0, ellipseCover: 0 },
+    { track: "between", at: 1, ...BETWEEN_KEY, outline: 1 },
+    // the stage scrolls away under the intelligence section: the mark leaves with it, then hides
+    { track: "between", at: 2, ...BETWEEN_KEY, sy: between.sy - 1, outline: 1, ease: linear },
+    { track: "between", at: 2.05, ...BETWEEN_KEY, sy: between.sy - 1, outline: 0 },
+  ];
+};
 
 // ── resolution ────────────────────────────────────────────────────────────────
 export type TrackRect = { top: number; height: number };

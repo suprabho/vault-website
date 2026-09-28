@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { MONOGRAM } from "@/components/brand/monogram";
 import { Icon, type IconName } from "@/lib/icons";
+import Lines from "@/components/type/Lines";
 import styles from "./People.module.css";
 
 const SPOKES = [
@@ -19,10 +20,24 @@ const NODES: { icon: IconName; from: [number, number]; to: [number, number] }[] 
 ];
 
 const WHO: { icon: IconName; label: string; text: string }[] = [
-  { icon: "exchange", label: "Exchanges & custodians", text: "Trading platforms, custodians and infrastructure providers operating at scale." },
-  { icon: "bank", label: "Financial institutions", text: "Banks, brokers and diversified financial institutions navigating digital asset risk." },
-  { icon: "scales", label: "Regulators & investigators", text: "Regulators, law enforcement and investigative teams shaping and enforcing standards." },
-  { icon: "person", label: "Legal & advisory", text: "Law firms and specialist advisors guiding compliance, governance and strategy." },
+  { icon: "exchange", label: "Exchanges & custodians", text: "The teams running compliance for platforms and custody at scale." },
+  { icon: "bank", label: "Financial institutions", text: "Banks and brokers bringing digital asset risk inside the perimeter." },
+  { icon: "scales", label: "Regulators & investigators", text: "The people who set the standard, and the ones who test it." },
+  { icon: "person", label: "Legal & advisory", text: "Counsel and specialist advisers on the hardest calls." },
+];
+
+/*
+ * Social proof. Only add organisations here once their names and marks are approved for
+ * use; until then the room is described by the seats it is built for, never by who is in it.
+ */
+const APPROVED_LOGOS: { name: string; src: string }[] = [];
+const SEATS = [
+  "Chief Compliance Officers",
+  "MLROs",
+  "Heads of Financial Crime",
+  "Heads of Investigations",
+  "Chief Risk Officers",
+  "General Counsel",
 ];
 
 /** 09 · people: the room as an amphitheatre around the mark. Hovering a constituency lights its seat. */
@@ -33,15 +48,14 @@ export default function People() {
     <section id="people" className={`c5 ${styles.people}`}>
       <div className="c5-sheet c5-grid" data-reveal>
         <div className={`c5c ${styles.head}`}>
-          <span className="c5-lab">09 — Who is in the room</span>
+          <span className="c5-lab">08 — Who is in the room</span>
           <h2 className="c5-h2 mt-[22px]" data-reveal>
-            <span className="c5-ln"><span>The right room is</span></span>
-            <span className="c5-ln"><span>defined by who is in it.</span></span>
+            <Lines lines={["The right room is", "defined by who is in it."]} />
           </h2>
         </div>
         <p className={`c5c c5-copy c5-fade d1 ${styles.co}`} data-reveal>
-          Vault brings together the people responsible for protecting the digital asset economy — across exchanges,
-          financial institutions, investigations, regulation, protocols and specialist advisory work.
+          Senior operators from exchanges, financial institutions, regulators, investigations, legal and advisory
+          already sit around the table.
         </p>
 
         <div className={`c5c ${styles.amph}`} data-reveal>
@@ -99,6 +113,28 @@ export default function People() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className={`c5c c5-fade ${styles.seats}`} data-reveal>
+          {APPROVED_LOGOS.length > 0 ? (
+            <ul className={styles.logos} aria-label="Organisations represented">
+              {APPROVED_LOGOS.map((l) => (
+                <li key={l.name}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={l.src} alt={l.name} />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <>
+              <span className="c5-lab">Typical seats</span>
+              <ul className={styles.roles}>
+                {SEATS.map((r) => (
+                  <li key={r}>{r}</li>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
       </div>
     </section>

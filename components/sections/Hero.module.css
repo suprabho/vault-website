@@ -23,13 +23,20 @@
   pointer-events: none;
   background: radial-gradient(closest-side, rgba(1, 0, 22, 0.66) 0%, rgba(1, 0, 22, 0.38) 54%, rgba(1, 0, 22, 0) 100%);
 }
+.h1 { max-width: 1040px; font-size: clamp(46px, 7vw, 108px); line-height: 0.98; text-wrap: balance; }
 .lead {
+  margin-top: clamp(28px, 4.2vh, 44px);
   font-size: clamp(18px, 1.55vw, 21px);
   letter-spacing: 0.002em;
   color: #d3d1db;
-  max-width: 660px;
+  max-width: 34em;
+  text-wrap: balance;
 }
+.ctas { margin-top: clamp(40px, 6.5vh, 64px); }
 
+@media (max-width: 599px) {
+  .ctas { flex-direction: column; align-items: stretch; max-width: 320px; margin-inline: auto; }
+}
 @media (max-width: 767px) {
   .vignette {
     width: 118%;

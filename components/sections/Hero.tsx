@@ -4,6 +4,7 @@ import { useCallback, useRef } from "react";
 import { useStillMedia } from "@/hooks/useStillMedia";
 import { useTrackScrub } from "@/hooks/useTrackScrub";
 import { HERO } from "@/lib/choreography";
+import { CTA } from "@/lib/site";
 import { easeQuad, t } from "@/lib/scrub";
 import styles from "./Hero.module.css";
 
@@ -45,24 +46,21 @@ export default function Hero() {
         <div className={styles.stage}>
           <div className={`canvas w-full text-center ${styles.copy}`} ref={copy}>
             <span className={styles.vignette} aria-hidden="true" />
-            <h1 className="h1 enter mx-auto max-w-[980px]" style={{ animationDelay: "150ms" }}>
+            <h1 className={`h1 enter mx-auto ${styles.h1}`} style={{ animationDelay: "150ms" }}>
               Where crypto compliance continues.
             </h1>
-            <p className={`lead enter mx-auto mt-8 ${styles.lead}`} style={{ animationDelay: "300ms" }}>
-              A private network for the people navigating financial crime, regulation and risk in digital assets — through
-              trusted intelligence, considered introductions and closed-door convenings.
+            <p className={`lead enter mx-auto ${styles.lead}`} style={{ animationDelay: "320ms" }}>
+              A private network for the people shaping and navigating financial crime, regulation and risk across
+              digital assets.
             </p>
-            <div className="enter mt-10 flex flex-wrap justify-center gap-3" style={{ animationDelay: "300ms" }}>
-              <a className="btn btn-brass" href="#request">
-                Request consideration
+            <div className={`enter flex flex-wrap justify-center gap-3 ${styles.ctas}`} style={{ animationDelay: "480ms" }}>
+              <a className="btn btn-brass" href={CTA.href}>
+                {CTA.label}
               </a>
               <a className="btn btn-ghost-brass" href="#room">
-                Explore what happens inside
+                See what happens inside
               </a>
             </div>
-            <p className="meta enter mt-[72px]" style={{ animationDelay: "550ms" }}>
-              Inside Vault ↓
-            </p>
           </div>
         </div>
       </div>

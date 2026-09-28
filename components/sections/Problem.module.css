@@ -10,38 +10,45 @@
 .head { will-change: transform; }
 .head :global(.c5-lab) { display: block; }
 .h2 { font-size: clamp(34px, 4.7vw, 62px); line-height: 0.95; letter-spacing: -0.025em; }
-.copy { margin: 28px auto 0; max-width: 46ch; opacity: 0; }
+/* the promise: short enough to read as one statement, not a paragraph */
+.copy {
+  margin: 30px auto 0; max-width: 30ch; opacity: 0;
+  font-family: var(--font-display); font-weight: 500;
+  font-size: clamp(19px, 1.9vw, 26px); line-height: 1.22; letter-spacing: -0.02em;
+  color: #3e3c52; text-wrap: balance;
+}
 
-/* the five signals stack over the text */
+/* the three themes stack over the text as one ledger */
 .ledger {
   position: absolute; left: 50%; top: calc(50% + var(--navh) / 2);
   transform: translate(-50%, -50%);
-  width: min(560px, calc(100% - 2 * var(--gutter)));
+  width: min(600px, calc(100% - 2 * var(--gutter)));
+  list-style: none; margin: 0; padding: 0;
 }
 .row {
-  display: grid; grid-template-columns: 40px 1fr; column-gap: 12px; row-gap: 4px; align-items: baseline;
-  padding: 16px 24px 18px; margin-top: 10px; text-align: left;
+  display: grid; grid-template-columns: 48px 1fr; column-gap: 12px; row-gap: 8px; align-items: baseline;
+  padding: 26px 32px 28px; margin-top: 12px; text-align: left;
   border-radius: var(--r-s);
-  background: rgba(255, 255, 255, 0.62);
-  border: 1px solid rgba(1, 0, 22, 0.08);
-  box-shadow: 0 10px 30px rgba(1, 0, 22, 0.05);
+  background: rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  border: 1px solid rgba(1, 0, 22, 0.06);
   opacity: 0;
-  transition: border-color 600ms var(--ease-editorial), background-color var(--fast);
+  transition: border-color 400ms var(--ease-editorial), background-color var(--fast);
 }
 .row:first-child { margin-top: 0; }
-.row:hover { background: rgba(255, 255, 255, 0.85); border-color: rgba(138, 119, 84, 0.4); }
-.row.active { background: rgba(255, 255, 255, 0.92); border-color: rgba(138, 119, 84, 0.5); }
+.row:hover { background: rgba(255, 255, 255, 0.94); border-color: rgba(138, 119, 84, 0.4); }
 .n { font-family: var(--font-mono); font-weight: 500; font-size: clamp(14px, 1.2vw, 17px); color: var(--color-brass); }
-.nm { font-family: var(--font-display); font-size: clamp(17px, 1.6vw, 21px); letter-spacing: -0.02em; color: #010016; }
-.ds { grid-column: 2; font-size: 14px; line-height: 1.5; color: #5a5870; }
+.nm { font-family: var(--font-display); font-size: clamp(20px, 1.9vw, 26px); letter-spacing: -0.025em; color: #010016; }
+.ds { grid-column: 2; font-size: 15px; line-height: 1.55; color: #4a485e; max-width: 44ch; }
 
 /* the claim follows the track in ordinary flow */
 .after { padding-block: clamp(64px, 9vw, 128px); }
 .claim {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(22px, 2.6vw, 36px);
-  letter-spacing: -0.025em;
+  font-size: clamp(28px, 3.6vw, 52px);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
   color: #010016;
 }
 

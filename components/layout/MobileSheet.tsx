@@ -1,7 +1,7 @@
 "use client";
 
 import VaultLogo from "@/components/brand/VaultLogo";
-import { NAV_LINKS } from "@/lib/site";
+import { CTA, MEMBER_ACCESS_HREF, NAV_LINKS } from "@/lib/site";
 
 type Props = { open: boolean; onClose: () => void };
 
@@ -38,12 +38,12 @@ export default function MobileSheet({ open, onClose }: Props) {
             {label}
           </a>
         ))}
-        <a href="#" onClick={onClose} className="py-3 font-display text-[32px] no-underline">
+        <a href={MEMBER_ACCESS_HREF} onClick={onClose} className="py-3 font-display text-[32px] no-underline">
           Member access
         </a>
       </nav>
-      <a className="btn btn-brass mt-auto" href="#request" onClick={onClose}>
-        Request consideration
+      <a className="btn btn-brass mt-auto" href={CTA.href} onClick={onClose}>
+        {CTA.label}
       </a>
     </div>
   );

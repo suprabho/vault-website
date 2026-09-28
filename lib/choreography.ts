@@ -20,13 +20,13 @@ export const HERO = {
 export const PROBLEM = {
   /** headline moves from the centre of the stage to its resting place above the copy */
   headUp: [0.28, 0.5] as Window,
-  /** body copy fades in under the headline */
+  /** the promise fades in under the headline */
   copyIn: [0.34, 0.52] as Window,
   /** headline + copy fade while the cards stack */
   textOut: [0.55, 0.68] as Window,
-  /** first card lands; each following card starts `cardStep` later */
+  /** first theme lands; each following theme starts `cardStep` later */
   cardsIn: [0.55, 0.69] as Window,
-  cardStep: 0.06,
+  cardStep: 0.08,
 };
 
 export const CONTINUATION = {

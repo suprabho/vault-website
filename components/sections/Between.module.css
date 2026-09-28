@@ -1,8 +1,7 @@
 .between { --grid-a: 0.025; overflow: clip; }
 /* the sheet paints above the motif layer; the right of the stage stays clear for the mark */
 .between :global(.c5-sheet) { z-index: 2; }
-.head { --c: 1 / span 6; }
-.co { --c: 1 / span 5; margin-top: 36px; }
+.head { --c: 1 / span 7; }
 /* the outline at the right, only when the motif layer is not running on a wide viewport */
 .stillGlyph { display: none; }
 @media (prefers-reduced-motion: reduce) and (min-width: 900px) {
@@ -32,7 +31,11 @@
   color: var(--color-brass);
 }
 .rmN i { display: block; width: 8px; height: 8px; border: 1px solid var(--color-brass); background: var(--color-night); }
-.rm :global(.c5-lab) { display: block; margin: 14px 0 10px; }
+.rm :global(.c5-lab) { display: block; margin: 14px 0 12px; }
+/* the week ticks: how often this stop lands across a quarter */
+.beat { display: block; margin-bottom: 16px; overflow: visible; }
+.beatOn { stroke: var(--color-brass); stroke-width: 1.4; stroke-linecap: round; }
+.beatOff { stroke: var(--color-brass); stroke-opacity: 0.28; stroke-width: 1; stroke-linecap: round; }
 .rm p {
   margin: 0; font-family: var(--font-body); font-weight: 500;
   font-size: clamp(16px, 1.35vw, 19px); line-height: 1.4; letter-spacing: -0.012em;
@@ -44,23 +47,19 @@
 .rmLast p { font-family: var(--font-display); font-weight: 500; font-size: clamp(24px, 2.6vw, 38px); line-height: 1.06; letter-spacing: -0.03em; max-width: 16ch; }
 .rm:hover p { transform: translateX(4px); }
 /* sequence: marker → label → line, item by item; the path draws underneath first */
-.rmN, .rm :global(.c5-lab), .rm p { opacity: 0; transform: translateY(10px); transition: opacity 800ms var(--ease-editorial), transform 800ms var(--ease-editorial); }
-.rhy:global(.in) .rmN, .rhy:global(.in) .rm :global(.c5-lab), .rhy:global(.in) .rm p { opacity: 1; transform: none; }
-.rhy:global(.in) .rm:nth-of-type(1) .rmN { transition-delay: 400ms; } .rhy:global(.in) .rm:nth-of-type(1) :global(.c5-lab) { transition-delay: 550ms; } .rhy:global(.in) .rm:nth-of-type(1) p { transition-delay: 700ms; }
-.rhy:global(.in) .rm:nth-of-type(2) .rmN { transition-delay: 700ms; } .rhy:global(.in) .rm:nth-of-type(2) :global(.c5-lab) { transition-delay: 850ms; } .rhy:global(.in) .rm:nth-of-type(2) p { transition-delay: 1000ms; }
-.rhy:global(.in) .rm:nth-of-type(3) .rmN { transition-delay: 1000ms; } .rhy:global(.in) .rm:nth-of-type(3) :global(.c5-lab) { transition-delay: 1150ms; } .rhy:global(.in) .rm:nth-of-type(3) p { transition-delay: 1300ms; }
-.rhy:global(.in) .rm:nth-of-type(4) .rmN { transition-delay: 1300ms; } .rhy:global(.in) .rm:nth-of-type(4) :global(.c5-lab) { transition-delay: 1450ms; } .rhy:global(.in) .rm:nth-of-type(4) p { transition-delay: 1600ms; }
-.rhy:global(.in) .rm:nth-of-type(5) .rmN { transition-delay: 1700ms; } .rhy:global(.in) .rm:nth-of-type(5) :global(.c5-lab) { transition-delay: 1850ms; } .rhy:global(.in) .rm:nth-of-type(5) p { transition-delay: 2000ms; }
+.rmN, .rm :global(.c5-lab), .rm .beat, .rm p { opacity: 0; transform: translateY(10px); transition: opacity 800ms var(--ease-editorial), transform 800ms var(--ease-editorial); }
+.rhy:global(.in) .rmN, .rhy:global(.in) .rm :global(.c5-lab), .rhy:global(.in) .rm .beat, .rhy:global(.in) .rm p { opacity: 1; transform: none; }
+.rhy:global(.in) .rm:nth-of-type(1) .rmN { transition-delay: 400ms; } .rhy:global(.in) .rm:nth-of-type(1) :global(.c5-lab) { transition-delay: 550ms; } .rhy:global(.in) .rm:nth-of-type(1) .beat { transition-delay: 625ms; } .rhy:global(.in) .rm:nth-of-type(1) p { transition-delay: 700ms; }
+.rhy:global(.in) .rm:nth-of-type(2) .rmN { transition-delay: 700ms; } .rhy:global(.in) .rm:nth-of-type(2) :global(.c5-lab) { transition-delay: 850ms; } .rhy:global(.in) .rm:nth-of-type(2) .beat { transition-delay: 925ms; } .rhy:global(.in) .rm:nth-of-type(2) p { transition-delay: 1000ms; }
+.rhy:global(.in) .rm:nth-of-type(3) .rmN { transition-delay: 1000ms; } .rhy:global(.in) .rm:nth-of-type(3) :global(.c5-lab) { transition-delay: 1150ms; } .rhy:global(.in) .rm:nth-of-type(3) .beat { transition-delay: 1225ms; } .rhy:global(.in) .rm:nth-of-type(3) p { transition-delay: 1300ms; }
+.rhy:global(.in) .rm:nth-of-type(4) .rmN { transition-delay: 1300ms; } .rhy:global(.in) .rm:nth-of-type(4) :global(.c5-lab) { transition-delay: 1450ms; } .rhy:global(.in) .rm:nth-of-type(4) .beat { transition-delay: 1525ms; } .rhy:global(.in) .rm:nth-of-type(4) p { transition-delay: 1600ms; }
+.rhy:global(.in) .rm:nth-of-type(5) .rmN { transition-delay: 1700ms; } .rhy:global(.in) .rm:nth-of-type(5) :global(.c5-lab) { transition-delay: 1850ms; } .rhy:global(.in) .rm:nth-of-type(5) .beat { transition-delay: 1925ms; } .rhy:global(.in) .rm:nth-of-type(5) p { transition-delay: 2000ms; }
 .rhy:global(.in) .rm:hover p { transition-delay: 0ms; }
 
-.promiseWrap { --c: 1 / span 8; margin-top: clamp(120px, 17vh, 220px); transition-delay: 2300ms; }
-.promiseRule { display: block; width: 56px; height: 1px; background: var(--color-brass); margin-bottom: 28px; }
-.promise { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(24px, 2.6vw, 38px); letter-spacing: -0.03em; line-height: 1.04; color: var(--color-cream); max-width: 22ch; }
 
 @media (max-width: 899px) {
-  .head, .co { --c: 1 / span 12; }
-  .co { margin-top: 28px; }
-  .rhy { grid-template-columns: 1fr; gap: 40px; }
+  .head { --c: 1 / span 12; }
+  .rhy { grid-template-columns: 1fr; gap: 40px; padding-left: 6px; }
   .rm { grid-column: 1 !important; margin-top: 0 !important; padding-left: 22px; padding-top: 0; border-left: 1px solid var(--hair); }
   .rmN { top: 2px; }
   .rmN i { margin-left: -26px; }
@@ -68,5 +67,5 @@
   .rhyPath { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .rmN, .rm :global(.c5-lab), .rm p { opacity: 1; transform: none; transition: none; }
+  .rmN, .rm :global(.c5-lab), .rm .beat, .rm p { opacity: 1; transform: none; transition: none; }
 }

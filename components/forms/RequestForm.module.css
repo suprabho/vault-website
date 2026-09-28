@@ -1,0 +1,28 @@
+.form { display: grid; gap: 28px; padding-top: 16px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 32px; }
+.field { display: grid; gap: 10px; }
+.field > span { font-family: var(--font-body); font-weight: 600; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-brass); }
+.field em { font-style: normal; font-weight: 400; color: var(--color-cream-3); margin-left: 6px; }
+.field input, .field textarea {
+  width: 100%; box-sizing: border-box; padding: 12px 0; border: 0; border-bottom: 1px solid var(--hair2);
+  background: transparent; color: var(--color-cream); font-family: var(--font-body); font-size: 17px; line-height: 1.5;
+  border-radius: 0; transition: border-color var(--fast);
+}
+.field textarea { resize: vertical; min-height: 120px; }
+.field input::placeholder { color: var(--color-signal); }
+.field input:focus, .field textarea:focus { outline: none; border-bottom-color: var(--color-brass); }
+.field input:focus-visible, .field textarea:focus-visible { box-shadow: 0 1px 0 var(--color-brass); }
+.trap { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.fine { font-size: 14px; color: var(--color-cream-3); }
+.fine a, .error a { color: var(--color-brass); }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 8px; }
+.actions button:disabled { opacity: 0.6; cursor: progress; }
+.error { flex: 1 1 280px; margin: 0; font-size: 14.5px; line-height: 1.5; color: #e2b7ae; }
+.error:empty { display: none; }
+.done { padding-top: 24px; }
+.done p { font-size: 17px; line-height: 1.6; color: var(--color-cream-2); }
+.done .doneHead { margin-bottom: 10px; font-family: var(--font-display); font-weight: 500; font-size: clamp(24px, 2.4vw, 32px); letter-spacing: -0.025em; color: var(--color-cream); }
+@media (max-width: 639px) {
+  .grid { grid-template-columns: 1fr; }
+  .actions button { width: 100%; }
+}

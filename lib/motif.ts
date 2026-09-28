@@ -1,5 +1,4 @@
 import { easeCubic } from "@/lib/scrub";
-import { BETWEEN } from "@/lib/choreography";
 
 /**
  * The motif camera. The monogram lives in its 662 × 827 viewBox; the fixed layer shows a
@@ -22,6 +21,24 @@ export const GLYPH_CENTRE: Point = { x: 331, y: 413.5 };
  * mark. Kept in glyph space so it scales and sits with the mark instead of with the viewport.
  */
 export const ELLIPSE = { rx: 283.7, ry: 196.6 } as const;
+
+/**
+ * The inside right edge of the mark: B's inner curve, the gap between B and D, then D's inner
+ * curve (glyph units, lifted from MONOGRAM.B and MONOGRAM.D). The cadence line runs along it,
+ * pulled in towards the counter's centre by RHYTHM_INSET so it sits just inside the outline.
+ */
+export const INNER_RIGHT = "M396.647 146.5C431.647 160.5 505.647 218.6 521.647 337L528 387.5C536.453 624.5 410 722.525 274.955 683";
+export const COUNTER_CENTRE: Point = { x: 334, y: 410 };
+export const RHYTHM_INSET = 0.94;
+
+/** 05 · the mark held large while the cadence draws along its inside right edge */
+export const BETWEEN_POSE = { anchor: { x: 528, y: 410 } as Point, sx: 0.78, sy: 0.5, h: 150 } as const;
+
+/** A glyph point on screen for a rotation-free pose. */
+export function glyphToScreen(p: Point, pose: { anchor: Point; sx: number; sy: number; h: number }, vw: number, vh: number) {
+  const px = ((pose.h / 100) * vh) / GLYPH_H;
+  return { x: pose.sx * vw + (p.x - pose.anchor.x) * px, y: pose.sy * vh + (p.y - pose.anchor.y) * px, px };
+}
 
 export type MotifState = {
   /** anchor in glyph units */
@@ -65,6 +82,7 @@ const ZOOM = 300;
 const ON_A: Point = { x: 105, y: 250 };
 const ON_D: Point = { x: 430, y: 720 };
 const ON_C: Point = { x: 95, y: 620 };
+const BETWEEN_KEY = { anchor: BETWEEN_POSE.anchor, sx: BETWEEN_POSE.sx, sy: BETWEEN_POSE.sy, h: BETWEEN_POSE.h };
 
 export const MOTIF_KEYFRAMES: Keyframe[] = [
   // 01 · hero: the mark surfaces once the copy has gone
@@ -97,10 +115,11 @@ export const MOTIF_KEYFRAMES: Keyframe[] = [
   { track: "continuation", at: 0.91, ...CENTRE, sx: 0.5, sy: 0.5, h: 150, ease: linear },
   { track: "continuation", at: 0.94, anchor: ON_C, sx: 0.74, sy: 0.3, h: ZOOM, ease: linear },
   { track: "continuation", at: 1, anchor: ON_C, sx: 0.74, sy: 0.3, h: ZOOM },
-  // 05 · between: upright again, outline only, at the right of the headline
-  { track: "between", at: 0, ...CENTRE, sx: 0.79, sy: 0.58, h: 120, rot: 0, outline: 1, photo: 0, gold: 0, ellipseCover: 0 },
-  { track: "between", at: BETWEEN.fadeOut[0], ...CENTRE, sx: 0.79, sy: 0.58, h: 120, outline: 1 },
-  { track: "between", at: BETWEEN.fadeOut[1], ...CENTRE, sx: 0.79, sy: 0.58, h: 120, outline: 0 },
+  // 05 · between: upright again, outline only, held large so the cadence can run down its inside right edge
+  { track: "between", at: 0, ...BETWEEN_KEY, rot: 0, outline: 1, photo: 0, gold: 0, ellipseCover: 0 },
+  { track: "between", at: 1, ...BETWEEN_KEY, outline: 1 },
+  // the intelligence section slides over it; the outline has gone by the time the track has left
+  { track: "between", at: 2, ...BETWEEN_KEY, outline: 0 },
 ];
 
 // ── resolution ────────────────────────────────────────────────────────────────

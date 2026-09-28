@@ -1,5 +1,6 @@
+/* z-index: slides over the fixed motif layer as the cadence leaves */
 .intelligence {
-  position: relative; background: #f6f6f8; color: #010016; overflow: hidden;
+  position: relative; z-index: 2; background: #f6f6f8; color: #010016; overflow: hidden;
   --i-rule: rgba(1, 0, 22, 0.1); --i-brass: #8a7754; --i-body: #3e3c52;
 }
 .head { max-width: 1040px; }

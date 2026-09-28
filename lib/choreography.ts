@@ -9,8 +9,8 @@
 
 export type Window = readonly [number, number];
 
-/** Pinned track heights, in vh. Between is not pinned. */
-export const TRACK_VH = { hero: 200, problem: 400, continuation: 1000 } as const;
+/** Pinned track heights, in vh. */
+export const TRACK_VH = { hero: 200, problem: 400, continuation: 1000, between: 500 } as const;
 
 export const HERO = {
   /** headline, lead and buttons fade and lift away */
@@ -49,6 +49,10 @@ export const CONTINUATION = {
 };
 
 export const BETWEEN = {
-  /** the mark fades before the intelligence section arrives */
-  fadeOut: [0.2, 0.45] as Window,
+  /** the headline gives way to the line */
+  headOut: [0.08, 0.16] as Window,
+  /** the line draws down the inside of the mark; each stop lands as the line reaches it */
+  draw: [0.16, 0.88] as Window,
+  /** how long a stop takes to settle once the line has reached it */
+  stopIn: 0.07,
 };

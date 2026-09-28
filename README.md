@@ -27,12 +27,13 @@ components/
   forms/RequestForm.tsx the invitation request form
   type/Lines.tsx        masked headline lines for the .c5-ln reveal, with the spaces kept between them
   motif/MotifLayer.tsx  the mark as one fixed layer travelling through sections 01–05 (see below)
+                        (lib/motif.ts also holds INNER_RIGHT + BETWEEN_POSE, which the cadence line is drawn from)
   motif/MotifGlyph.tsx  the mark as a static picture, for narrow viewports and reduced motion
   sections/             one component (+ CSS module) per section:
     Hero            01  pinned: the copy over the aura, then the mark alone
     Problem         02  pinned, inside the mark: headline, the promise, the three themes (light ground)
     Continuation    03→04  pinned: the introduction/relationship line, the room on a cream ellipse, the three convenings
-    Between         05  the mark upright at the right; the cadence joined by one drawn path, each stop with its week ticks
+    Between         05  pinned, inside the mark held large: the cadence draws down its inside right edge, stop by stop
     Intelligence    06  the weekly briefing: one item open, four out of focus
     Pulse           07  vault pulse: this week's intelligence, the next table, the newest resource
     People          08  the amphitheatre, and the seats the room is built for
@@ -61,7 +62,7 @@ public/fonts            New York (Apple) subset, 400/500/600
 - **Reveals**: add `data-reveal` to an element and `RevealObserver` gives it
   the `in` class once it scrolls into view. The `.c5-ln`, `.c5-fade`,
   `.c5-rule`, `.ap` and `.reveal` primitives respond to that class.
-- **Pinned sequences** (Hero, Problem, Continuation, Process, Request) are
+- **Pinned sequences** (Hero, Problem, Continuation, Between, Process, Request) are
   client components that scrub inline styles from scroll progress. Below 900px
   or with `prefers-reduced-motion`, they unpin and settle into the final frame.
 - **The motif** (sections 01–05) is a single `position: fixed` layer

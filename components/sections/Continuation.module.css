@@ -46,12 +46,12 @@
   font-size: clamp(26px, 2.8vw, 40px); letter-spacing: -0.03em; line-height: 1; color: #010016;
 }
 .capText { margin: 14px 0 0; font-size: clamp(15px, 1.15vw, 17px); line-height: 1.55; color: #3e3c52; max-width: 32ch; }
-/* the dinner's photograph fills the lower frame: its caption runs wide across the cream band above */
-.cap0 { left: 12%; top: calc(var(--navh) + 3vh); width: min(560px, 44vw); }
-.cap1 { left: 60%; top: 28%; }
-.cap0 .capText { max-width: 46ch; }
-.cap2 { left: 9%; bottom: 7%; width: min(340px, 26vw); }
-.cap2 .capName { white-space: normal; }
+/* placed as the storyboard frames place them, in the cream each hold leaves:
+   the dinner above-left of its arc, the breakfast inside the counter, the roundtable below-left */
+.cap0 { left: 15%; top: 29%; width: min(340px, 26vw); }
+.cap1 { left: 63.5%; top: 29%; width: min(340px, 28vw); }
+.cap2 { left: 13%; bottom: 5%; width: min(560px, 44vw); }
+.cap2 .capText { max-width: 46ch; }
 
 .still { display: none; }
 

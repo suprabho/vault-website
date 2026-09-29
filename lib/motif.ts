@@ -91,12 +91,17 @@ export type Keyframe = Partial<Omit<MotifState, "ax" | "ay">> & {
 // ── the storyboard ────────────────────────────────────────────────────────────
 const CENTRE = { anchor: "centre" as const };
 const HOME = { ...CENTRE, sx: 0.47, sy: 0.53, h: 56, rot: 0 };
-/** pre-rotation height of the mark while the camera is inside the photographs (vh) */
-const ZOOM = 300;
-/** points on the photograph bands (glyph units): a piece's box centre sits in the hole, these do not */
-const ON_A: Point = { x: 105, y: 250 };
-const ON_D: Point = { x: 430, y: 720 };
-const ON_C: Point = { x: 95, y: 620 };
+/**
+ * The three holds inside the photographs, fitted to the storyboard frames: a point on each band
+ * (glyph units — a piece's box centre sits in the hole, these do not), where it sits on screen,
+ * and the pre-rotation height of the mark (vh).
+ */
+const IN_C = { anchor: { x: 112, y: 637 } as Point, sx: 0.69, sy: 0.68, h: 403 };
+const IN_D = { anchor: { x: 537, y: 596 } as Point, sx: 0.43, sy: 0.67, h: 446 };
+const IN_B = { anchor: { x: 568, y: 162 } as Point, sx: 0.525, sy: 0.54, h: 425 };
+/** where on the continuation track the camera rests in each photograph (the photos drift across these) */
+export const PHOTO_HOLDS = { C: [0.7, 0.76], D: [0.82, 0.88], B: [0.94, 1] } as const;
+const { C: HC, D: HD, B: HB } = PHOTO_HOLDS;
 
 /** The storyboard for a viewport: 05 depends on its size; everything else is in viewport fractions. */
 export const motifKeyframes = (vw: number, vh: number): Keyframe[] => {
@@ -124,15 +129,16 @@ export const motifKeyframes = (vw: number, vh: number): Keyframe[] => {
     // the ellipse becomes the ground; the photographs arrive
     { track: "continuation", at: 0.58, ...CENTRE, sx: 0.5, sy: 0.57, h: 74, ellipseCover: 1, photo: 1, gold: 1 },
     // the camera dives into the photographs: each one framed off-centre so the caption sits on cream;
-    // between pieces it pulls back a little so the move reads as one camera, not a cut
-    { track: "continuation", at: 0.7, anchor: ON_A, sx: 0.78, sy: 0.72, h: ZOOM, ellipse: 0, outline: 0 },
-    { track: "continuation", at: 0.76, anchor: ON_A, sx: 0.78, sy: 0.72, h: ZOOM },
+    // between pieces it pulls back a little so the move reads as one camera, not a cut.
+    // C holds the dinner, D the breakfast, B the roundtable — the order the captions run in.
+    { track: "continuation", at: HC[0], ...IN_C, ellipse: 0, outline: 0 },
+    { track: "continuation", at: HC[1], ...IN_C },
     { track: "continuation", at: 0.79, ...CENTRE, sx: 0.5, sy: 0.5, h: 150, ease: linear },
-    { track: "continuation", at: 0.82, anchor: ON_D, sx: 0.3, sy: 0.56, h: ZOOM, ease: linear },
-    { track: "continuation", at: 0.88, anchor: ON_D, sx: 0.3, sy: 0.56, h: ZOOM },
+    { track: "continuation", at: HD[0], ...IN_D, ease: linear },
+    { track: "continuation", at: HD[1], ...IN_D },
     { track: "continuation", at: 0.91, ...CENTRE, sx: 0.5, sy: 0.5, h: 150, ease: linear },
-    { track: "continuation", at: 0.94, anchor: ON_C, sx: 0.74, sy: 0.3, h: ZOOM, ease: linear },
-    { track: "continuation", at: 1, anchor: ON_C, sx: 0.74, sy: 0.3, h: ZOOM },
+    { track: "continuation", at: HB[0], ...IN_B, ease: linear },
+    { track: "continuation", at: HB[1], ...IN_B },
     // 05 · between: upright again, outline only, at the left, framing the cadence dial
     { track: "between", at: 0, ...BETWEEN_KEY, rot: 0, outline: 1, photo: 0, gold: 0, ellipseCover: 0 },
     { track: "between", at: 1, ...BETWEEN_KEY, outline: 1 },

@@ -88,7 +88,7 @@ export default function Request() {
             </defs>
             <g className={styles.rp} ref={(el) => { pieces.current.A = el; }}>
               <g clipPath="url(#rqA)">
-                <image className={styles.rqImg} x="-6" y="-11" width="370" height="405" preserveAspectRatio="xMidYMid slice" href="/images/private-dinner.webp" />
+                <image className={styles.rqImg} x="-6" y="-11" width="370" height="405" preserveAspectRatio="xMidYMid slice" href="/images/roundtable.webp" />
               </g>
               <path className={styles.rl} d={MONOGRAM.A} />
             </g>

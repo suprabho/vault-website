@@ -1,62 +1,94 @@
-import { Icon } from "@/lib/icons";
+import { Icon, type IconName } from "@/lib/icons";
+import { MONOGRAM_FULL } from "@/components/brand/monogram";
 import styles from "./Membership.module.css";
 
-const BUILT_FOR = [
-  "Senior compliance and AML leaders",
-  "Financial crime and investigations teams",
-  "Risk leaders",
-  "Relevant digital asset operators and advisers",
-  "People willing to contribute, not only consume",
+const BUILT_FOR: { icon: IconName; title: string }[] = [
+  { icon: "shieldCheck", title: "Senior compliance and AML leaders" },
+  { icon: "targetSm", title: "Financial crime and investigations teams" },
+  { icon: "scales", title: "Risk leaders" },
+  { icon: "peopleSm", title: "Relevant digital asset operators and advisers" },
+  { icon: "chat", title: "People willing to contribute, not only consume" },
 ];
-const NOT_FOR = [
-  "Mass prospecting",
-  "Directory extraction",
-  "Status without contribution",
-  "Public attribution of private discussions",
-  "Pay-to-play access",
+const NOT_FOR: { icon: IconName; text: string }[] = [
+  { icon: "xCircle", text: "Mass prospecting" },
+  { icon: "lockKey", text: "Directory extraction" },
+  { icon: "personOff", text: "Status without contribution" },
+  { icon: "eyeOff", text: "Public attribution of private discussions" },
+  { icon: "cartOff", text: "Pay-to-play access" },
 ];
 
 /** 09 · the standard */
 export default function Membership() {
   return (
-    <section id="membership" className="section-pad light-2">
+    <section id="membership" className={`section-pad light-2 ${styles.section}`} aria-labelledby="membership-title">
       <div className="canvas">
-        <div className={`reveal ${styles.head}`} data-reveal>
-          <p className="eyebrow mb-6 text-[#7A6A48]">The standard</p>
-          <h2 className={`h2 ${styles.h2}`}>Not open to everyone. Built for the people who carry the responsibility.</h2>
-          <p className={styles.lead}>
-            Vault is for people directly responsible for the decisions, controls and investigations shaping digital asset
-            compliance.
-          </p>
+        <div className={styles.intro}>
+          <div className="reveal" data-reveal>
+            <p className={`eyebrow ${styles.eyebrow}`}>The standard</p>
+            <h2 id="membership-title" className={styles.heading}>Not open to everyone.<br />Built for the people who carry the responsibility.</h2>
+            <p className={styles.description}>
+              Vault is for people directly responsible for the decisions, controls and investigations shaping digital asset
+              compliance.
+            </p>
+          </div>
+          <div className={`${styles.seal} reveal`} data-reveal>
+            <svg viewBox="0 0 440 400" className={styles.sealDrawing} aria-hidden="true">
+              <circle cx="220" cy="200" r="158" className={styles.outerRing} />
+              <circle cx="220" cy="200" r="137" className={styles.dottedRing} />
+              <path d="M220 42 357 279H83Z" className={styles.triangle} />
+              <circle cx="220" cy="200" r="88" className={styles.innerRing} />
+              <circle cx="220" cy="200" r="76" className={styles.innerRule} />
+              <svg x="192" y="153" width="56" height="70" viewBox="0 0 662 827">
+                <path d={MONOGRAM_FULL} fill="none" stroke="#c3ae87" strokeWidth="10" />
+              </svg>
+              <text x="220" y="249" textAnchor="middle" className={styles.sealWord}>VAULT</text>
+              <circle cx="220" cy="42" r="5" className={styles.dot} />
+              <circle cx="357" cy="279" r="5" className={styles.dot} />
+              <circle cx="83" cy="279" r="5" className={styles.dot} />
+            </svg>
+            <span className={`${styles.sealLabel} ${styles.relevance}`}>01 / Relevance</span>
+            <span className={`${styles.sealLabel} ${styles.contribution}`}>02 / Contribution</span>
+            <span className={`${styles.sealLabel} ${styles.confidence}`}>03 / Trust</span>
+            <p className={styles.sealCaption}>A considered room. A shared standard.</p>
+          </div>
         </div>
 
-        <div className={`reveal ${styles.cols}`} data-reveal>
-          <div>
-            <h3 className={styles.colHead}>Built for</h3>
-            <ul className={styles.list}>
-              {BUILT_FOR.map((t) => (
-                <li key={t}>{t}</li>
+        <div className={styles.panels}>
+          <div className={`${styles.builtPanel} reveal`} data-reveal>
+            <div className={styles.panelHeader}>
+              <h3>Built for</h3><Icon name="check" className={styles.headerIcon} />
+            </div>
+            <ul className={styles.cards}>
+              {BUILT_FOR.map((item, index) => (
+                <li key={item.title} className={styles.card}>
+                  <div className={styles.cardTop}>
+                    <span className={styles.badge}><Icon name={item.icon} strokeWidth={1.3} /></span>
+                    <span className={styles.number}>0{index + 1}</span>
+                  </div>
+                  <h4>{item.title}</h4>
+                </li>
               ))}
             </ul>
           </div>
-          <div>
-            <h3 className={`${styles.colHead} ${styles.mutedHead}`}>Not built for</h3>
-            <ul className={`${styles.list} ${styles.not}`}>
-              {NOT_FOR.map((t) => (
-                <li key={t}>{t}</li>
+          <div className={`${styles.boundaries} reveal`} data-reveal>
+            <div className={styles.panelHeader}>
+              <h3>Not built for</h3><Icon name="xCircle" className={styles.headerIcon} />
+            </div>
+            <p className={styles.boundaryIntro}>Clear boundaries protect the room.</p>
+            <ul className={styles.exclusions}>
+              {NOT_FOR.map((item) => (
+                <li key={item.text}><Icon name={item.icon} strokeWidth={1.3} /><span>{item.text}</span></li>
               ))}
             </ul>
           </div>
         </div>
-
-        <div className={`reveal ${styles.trust}`} data-reveal>
-          <Icon name="shieldCheck" strokeWidth={1.3} className={styles.trustIcon} />
-          <p>No sponsorship, payment or commercial relationship buys a seat in the room.</p>
+        <div className={styles.trust}>
+          <Icon name="shieldCheck" strokeWidth={1.35} />
+          <div><p className={styles.trustLabel}>Trust statement</p>
+            <p className={styles.trustText}>No sponsorship, payment or commercial relationship buys a seat in the room.</p>
+          </div>
+          <p className={styles.links}><a href="/code-of-conduct">Code of Conduct</a><a href="/privacy">Privacy</a></p>
         </div>
-        <p className={styles.links}>
-          <a href="/code-of-conduct">Code of Conduct</a>
-          <a href="/privacy">Privacy</a>
-        </p>
       </div>
     </section>
   );

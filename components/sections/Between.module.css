@@ -1,60 +1,76 @@
-.between { --grid-a: 0.025; }
-.head { --c: 1 / span 7; }
-.co { --c: 8 / span 5; align-self: start; margin-top: 58px; }
-.rhy {
-  --c: 1 / span 12;
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: clamp(96px, 13vh, 160px) clamp(16px, 2vw, 32px);
-  margin-top: clamp(80px, 12vh, 160px);
-  padding-top: 32px;
-  padding-bottom: 24px;
-}
-.rhyPath { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 0; }
-.rhyPath path { stroke-opacity: 0.28; }
-.rm { z-index: 1; grid-column: var(--c); margin-top: var(--o); position: relative; padding-top: 30px; }
-.rmN {
-  position: absolute; left: 0; top: 0;
-  display: flex; align-items: center; gap: 12px;
-  font-family: var(--font-mono); font-weight: 500;
-  font-size: clamp(16px, 1.4vw, 19px); letter-spacing: 0.06em; line-height: 1;
-  color: var(--color-brass);
-}
-.rmN i { display: block; width: 8px; height: 8px; border: 1px solid var(--color-brass); background: var(--color-night); }
-.rm :global(.c5-lab) { display: block; margin: 14px 0 10px; }
-.rm p {
-  margin: 0; font-family: var(--font-body); font-weight: 500;
-  font-size: clamp(16px, 1.35vw, 19px); line-height: 1.4; letter-spacing: -0.012em;
-  color: var(--color-cream); max-width: 24ch;
-  transition: transform 420ms var(--ease-editorial);
-}
-.rmLast :global(.c5-lab) { margin-top: 18px; }
-.rmLast { padding-right: 8%; }
-.rmLast p { font-family: var(--font-display); font-weight: 500; font-size: clamp(24px, 2.6vw, 38px); line-height: 1.06; letter-spacing: -0.03em; max-width: 16ch; }
-.rm:hover p { transform: translateX(4px); }
-/* sequence: marker → label → line, item by item; the path draws underneath first */
-.rmN, .rm :global(.c5-lab), .rm p { opacity: 0; transform: translateY(10px); transition: opacity 800ms var(--ease-editorial), transform 800ms var(--ease-editorial); }
-.rhy:global(.in) .rmN, .rhy:global(.in) .rm :global(.c5-lab), .rhy:global(.in) .rm p { opacity: 1; transform: none; }
-.rhy:global(.in) .rm:nth-of-type(1) .rmN { transition-delay: 400ms; } .rhy:global(.in) .rm:nth-of-type(1) :global(.c5-lab) { transition-delay: 550ms; } .rhy:global(.in) .rm:nth-of-type(1) p { transition-delay: 700ms; }
-.rhy:global(.in) .rm:nth-of-type(2) .rmN { transition-delay: 700ms; } .rhy:global(.in) .rm:nth-of-type(2) :global(.c5-lab) { transition-delay: 850ms; } .rhy:global(.in) .rm:nth-of-type(2) p { transition-delay: 1000ms; }
-.rhy:global(.in) .rm:nth-of-type(3) .rmN { transition-delay: 1000ms; } .rhy:global(.in) .rm:nth-of-type(3) :global(.c5-lab) { transition-delay: 1150ms; } .rhy:global(.in) .rm:nth-of-type(3) p { transition-delay: 1300ms; }
-.rhy:global(.in) .rm:nth-of-type(4) .rmN { transition-delay: 1300ms; } .rhy:global(.in) .rm:nth-of-type(4) :global(.c5-lab) { transition-delay: 1450ms; } .rhy:global(.in) .rm:nth-of-type(4) p { transition-delay: 1600ms; }
-.rhy:global(.in) .rm:nth-of-type(5) .rmN { transition-delay: 1700ms; } .rhy:global(.in) .rm:nth-of-type(5) :global(.c5-lab) { transition-delay: 1850ms; } .rhy:global(.in) .rm:nth-of-type(5) p { transition-delay: 2000ms; }
-.rhy:global(.in) .rm:hover p { transition-delay: 0ms; }
+/* 05 · a pinned track inside the mark: the motif layer holds the outline, this stage turns its counter into a year */
+.between { --grid-a: 0.025; padding: 0; overflow: clip; }
+.track { height: 500vh; }
+.stage { position: sticky; top: 0; height: 100svh; z-index: 2; overflow: clip; }
 
-.promiseWrap { --c: 1 / span 8; margin-top: clamp(120px, 17vh, 220px); transition-delay: 2300ms; }
-.promiseRule { display: block; width: 56px; height: 1px; background: var(--color-brass); margin-bottom: 28px; }
-.promise { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(24px, 2.6vw, 38px); letter-spacing: -0.03em; line-height: 1.04; color: var(--color-cream); max-width: 22ch; }
+.measure { position: absolute; width: 0; height: 0; overflow: hidden; visibility: hidden; }
+.dial { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.rim { fill: none; stroke: var(--color-brass); stroke-width: 1.1; stroke-dasharray: 1; stroke-dashoffset: 1; }
 
-@media (max-width: 899px) {
-  .rhy { grid-template-columns: 1fr; gap: 40px; }
-  .rm { grid-column: 1 !important; margin-top: 0 !important; padding-left: 22px; padding-top: 0; border-left: 1px solid var(--hair); }
-  .rmN { top: 2px; }
-  .rmN i { margin-left: -26px; }
-  .rm :global(.c5-lab) { margin-top: 0; }
-  .rhyPath { display: none; }
+/* 365 days, one spoke each. They arrive as faint graduations (months a little longer); each stop
+   lights its own days at full length, sweeping round the year from 1 January. */
+.day {
+  fill: none; stroke: var(--color-brass); stroke-width: 1; stroke-linecap: round; opacity: 0;
+  stroke-dasharray: calc(var(--reach, 18) * 0.28px) 100px;
+  transition: opacity 420ms var(--ease-editorial), stroke-dasharray 520ms var(--ease-editorial);
+  transition-delay: calc(var(--d) * 1.5ms);
+}
+.dial[data-days="in"] .day { opacity: 0.26; }
+.dial[data-days="in"] .month { opacity: 0.6; stroke-dasharray: calc(var(--reach, 18) * 0.55px) 100px; }
+.dial[data-stop="0"] .on0,
+.dial[data-stop="1"] .on1,
+.dial[data-stop="2"] .on2,
+.dial[data-stop="3"] .on3,
+.dial[data-stop="4"] .on4 { opacity: 1; stroke-width: 1.3; stroke-dasharray: calc(var(--reach, 18) * 1px) 100px; }
+
+/* the preview of what the stop delivers, in the middle of the counter */
+.art { position: absolute; display: grid; transform: translate(-50%, -50%); pointer-events: none; }
+.asset { grid-area: 1 / 1; opacity: 0; visibility: hidden; will-change: opacity, transform; }
+
+/* the headline, then each stop in turn, to the right of the mark */
+.head, .box { position: absolute; left: 60%; top: 50%; transform: translateY(-50%); }
+.head :global(.c5-lab) { display: block; }
+.head h2 { font-size: clamp(30px, 3.4vw, 52px); line-height: 1; }
+.box { display: grid; list-style: none; margin: 0; padding: 0; }
+.rm { grid-area: 1 / 1; align-self: center; opacity: 0; visibility: hidden; will-change: opacity, transform; }
+.rmHead { display: flex; align-items: baseline; gap: 16px; margin: 0; }
+.rmN { font-family: var(--font-mono); font-weight: 500; font-size: 15px; letter-spacing: 0.06em; color: var(--color-brass); }
+.rmOf { color: var(--color-brass-lo); }
+.beat { display: none; }
+.beatOn { stroke: var(--color-brass); stroke-width: 1.4; stroke-linecap: round; }
+.beatOff { stroke: var(--color-brass); stroke-opacity: 0.28; stroke-width: 1; stroke-linecap: round; }
+.rmWhat {
+  margin: 22px 0 0; font-family: var(--font-display); font-weight: 500;
+  font-size: clamp(24px, 3.6vh, 38px); line-height: 1.1; letter-spacing: -0.028em; color: var(--color-cream);
+  text-wrap: balance;
+}
+
+/* the outline at the right, only when the motif layer is not running on a wide viewport */
+.stillGlyph { display: none; }
+@media (prefers-reduced-motion: reduce) and (min-width: 900px) {
+  .stillGlyph {
+    display: block; position: absolute; pointer-events: none; opacity: 0.5;
+    height: 120vh; width: auto; left: 79%; top: 0; transform: translate(-50%, -12vh);
+  }
+}
+
+/* still: no pin, the headline and then the cadence as a list, each stop with its own week ticks */
+@media (max-width: 899px), (prefers-reduced-motion: reduce) {
+  .between { padding-block: clamp(88px, 12vw, 168px); }
+  .track { height: auto; }
+  .stage { position: static; height: auto; overflow: visible; max-width: 1280px; margin-inline: auto; padding-inline: var(--gutter); }
+  .dial, .art { display: none; }
+  .head, .box { position: static; transform: none; width: auto !important; }
+  .head h2 { font-size: clamp(30px, 3.9vw, 58px); }
+  .box { gap: 40px; max-width: 560px; margin-top: 64px; padding-left: 6px; }
+  .rm { grid-area: auto; position: relative; opacity: 1; visibility: visible; padding-left: 22px; border-left: 1px solid var(--hair); }
+  .rm::before { content: ""; position: absolute; left: -5px; top: 4px; width: 8px; height: 8px; border: 1px solid var(--color-brass); background: var(--color-night); }
+  .rmHead { gap: 14px; }
+  .rmOf { display: none; }
+  .beat { display: block; margin: 12px 0 14px; }
+  .rmWhat { margin: 0; font-family: var(--font-body); font-size: clamp(16px, 1.35vw, 19px); line-height: 1.4; letter-spacing: -0.01em; }
+  .rm:last-child .rmWhat { font-family: var(--font-display); font-size: clamp(22px, 2.6vw, 32px); line-height: 1.1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .rmN, .rm :global(.c5-lab), .rm p { opacity: 1; transform: none; transition: none; }
+  .day { transition: none; }
 }

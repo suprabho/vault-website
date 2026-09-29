@@ -1,13 +1,33 @@
 import { Icon } from "@/lib/icons";
+import { LEAD } from "@/lib/briefing";
 import styles from "./Pulse.module.css";
 
-const ROWS = [
-  { n: "01", label: "Latest briefing", title: "Five things every crypto compliance team should care about this week", meta: [{ icon: "calendar", text: "25 Aug 2026" }] },
-  { n: "02", label: "Next convening", title: "Private dinner — institutional custody exposure", meta: [{ icon: "pin", text: "Singapore" }, { text: "September" }] },
-  { n: "03", label: "New playbook", title: "Travel Rule exceptions: a defensible handling standard", meta: [{ icon: "calendar", text: "21 Aug 2026" }] },
-] as const;
+/*
+ * What is open inside Vault right now. City and format only for convenings: venues and
+ * guests are never published. Update these three when the briefing, table or resource changes.
+ */
+const TABLE = {
+  label: "Next private table",
+  title: "Private dinner, London",
+  text: "Twelve seats. A private dining room. One conversation around where crypto enforcement is heading next.",
+  meta: ["Invitation only", "Twelve seats"],
+};
+const RESOURCE = {
+  label: "New member resource",
+  title: "Transaction Monitoring Control Pack",
+  text: "A plug-and-play framework for reviewing crypto transaction monitoring coverage.",
+  meta: ["Playbook", "Template + checklist"],
+  /** the pack's contents, shown as a checklist: the first two legible, the rest out of focus */
+  contents: ["Coverage map by product and chain", "Scenario-to-typology matrix", "Threshold tuning log", "Alert quality review", "Board reporting template"],
+};
 
-/** 08 · vault pulse */
+/** twelve seats around an oval table, drawn over the photograph */
+const SEATS = Array.from({ length: 12 }, (_, i) => {
+  const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
+  return [60 + 50 * Math.cos(a), 34 + 24 * Math.sin(a)] as const;
+});
+
+/** 07 · vault pulse: a glimpse of what members are opening now. */
 export default function Pulse() {
   return (
     <section id="pulse" className="section-pad relative overflow-hidden bg-night">
@@ -21,48 +41,87 @@ export default function Pulse() {
         </g>
       </svg>
       <div className="canvas relative">
-        <p className="eyebrow reveal mb-[22px] text-brass" data-reveal>Vault pulse</p>
-        <h2 className="h2 reveal max-w-[16ch]" data-reveal>A network should feel alive before you enter it.</h2>
+        <p className={`eyebrow reveal ${styles.eyebrow}`} data-reveal>
+          <span className={styles.live} aria-hidden="true" />
+          Vault pulse
+        </p>
+        <h2 className={`h2 reveal ${styles.h2}`} data-reveal>
+          See what is happening inside Vault right now.
+        </h2>
 
-        <div className={`reveal ${styles.board}`} data-reveal>
-          <span className={styles.tick} aria-hidden="true" />
-          <span className={styles.line} aria-hidden="true" />
-          <ol className={styles.list}>
-            {ROWS.map((r) => (
-              <li key={r.n} className={styles.row}>
-                <span className={styles.node} aria-hidden="true" />
-                <span className={styles.num}>{r.n}</span>
-                <div>
-                  <p className={styles.label}>{r.label}</p>
-                  <h3 className={styles.title}>{r.title}</h3>
-                </div>
-                <div className={styles.meta}>
-                  {r.meta.map((m, i) =>
-                    "icon" in m ? (
-                      <span key={m.text} className="contents">
-                        <Icon name={m.icon} strokeWidth={1.4} className="h-5 w-5 text-brass" />
-                        <p className={styles.meta1}>{m.text}</p>
-                      </span>
-                    ) : (
-                      <p key={m.text} className={i === 0 ? styles.meta1 : styles.meta2}>{m.text}</p>
-                    ),
-                  )}
-                </div>
-                <span className={styles.go}>
-                  <Icon name="arrowLong" className={styles.arrow} />
-                </span>
-              </li>
-            ))}
-          </ol>
+        <div className={styles.grid}>
+          {/* this week's intelligence */}
+          <article className={`reveal ${styles.col}`} data-reveal>
+            <p className={styles.label}>This week&apos;s intelligence</p>
+            <div className={`${styles.visual} ${styles.docVisual}`} aria-hidden="true">
+              <div className={styles.doc}>
+                <p className={styles.docHead}>
+                  <span>Monday briefing</span>
+                  <span>01 / 05</span>
+                </p>
+                <span className={`${styles.docLine} ${styles.headLine}`} />
+                <span className={`${styles.docLine} ${styles.headLine} ${styles.mid}`} />
+                <span className={styles.docLine} />
+                <span className={styles.docLine} />
+                <span className={`${styles.docLine} ${styles.short}`} />
+              </div>
+            </div>
+            <h3 className={styles.title}>{LEAD.title}</h3>
+            <p className={styles.text}>{LEAD.context[0].text}</p>
+            <p className={styles.meta}>
+              <span>{LEAD.theme}</span>
+              <span>Four more inside</span>
+            </p>
+          </article>
+
+          {/* next private table */}
+          <article className={`reveal ${styles.col} ${styles.feature}`} data-reveal>
+            <p className={styles.label}>{TABLE.label}</p>
+            <div className={`${styles.visual} ${styles.photo}`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/private-dinner.webp" alt="" loading="lazy" />
+              <svg className={styles.seats} viewBox="0 0 120 68" aria-hidden="true">
+                <ellipse cx="60" cy="34" rx="36" ry="14" />
+                {SEATS.map(([x, y]) => (
+                  <circle key={`${x}-${y}`} cx={x} cy={y} r="2.1" />
+                ))}
+              </svg>
+            </div>
+            <h3 className={styles.title}>{TABLE.title}</h3>
+            <p className={styles.text}>{TABLE.text}</p>
+            <p className={styles.meta}>
+              {TABLE.meta.map((m) => (
+                <span key={m}>{m}</span>
+              ))}
+            </p>
+          </article>
+
+          {/* new member resource */}
+          <article className={`reveal ${styles.col}`} data-reveal>
+            <p className={styles.label}>{RESOURCE.label}</p>
+            <div className={`${styles.visual} ${styles.packVisual}`} aria-hidden="true">
+              <ul className={styles.pack}>
+                {RESOURCE.contents.map((c, i) => (
+                  <li key={c} className={i > 1 ? styles.packLocked : undefined}>
+                    <Icon name={i > 1 ? "lock" : "check"} strokeWidth={1.5} className={styles.packIcon} />
+                    <span>{c}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <h3 className={styles.title}>{RESOURCE.title}</h3>
+            <p className={styles.text}>{RESOURCE.text}</p>
+            <p className={styles.meta}>
+              {RESOURCE.meta.map((m) => (
+                <span key={m}>{m}</span>
+              ))}
+            </p>
+          </article>
         </div>
 
         <p className={`reveal ${styles.note}`} data-reveal>
-          <Icon name="shield" strokeWidth={1.4} className="mt-0.5 h-5 w-5 flex-none text-brass" />
-          <span>
-            City, month and format only. Venue and attendees are never exposed publicly.
-            <br />
-            Rows hide automatically when stale.
-          </span>
+          <Icon name="shield" strokeWidth={1.4} className="h-[18px] w-[18px] flex-none text-brass" />
+          <span>Venues and guests are never published.</span>
         </p>
       </div>
     </section>

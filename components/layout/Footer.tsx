@@ -1,18 +1,9 @@
 import VaultLogo from "@/components/brand/VaultLogo";
+import { CONTACT_EMAIL, CTA, LEGAL_LINKS, MEMBER_ACCESS_HREF, NAV_LINKS } from "@/lib/site";
 import styles from "./Footer.module.css";
 
-const NAV_PRIMARY = [
-  { href: "#room", label: "The Room" },
-  { href: "#intelligence", label: "Intelligence" },
-  { href: "#membership", label: "Membership" },
-  { href: "#request", label: "Request consideration" },
-];
-const NAV_SECONDARY = [
-  { href: "#", label: "Member access" },
-  { href: "#", label: "Code of Conduct" },
-  { href: "#", label: "Privacy" },
-  { href: "#", label: "Terms" },
-];
+const NAV_PRIMARY = [...NAV_LINKS, CTA];
+const NAV_SECONDARY = [{ href: MEMBER_ACCESS_HREF, label: "Member access" }, ...LEGAL_LINKS];
 
 export default function Footer() {
   return (
@@ -23,25 +14,29 @@ export default function Footer() {
             <VaultLogo className="block h-[34px] w-auto text-white" />
             <p className={`${styles.folio} mt-3.5`}>Powered by Merkle Science</p>
           </div>
-          <nav className={styles.nav}>
+          <nav className={styles.nav} aria-label="Site">
             {NAV_PRIMARY.map((l) => (
               <a key={l.label} href={l.href}>
                 {l.label}
               </a>
             ))}
           </nav>
-          <nav className={styles.nav}>
+          <nav className={styles.nav} aria-label="Members and legal">
             {NAV_SECONDARY.map((l) => (
               <a key={l.label} href={l.href}>
                 {l.label}
               </a>
             ))}
           </nav>
-          <div className={styles.folio}>
-            Contact
-            <br />
-            <span className="text-cream-2">[Approved community email]</span>
-          </div>
+          {CONTACT_EMAIL && (
+            <div className={styles.folio}>
+              Contact
+              <br />
+              <a className="text-cream-2" href={`mailto:${CONTACT_EMAIL}`}>
+                {CONTACT_EMAIL}
+              </a>
+            </div>
+          )}
         </div>
         <p className={styles.fine}>© 2026 Merkle Science. Vault is an invitation-only professional network.</p>
       </div>

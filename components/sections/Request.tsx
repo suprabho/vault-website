@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import { MONOGRAM } from "@/components/brand/monogram";
 import { useStillMedia } from "@/hooks/useStillMedia";
 import { easeCubic, t, trackProgress } from "@/lib/scrub";
+import Lines from "@/components/type/Lines";
+import { CTA } from "@/lib/site";
 import styles from "./Request.module.css";
 
 type Key = "A" | "B" | "C" | "D";
@@ -12,7 +14,7 @@ const OFF: Record<Key, [number, number]> = { A: [-330, -260], B: [340, -280], C:
 const DROP = 420;
 const REST = 0.38;
 
-/** 12 · pinned close: the identity assembles around the invitation, holds, then releases into the footer. */
+/** 11 · pinned close: the identity assembles around the invitation, holds, then releases into the footer. */
 export default function Request() {
   const still = useStillMedia("(prefers-reduced-motion:reduce)");
   const track = useRef<HTMLDivElement>(null);
@@ -86,7 +88,7 @@ export default function Request() {
             </defs>
             <g className={styles.rp} ref={(el) => { pieces.current.A = el; }}>
               <g clipPath="url(#rqA)">
-                <image className={styles.rqImg} x="-6" y="-11" width="370" height="405" preserveAspectRatio="xMidYMid slice" href="/images/private-dinner.webp" />
+                <image className={styles.rqImg} x="-6" y="-11" width="370" height="405" preserveAspectRatio="xMidYMid slice" href="/images/roundtable.webp" />
               </g>
               <path className={styles.rl} d={MONOGRAM.A} />
             </g>
@@ -104,17 +106,11 @@ export default function Request() {
             </g>
           </svg>
           <div className={`c5-sheet ${styles.copy}`} ref={copy}>
-            <span className="c5-lab">12 — Request consideration</span>
             <h2 className={`c5-h2 ${styles.h2}`}>
-              <span className="c5-ln"><span>If this is your room,</span></span>
-              <span className="c5-ln"><span>tell us why.</span></span>
+              <Lines lines={["If this is your room,", "tell us why."]} />
             </h2>
-            <p className="c5-copy">
-              Vault is built for professionals who believe the most valuable conversations in crypto compliance should
-              continue after the conference ends.
-            </p>
-            <a className={`btn btn-primary ${styles.cta}`} href="#" ref={cta}>
-              Request consideration
+            <a className={`btn btn-brass ${styles.cta}`} href={CTA.href} ref={cta}>
+              {CTA.label}
             </a>
           </div>
         </div>

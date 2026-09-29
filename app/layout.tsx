@@ -23,7 +23,7 @@ const newYork = localFont({
 export const metadata: Metadata = {
   title: "The Vault — Where crypto compliance continues",
   description:
-    "A private network for the people navigating financial crime, regulation and risk in digital assets — through trusted intelligence, considered introductions and closed-door convenings.",
+    "A private network for the people shaping and navigating financial crime, regulation and risk across digital assets.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

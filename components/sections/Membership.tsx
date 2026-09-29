@@ -24,7 +24,6 @@ export default function Membership() {
       <div className="canvas">
         <div className={styles.intro}>
           <div className="reveal" data-reveal>
-            <p className={`eyebrow ${styles.eyebrow}`}>The standard</p>
             <h2 id="membership-title" className={styles.heading}>Not open to everyone.<br />Built for the people who carry the responsibility.</h2>
             <p className={styles.description}>
               Vault is for people directly responsible for the decisions, controls and investigations shaping digital asset
@@ -46,9 +45,9 @@ export default function Membership() {
               <circle cx="357" cy="279" r="5" className={styles.dot} />
               <circle cx="83" cy="279" r="5" className={styles.dot} />
             </svg>
-            <span className={`${styles.sealLabel} ${styles.relevance}`}>01 / Relevance</span>
-            <span className={`${styles.sealLabel} ${styles.contribution}`}>02 / Contribution</span>
-            <span className={`${styles.sealLabel} ${styles.confidence}`}>03 / Trust</span>
+            <span className={`${styles.sealLabel} ${styles.relevance}`}>Relevance</span>
+            <span className={`${styles.sealLabel} ${styles.contribution}`}>Contribution</span>
+            <span className={`${styles.sealLabel} ${styles.confidence}`}>Trust</span>
             <p className={styles.sealCaption}>A considered room. A shared standard.</p>
           </div>
         </div>
@@ -56,14 +55,13 @@ export default function Membership() {
         <div className={styles.panels}>
           <div className={`${styles.builtPanel} reveal`} data-reveal>
             <div className={styles.panelHeader}>
-              <h3>Built for</h3><Icon name="check" className={styles.headerIcon} />
+              <h3 className="sr-only">Built for</h3><Icon name="check" className={styles.headerIcon} />
             </div>
             <ul className={styles.cards}>
-              {BUILT_FOR.map((item, index) => (
+              {BUILT_FOR.map((item) => (
                 <li key={item.title} className={styles.card}>
                   <div className={styles.cardTop}>
                     <span className={styles.badge}><Icon name={item.icon} strokeWidth={1.3} /></span>
-                    <span className={styles.number}>0{index + 1}</span>
                   </div>
                   <h4>{item.title}</h4>
                 </li>
@@ -72,7 +70,7 @@ export default function Membership() {
           </div>
           <div className={`${styles.boundaries} reveal`} data-reveal>
             <div className={styles.panelHeader}>
-              <h3>Not built for</h3><Icon name="xCircle" className={styles.headerIcon} />
+              <h3 className="sr-only">Not built for</h3><Icon name="xCircle" className={styles.headerIcon} />
             </div>
             <p className={styles.boundaryIntro}>Clear boundaries protect the room.</p>
             <ul className={styles.exclusions}>
@@ -84,7 +82,7 @@ export default function Membership() {
         </div>
         <div className={styles.trust}>
           <Icon name="shieldCheck" strokeWidth={1.35} />
-          <div><p className={styles.trustLabel}>Trust statement</p>
+          <div>
             <p className={styles.trustText}>No sponsorship, payment or commercial relationship buys a seat in the room.</p>
           </div>
           <p className={styles.links}><a href="/code-of-conduct">Code of Conduct</a><a href="/privacy">Privacy</a></p>

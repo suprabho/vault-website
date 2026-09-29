@@ -1,10 +1,8 @@
 /*
  * A sample edition of the Monday briefing, written to show the format and the standard.
  * It describes patterns, not specific cases, agencies or firms. Replace it with a live
- * edition (and drop "Sample edition") once one can be published openly.
+ * edition once one can be published openly.
  */
-export const EDITION = { kind: ["Monday briefing", "Sample edition"], length: "6 min read" };
-
 export const LEAD = {
   theme: "Regulation",
   title: "Travel Rule supervision is moving from “do you have a solution?” to “show us your exceptions.”",

@@ -7,13 +7,11 @@ import styles from "./Pulse.module.css";
  * guests are never published. Update these three when the briefing, table or resource changes.
  */
 const TABLE = {
-  label: "Next private table",
   title: "Private dinner, London",
   text: "Twelve seats. A private dining room. One conversation around where crypto enforcement is heading next.",
   meta: ["Invitation only", "Twelve seats"],
 };
 const RESOURCE = {
-  label: "New member resource",
   title: "Transaction Monitoring Control Pack",
   text: "A plug-and-play framework for reviewing crypto transaction monitoring coverage.",
   meta: ["Playbook", "Template + checklist"],
@@ -41,10 +39,6 @@ export default function Pulse() {
         </g>
       </svg>
       <div className="canvas relative">
-        <p className={`eyebrow reveal ${styles.eyebrow}`} data-reveal>
-          <span className={styles.live} aria-hidden="true" />
-          Vault pulse
-        </p>
         <h2 className={`h2 reveal ${styles.h2}`} data-reveal>
           See what is happening inside Vault right now.
         </h2>
@@ -52,12 +46,10 @@ export default function Pulse() {
         <div className={styles.grid}>
           {/* this week's intelligence */}
           <article className={`reveal ${styles.col}`} data-reveal>
-            <p className={styles.label}>This week&apos;s intelligence</p>
             <div className={`${styles.visual} ${styles.docVisual}`} aria-hidden="true">
               <div className={styles.doc}>
                 <p className={styles.docHead}>
                   <span>Monday briefing</span>
-                  <span>01 / 05</span>
                 </p>
                 <span className={`${styles.docLine} ${styles.headLine}`} />
                 <span className={`${styles.docLine} ${styles.headLine} ${styles.mid}`} />
@@ -76,7 +68,6 @@ export default function Pulse() {
 
           {/* next private table */}
           <article className={`reveal ${styles.col} ${styles.feature}`} data-reveal>
-            <p className={styles.label}>{TABLE.label}</p>
             <div className={`${styles.visual} ${styles.photo}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/images/private-dinner.webp" alt="" loading="lazy" />
@@ -98,7 +89,6 @@ export default function Pulse() {
 
           {/* new member resource */}
           <article className={`reveal ${styles.col}`} data-reveal>
-            <p className={styles.label}>{RESOURCE.label}</p>
             <div className={`${styles.visual} ${styles.packVisual}`} aria-hidden="true">
               <ul className={styles.pack}>
                 {RESOURCE.contents.map((c, i) => (

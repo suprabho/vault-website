@@ -1,6 +1,5 @@
 .section { overflow: hidden; }
 .intro { display: grid; grid-template-columns: 1.35fr 1fr; align-items: center; gap: 48px; margin-bottom: 58px; }
-.eyebrow { color: #7a6a48; margin-bottom: 24px; }
 .heading { font-size: clamp(36px, 4.3vw, 60px); line-height: 1.06; letter-spacing: -0.035em; }
 .description { margin-top: 26px; max-width: 57ch; font-size: 17px; line-height: 1.65; color: #4a485e; }
 .seal { position: relative; width: 100%; max-width: 440px; justify-self: center; }
@@ -20,27 +19,24 @@
 .sealCaption { text-align: center; margin-top: -6px; color: #6e6c7e; font-size: 13px; font-style: italic; }
 .panels { display: grid; grid-template-columns: 1.65fr 1fr; gap: 24px; }
 .builtPanel { background: #151326; color: #f2f1f3; padding: 30px; border: 1px solid #29263d; }
-.panelHeader { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-.panelHeader h3 { font-family: var(--font-mono); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: #c3ae87; }
+.panelHeader { display: flex; justify-content: flex-end; }
 .headerIcon { width: 22px; height: 22px; color: #c3ae87; }
 .cards { list-style: none; padding: 0; margin: 25px 0 0; display: grid; grid-template-columns: 1fr 1fr; }
 .card { padding: 24px 22px 24px 0; border-top: 1px solid rgba(195,174,135,.2); }
 .card:nth-child(even) { padding-left: 24px; padding-right: 0; border-left: 1px solid rgba(195,174,135,.2); }
-.cardTop { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.cardTop { margin-bottom: 20px; }
 .badge { display: grid; place-items: center; width: 46px; height: 46px; border: 1px solid rgba(195,174,135,.35); border-radius: 50%; color: #c3ae87; }
 .badge svg { width: 23px; height: 23px; }
-.number { font-size: 11px; color: #a69b87; }
 .card h4 { font-size: 21px; line-height: 1.2; letter-spacing: -.02em; margin-bottom: 10px; }
 .card:last-child:nth-child(odd) { grid-column: 1 / -1; padding-right: 0; }
 .boundaries { padding: 30px; border: 1px solid #dddae0; background: #efedf0; }
-.boundaries .panelHeader h3, .boundaries .headerIcon { color: #6e6c7e; }
+.boundaries .headerIcon { color: #6e6c7e; }
 .boundaryIntro { font-size: 22px; line-height: 1.3; color: #4a485e; margin: 28px 0 23px; max-width: 19ch; }
 .exclusions { list-style: none; margin: 0; padding: 0; }
 .exclusions li { display: grid; grid-template-columns: 24px 1fr; align-items: start; gap: 15px; border-top: 1px solid #dcd9e0; padding: 20px 0; font-size: 14px; line-height: 1.6; color: #5d596d; }
 .exclusions svg { width: 23px; height: 23px; color: #817b8d; }
 .trust { display: flex; align-items: center; gap: 17px; margin-top: 28px; padding-top: 24px; border-top: 1px solid #dcd9e0; }
 .trust > svg { width: 27px; height: 27px; flex-shrink: 0; color: #8a7754; }
-.trustLabel { color: #7a6a48; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 6px; }
 .trustText { font-size: 13px; line-height: 1.6; color: #4a485e; }
 .links { margin-left: auto; display: flex; gap: 18px; flex-shrink: 0; font-size: 11px; color: #7a6a48; }
 .links a { text-decoration: underline; text-underline-offset: 3px; }

@@ -48,8 +48,7 @@ export default function People() {
     <section id="people" className={`c5 ${styles.people}`}>
       <div className="c5-sheet c5-grid" data-reveal>
         <div className={`c5c ${styles.head}`}>
-          <span className="c5-lab">08 — Who is in the room</span>
-          <h2 className="c5-h2 mt-[22px]" data-reveal>
+          <h2 className="c5-h2" data-reveal>
             <Lines lines={["The right room is", "defined by who is in it."]} />
           </h2>
         </div>
@@ -107,10 +106,7 @@ export default function People() {
               <span className={styles.wi}>
                 <Icon name={w.icon} strokeWidth={1.4} className="h-[18px] w-[18px] text-brass" />
               </span>
-              <div>
-                <span className="c5-lab">{w.label}</span>
-                <p>{w.text}</p>
-              </div>
+              <p>{w.text}</p>
             </div>
           ))}
         </div>
@@ -126,14 +122,11 @@ export default function People() {
               ))}
             </ul>
           ) : (
-            <>
-              <span className="c5-lab">Typical seats</span>
-              <ul className={styles.roles}>
-                {SEATS.map((r) => (
-                  <li key={r}>{r}</li>
-                ))}
-              </ul>
-            </>
+            <ul className={styles.roles}>
+              {SEATS.map((r) => (
+                <li key={r}>{r}</li>
+              ))}
+            </ul>
           )}
         </div>
       </div>

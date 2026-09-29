@@ -8,7 +8,6 @@
 .line { position: relative; flex: 1; height: 1px; background: transparent; margin-right: calc(-1 * clamp(20px, 2.6vw, 40px)); }
 .line i { position: absolute; inset: 0; background: #8a7754; transform: scaleX(0); transform-origin: left center; }
 .num { margin: 28px 0 12px; font-family: var(--font-display); font-weight: 500; font-size: clamp(22px, 2vw, 28px); letter-spacing: -0.025em; color: #010016; opacity: 0; }
-.num span { display: block; margin-bottom: 10px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; color: #8a7754; }
 .desc { margin: 0; font-size: clamp(15px, 1.2vw, 16.5px); line-height: 1.55; color: #3e3c52; max-width: 26ch; opacity: 0; }
 @media (max-width: 899px) {
   .process { padding-block: var(--pad); }
@@ -26,7 +25,6 @@
   .badge { width: 52px; height: 52px; flex-basis: 52px; }
   .badge svg { width: 24px; height: 24px; }
   .num { margin: 2px 0 8px; }
-  .num span { display: inline; margin: 0 10px 0 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .seq { height: auto; }

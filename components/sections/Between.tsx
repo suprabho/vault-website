@@ -18,7 +18,7 @@ const DAY = Array.from({ length: DAYS }, (_, d) => d);
 const MONTHS = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
 
 type Stop = {
-  n: string;
+  /** read out with the stop but not shown: the dial, its preview and the week ticks say when */
   when: string;
   what: string;
   /** the days this stop lands on, or "all" */
@@ -29,11 +29,11 @@ type Stop = {
 
 const RHYTHM: Stop[] = [
   // 52 Mondays: the year used for the dial starts on a Thursday, so the first Monday is day 4
-  { n: "01", when: "Monday", what: "Five things worth knowing before the week starts.", days: Array.from({ length: 52 }, (_, k) => 4 + 7 * k), beat: Array.from({ length: 13 }, (_, i) => i) },
-  { n: "02", when: "As needed", what: "The regulatory or enforcement signal that cannot wait until Monday.", days: [19, 47, 51, 96, 138, 170, 204, 233, 237, 281, 318, 344], beat: [1, 5, 6, 10] },
-  { n: "03", when: "Monthly", what: "The cases, decisions and developments worth understanding properly.", days: MONTHS, beat: [4, 8, 12] },
-  { n: "04", when: "Quarterly", what: "Where regulation, enforcement and the market appear to be heading next.", days: [0, 90, 181, 273], beat: [12] },
-  { n: "05", when: "Always available", what: "Playbooks, recordings, tools and trusted introductions.", days: "all", beat: "always" },
+  { when: "Monday", what: "Five things worth knowing before the week starts.", days: Array.from({ length: 52 }, (_, k) => 4 + 7 * k), beat: Array.from({ length: 13 }, (_, i) => i) },
+  { when: "As needed", what: "The regulatory or enforcement signal that cannot wait until Monday.", days: [19, 47, 51, 96, 138, 170, 204, 233, 237, 281, 318, 344], beat: [1, 5, 6, 10] },
+  { when: "Monthly", what: "The cases, decisions and developments worth understanding properly.", days: MONTHS, beat: [4, 8, 12] },
+  { when: "Quarterly", what: "Where regulation, enforcement and the market appear to be heading next.", days: [0, 90, 181, 273], beat: [12] },
+  { when: "Always available", what: "Playbooks, recordings, tools and trusted introductions.", days: "all", beat: "always" },
 ];
 const ON = RHYTHM.map((s) => new Set(s.days === "all" ? DAY : s.days));
 
@@ -225,31 +225,26 @@ export default function Between() {
 
           <div className={styles.art} ref={art} aria-hidden="true">
             {CADENCE_ASSETS.map((Asset, i) => (
-              <div key={RHYTHM[i].n} className={styles.asset} ref={(el) => { assets.current[i] = el; }}>
+              <div key={RHYTHM[i].when} className={styles.asset} ref={(el) => { assets.current[i] = el; }}>
                 <Asset />
               </div>
             ))}
           </div>
 
           <div className={styles.head} ref={head}>
-            <span className="c5-lab">05 — Between the rooms</span>
-            <h2 className="c5-h2 mt-[22px]" data-reveal>
+            <h2 className="c5-h2" data-reveal>
               <Lines lines={["Membership should make", "the working week easier."]} />
             </h2>
           </div>
 
           <ol className={styles.box} ref={box} aria-label="The Vault cadence">
             {RHYTHM.map((r, i) => (
-              <li key={r.n} className={styles.rm} ref={(el) => { stops.current[i] = el; }}>
-                <p className={styles.rmHead}>
-                  <span className={styles.rmN}>
-                    {r.n}
-                    <span className={styles.rmOf}> / {String(RHYTHM.length).padStart(2, "0")}</span>
-                  </span>
-                  <span className="c5-lab">{r.when}</span>
-                </p>
+              <li key={r.when} className={styles.rm} ref={(el) => { stops.current[i] = el; }}>
                 <Beat beat={r.beat} />
-                <p className={styles.rmWhat}>{r.what}</p>
+                <p className={styles.rmWhat}>
+                  <span className="sr-only">{r.when}: </span>
+                  {r.what}
+                </p>
               </li>
             ))}
           </ol>

@@ -44,11 +44,11 @@ function Paper({ className = "", children }: { className?: string; children: Rea
   );
 }
 
-function Kicker({ left, right }: { left: string; right: string }) {
+function Kicker({ left, right }: { left: string; right?: string }) {
   return (
     <p className={styles.kicker}>
       <span>{left}</span>
-      <span>{right}</span>
+      {right && <span>{right}</span>}
     </p>
   );
 }
@@ -57,16 +57,14 @@ function Kicker({ left, right }: { left: string; right: string }) {
 function Monday() {
   return (
     <Paper>
-      <Kicker left="Monday briefing" right="05 items" />
+      <Kicker left="Monday briefing" />
       <p className={styles.title}>Five things worth knowing</p>
       <ol className={styles.rows}>
         <li>
-          <span className={styles.n}>01</span>
           <span className={styles.item}>Travel Rule exceptions</span>
         </li>
-        {[78, 64, 84, 56].map((w, i) => (
+        {[78, 64, 84, 56].map((w) => (
           <li key={w} className={styles.locked}>
-            <span className={styles.n}>{String(i + 2).padStart(2, "0")}</span>
             <span className={styles.bar} style={{ width: `${w}%` }} />
             <Icon name="lock" strokeWidth={1.6} className={styles.lock} />
           </li>

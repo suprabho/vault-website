@@ -1,11 +1,3 @@
-.eyebrow { display: flex; align-items: center; gap: 12px; margin: 0 0 22px; color: var(--color-brass); }
-/* a single slow pulse: the network is live, not loud */
-.live { position: relative; width: 7px; height: 7px; border-radius: 50%; background: var(--color-brass); }
-.live::after {
-  content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 1px solid var(--color-brass);
-  opacity: 0; animation: pulse 2.8s var(--ease-rise) infinite;
-}
-@keyframes pulse { 0% { opacity: 0.7; transform: scale(0.4); } 100% { opacity: 0; transform: scale(1.6); } }
 .h2 { max-width: 15ch; text-wrap: balance; }
 
 /* three columns divided by hairlines, the table in the middle carries the weight */
@@ -17,7 +9,6 @@
 .col { padding: 28px clamp(20px, 2.4vw, 36px) 8px; border-left: 1px solid rgba(195, 174, 135, 0.14); }
 .col:first-child { padding-left: 0; border-left: 0; }
 .col:last-child { padding-right: 0; }
-.label { margin: 0 0 22px; font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-brass); }
 
 .visual { position: relative; aspect-ratio: 4 / 3; border-radius: 4px; overflow: hidden; margin-bottom: 26px; background: #0b0a17; }
 .feature .visual { aspect-ratio: 16 / 11; }
@@ -78,6 +69,5 @@
   .visual, .feature .visual { aspect-ratio: 16 / 9; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .live::after { animation: none; }
   .doc, .photo img { transition: none; }
 }

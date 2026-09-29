@@ -9,21 +9,18 @@ import { easeQuad, t } from "@/lib/scrub";
 import Lines from "@/components/type/Lines";
 import styles from "./Continuation.module.css";
 
-/** the three convenings. Settings are described, never named: no venues, no guests. */
+/** the three convenings. Described, never named: no venues, no guests. */
 const CONVENINGS = [
   {
     name: "Private dinners",
-    setting: "Invitation-only supper · Chef-led table",
     text: "Twelve seats. A private table. One topic everyone in the room has a reason to care about.",
   },
   {
     name: "Executive breakfasts",
-    setting: "Private dining room · Before nine",
     text: "Small morning sessions with senior operators before the day starts.",
   },
   {
     name: "Closed-door roundtables",
-    setting: "Closed-door setting · One issue",
     text: "A confidential room built around one regulatory, enforcement or financial crime issue.",
   },
 ];
@@ -87,8 +84,7 @@ export default function Continuation() {
           {/* 03 · the continuation */}
           <div className={`c5-sheet c5-grid ${styles.sheet}`} ref={sheet} data-reveal>
             <div className={`c5c ${styles.st}`}>
-              <span className="c5-lab">03 — After the event</span>
-              <h2 className="c5-h2 mt-[22px]" data-reveal>
+              <h2 className="c5-h2" data-reveal>
                 <Lines lines={["The event ends.", "The conversation should not."]} />
               </h2>
             </div>
@@ -104,7 +100,6 @@ export default function Continuation() {
 
           {/* 04 · inside the room, on the cream ellipse */}
           <div className={styles.roomMsg} ref={msg}>
-            <span className="c5-lab">04 — Private convenings</span>
             <h2 className={styles.roomH2}>
               A community of pioneers, brought together in exceptional rooms for a reason.
             </h2>
@@ -123,7 +118,6 @@ export default function Continuation() {
           {/* the three convenings, as the camera reaches each photograph */}
           {CONVENINGS.map((c, i) => (
             <div key={c.name} className={`${styles.cap} ${styles[`cap${i}`]}`} ref={(el) => { caps.current[i] = el; }}>
-              <p className={styles.capSetting}>{c.setting}</p>
               <h3 className={styles.capName}>{c.name}</h3>
               <p className={styles.capText}>{c.text}</p>
             </div>

@@ -174,12 +174,11 @@
   .lead { font-size: clamp(18px, 1.5vw, 20px); line-height: 1.58; color: #c7c5d2; max-width: 680px; }
   .body { font-size: 16px; line-height: 1.62; color: var(--color-quiet); max-width: 680px; }
   .meta { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-brass-lo); }
-  .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-brass); }
 
   /* light surfaces */
   .light { background: var(--color-light); color: var(--color-on-light); }
   .light .body, .light .lead { color: var(--color-on-light-2); }
-  .light .eyebrow, .light .meta { color: #7a6a48; }
+  .light .meta { color: #7a6a48; }
   .light-2 { background: var(--color-light-2); color: var(--color-on-light); }
 
   /* buttons */

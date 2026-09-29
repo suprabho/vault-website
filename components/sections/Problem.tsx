@@ -9,9 +9,9 @@ import Lines from "@/components/type/Lines";
 import styles from "./Problem.module.css";
 
 const SIGNALS = [
-  { n: "01", name: "Regulation", desc: "Stay ahead of policy and rulemaking across key jurisdictions." },
-  { n: "02", name: "Enforcement", desc: "Know what global enforcement bodies are prioritising before it becomes yesterday\u2019s news." },
-  { n: "03", name: "Financial crime", desc: "Track emerging typologies, risk patterns and threats before they reach your controls." },
+  { name: "Regulation", desc: "Stay ahead of policy and rulemaking across key jurisdictions." },
+  { name: "Enforcement", desc: "Know what global enforcement bodies are prioritising before it becomes yesterday\u2019s news." },
+  { name: "Financial crime", desc: "Track emerging typologies, risk patterns and threats before they reach your controls." },
 ];
 
 /**
@@ -63,8 +63,7 @@ export default function Problem() {
         <div className={styles.stage}>
           <div className={styles.text} ref={text}>
             <div className={styles.head} ref={head}>
-              <span className="c5-lab">02 — The pace</span>
-              <h2 className={`c5-h2 mt-[22px] ${styles.h2}`} data-reveal>
+              <h2 className={`c5-h2 ${styles.h2}`} data-reveal>
                 <Lines lines={["Crypto compliance", "does not wait for", "the next conference."]} />
               </h2>
             </div>
@@ -74,8 +73,7 @@ export default function Problem() {
           </div>
           <ol className={styles.ledger} aria-label="What Vault tracks">
             {SIGNALS.map((s, i) => (
-              <li key={s.n} className={styles.row} ref={(el) => { rows.current[i] = el; }}>
-                <span className={styles.n}>{s.n}</span>
+              <li key={s.name} className={styles.row} ref={(el) => { rows.current[i] = el; }}>
                 <span className={styles.nm}>{s.name}</span>
                 <span className={styles.ds}>{s.desc}</span>
               </li>

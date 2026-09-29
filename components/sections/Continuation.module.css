@@ -31,7 +31,6 @@
 /* the ellipse is ~51vh wide, so the copy inside it is measured in vh too */
 .roomMsg { width: min(440px, 42vh); color: #010016; }
 /* the type inside the ellipse is measured in vh for the same reason as its width */
-.roomMsg :global(.c5-lab) { display: block; margin-bottom: 1.4vh; color: #8a7754; }
 .roomH2 {
   margin: 0; font-family: var(--font-display); font-weight: 500;
   font-size: clamp(16px, 2.7vh, 27px); letter-spacing: -0.03em; line-height: 1.06; color: #010016; text-wrap: balance;
@@ -40,7 +39,6 @@
 
 /* the three convenings, placed where the storyboard puts them over each photograph */
 .cap { position: absolute; margin: 0; opacity: 0; pointer-events: none; width: min(380px, 30vw); color: #010016; }
-.capSetting { margin: 0 0 14px; font-family: var(--font-body); font-weight: 600; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #8a7754; }
 .capName {
   margin: 0; white-space: nowrap; font-family: var(--font-display); font-weight: 500;
   font-size: clamp(26px, 2.8vw, 40px); letter-spacing: -0.03em; line-height: 1; color: #010016;
@@ -70,13 +68,11 @@
   }
   .close p { max-width: 18ch; }
   .roomMsg, .roomH2 { color: var(--color-cream); }
-  .roomMsg :global(.c5-lab) { color: var(--color-brass); }
   .roomCopy { margin-inline: 0; color: var(--color-cream-2); font-size: clamp(15px, 1.15vw, 17px); max-width: 52ch; }
   .roomH2 { font-size: clamp(24px, 2.8vw, 44px); }
   .still { display: block; margin-top: 56px; }
   .stillGlyph { display: block; width: min(100%, 520px); height: auto; }
   .cap { width: auto; margin-top: 36px; }
-  .capSetting { color: var(--color-brass); margin-bottom: 10px; }
   .capName { color: var(--color-cream); white-space: normal; font-size: clamp(22px, 2.4vw, 28px); }
   .capText { color: var(--color-cream-2); margin-top: 10px; }
   .cap0 { margin-top: 40px; }

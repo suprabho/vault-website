@@ -77,7 +77,6 @@ export default function Process() {
             </g>
           </svg>
           <div className="canvas relative w-full">
-            <p className="eyebrow mb-[22px] text-brass-ink">Membership</p>
             <h2 className="h2 max-w-[12ch] text-night">A considered way in.</h2>
             <div className={styles.steps}>
               {STEPS.map((s, i) => (
@@ -93,7 +92,6 @@ export default function Process() {
                     )}
                   </div>
                   <p className={styles.num} data-num>
-                    <span>{String(i + 1).padStart(2, "0")}</span>
                     {s.num}
                   </p>
                   <p className={styles.desc} data-desc>{s.desc}</p>

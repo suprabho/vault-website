@@ -20,12 +20,18 @@ import {
 import styles from "./MotifLayer.module.css";
 
 const PIECES: Piece[] = ["A", "B", "C", "D"];
-const PHOTOS: Record<"A" | "C" | "D", string> = {
-  A: "/images/private-dinner.webp",
-  C: "/images/roundtable.webp",
-  D: "/images/executive-breakfast.webp",
+/**
+ * The photographs. The mark is on its side for the whole dive, so each one is turned back by the
+ * same 90° and reads upright on screen. Rects are in that turned frame (glyph units, as the camera
+ * sees it), at each photograph's own aspect, and placed so the people sit where the camera holds.
+ */
+const PHOTOS: Record<"A" | "C" | "D", { href: string; x: number; y: number; w: number; h: number }> = {
+  A: { href: "/images/roundtable.webp", x: 291, y: 85.5, w: 426, h: 355 },
+  C: { href: "/images/private-dinner.webp", x: -82, y: 85.5, w: 390, h: 236 },
+  D: { href: "/images/executive-breakfast.webp", x: -103, y: 357.5, w: 460, h: 384 },
 };
-/** the photographs are cut with transparent margins; this sits under them so nothing shows through */
+const UPRIGHT = `rotate(-90 ${GLYPH_CENTRE.x} ${GLYPH_CENTRE.y})`;
+/** sits under the photographs so nothing shows through while they load */
 const UNDER = "#0b0a17";
 const TRACKS: TrackKey[] = ["hero", "problem", "continuation", "between"];
 const STROKE = { fill: "none", stroke: "#C3AE87", strokeWidth: 1, strokeLinejoin: "round" as const, vectorEffect: "non-scaling-stroke" as const };
@@ -151,18 +157,23 @@ export default function MotifLayer() {
         />
 
         <g ref={phG} style={{ opacity: 0 }}>
-          <g clipPath="url(#motif-clip-A)">
-            <path d={MONOGRAM.A} fill={UNDER} />
-            <image x="-6" y="-11" width="370" height="405" preserveAspectRatio="xMidYMid slice" href={PHOTOS.A} />
-          </g>
-          <g clipPath="url(#motif-clip-C)">
-            <path d={MONOGRAM.C} fill={UNDER} />
-            <image x="-3" y="430" width="248" height="374" preserveAspectRatio="xMidYMid slice" href={PHOTOS.C} />
-          </g>
-          <g clipPath="url(#motif-clip-D)">
-            <path d={MONOGRAM.D} fill={UNDER} />
-            <image x="269" y="381" width="396" height="449" preserveAspectRatio="xMidYMid slice" href={PHOTOS.D} />
-          </g>
+          {(Object.keys(PHOTOS) as ("A" | "C" | "D")[]).map((k) => {
+            const ph = PHOTOS[k];
+            return (
+              <g key={k} clipPath={`url(#motif-clip-${k})`}>
+                <path d={MONOGRAM[k]} fill={UNDER} />
+                <image
+                  transform={UPRIGHT}
+                  x={ph.x}
+                  y={ph.y}
+                  width={ph.w}
+                  height={ph.h}
+                  preserveAspectRatio="xMidYMid slice"
+                  href={ph.href}
+                />
+              </g>
+            );
+          })}
           <path ref={gold} d={MONOGRAM.B} fill="#C3AE87" style={{ opacity: 0 }} />
           {PIECES.map((k) => (
             <path key={k} d={MONOGRAM[k]} {...STROKE} />

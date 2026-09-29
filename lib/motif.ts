@@ -124,15 +124,16 @@ export const motifKeyframes = (vw: number, vh: number): Keyframe[] => {
     // the ellipse becomes the ground; the photographs arrive
     { track: "continuation", at: 0.58, ...CENTRE, sx: 0.5, sy: 0.57, h: 74, ellipseCover: 1, photo: 1, gold: 1 },
     // the camera dives into the photographs: each one framed off-centre so the caption sits on cream;
-    // between pieces it pulls back a little so the move reads as one camera, not a cut
-    { track: "continuation", at: 0.7, anchor: ON_A, sx: 0.78, sy: 0.72, h: ZOOM, ellipse: 0, outline: 0 },
-    { track: "continuation", at: 0.76, anchor: ON_A, sx: 0.78, sy: 0.72, h: ZOOM },
+    // between pieces it pulls back a little so the move reads as one camera, not a cut.
+    // C holds the dinner, D the breakfast, A the roundtable — the order the captions run in.
+    { track: "continuation", at: 0.7, anchor: ON_C, sx: 0.74, sy: 0.3, h: ZOOM, ellipse: 0, outline: 0 },
+    { track: "continuation", at: 0.76, anchor: ON_C, sx: 0.74, sy: 0.3, h: ZOOM },
     { track: "continuation", at: 0.79, ...CENTRE, sx: 0.5, sy: 0.5, h: 150, ease: linear },
     { track: "continuation", at: 0.82, anchor: ON_D, sx: 0.3, sy: 0.56, h: ZOOM, ease: linear },
     { track: "continuation", at: 0.88, anchor: ON_D, sx: 0.3, sy: 0.56, h: ZOOM },
     { track: "continuation", at: 0.91, ...CENTRE, sx: 0.5, sy: 0.5, h: 150, ease: linear },
-    { track: "continuation", at: 0.94, anchor: ON_C, sx: 0.74, sy: 0.3, h: ZOOM, ease: linear },
-    { track: "continuation", at: 1, anchor: ON_C, sx: 0.74, sy: 0.3, h: ZOOM },
+    { track: "continuation", at: 0.94, anchor: ON_A, sx: 0.78, sy: 0.72, h: ZOOM, ease: linear },
+    { track: "continuation", at: 1, anchor: ON_A, sx: 0.78, sy: 0.72, h: ZOOM },
     // 05 · between: upright again, outline only, at the left, framing the cadence dial
     { track: "between", at: 0, ...BETWEEN_KEY, rot: 0, outline: 1, photo: 0, gold: 0, ellipseCover: 0 },
     { track: "between", at: 1, ...BETWEEN_KEY, outline: 1 },

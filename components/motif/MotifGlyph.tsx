@@ -35,11 +35,11 @@ export default function MotifGlyph({ className, photos = false, title }: Props) 
           </defs>
           <g clipPath={`url(#${id}A)`}>
             <path d={MONOGRAM.A} fill="#0b0a17" />
-            <image x="-6" y="-11" width="370" height="405" preserveAspectRatio="xMidYMid slice" href="/images/private-dinner.webp" />
+            <image x="-6" y="-11" width="370" height="405" preserveAspectRatio="xMidYMid slice" href="/images/roundtable.webp" />
           </g>
           <g clipPath={`url(#${id}C)`}>
             <path d={MONOGRAM.C} fill="#0b0a17" />
-            <image x="-3" y="430" width="248" height="374" preserveAspectRatio="xMidYMid slice" href="/images/roundtable.webp" />
+            <image x="-3" y="430" width="248" height="374" preserveAspectRatio="xMidYMid slice" href="/images/private-dinner.webp" />
           </g>
           <g clipPath={`url(#${id}D)`}>
             <path d={MONOGRAM.D} fill="#0b0a17" />

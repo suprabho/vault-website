@@ -25,8 +25,9 @@ const PIECES: Piece[] = ["A", "B", "C", "D"];
  * same 90° and reads upright on screen. Rects are in that turned frame (glyph units, as the camera
  * sees it), at each photograph's own aspect, and placed so the people sit where the camera holds.
  */
-const PHOTOS: Record<"A" | "C" | "D", { href: string; x: number; y: number; w: number; h: number }> = {
-  A: { href: "/images/roundtable.webp", x: 291, y: 85.5, w: 426, h: 355 },
+type Photo = "B" | "C" | "D";
+const PHOTOS: Record<Photo, { href: string; x: number; y: number; w: number; h: number }> = {
+  B: { href: "/images/roundtable.webp", x: 407.5, y: 479, w: 334, h: 278 },
   C: { href: "/images/private-dinner.webp", x: -82, y: 85.5, w: 390, h: 236 },
   D: { href: "/images/executive-breakfast.webp", x: -103, y: 357.5, w: 460, h: 384 },
 };
@@ -133,7 +134,7 @@ export default function MotifLayer() {
     <div ref={layer} className={styles.layer} aria-hidden="true">
       <svg ref={svg} className={styles.svg} viewBox="0 0 662 827" preserveAspectRatio="none">
         <defs>
-          {(Object.keys(PHOTOS) as ("A" | "C" | "D")[]).map((k) => (
+          {(Object.keys(PHOTOS) as Photo[]).map((k) => (
             <clipPath key={k} id={`motif-clip-${k}`} clipPathUnits="userSpaceOnUse">
               <path d={MONOGRAM[k]} />
             </clipPath>
@@ -157,7 +158,7 @@ export default function MotifLayer() {
         />
 
         <g ref={phG} style={{ opacity: 0 }}>
-          {(Object.keys(PHOTOS) as ("A" | "C" | "D")[]).map((k) => {
+          {(Object.keys(PHOTOS) as Photo[]).map((k) => {
             const ph = PHOTOS[k];
             return (
               <g key={k} clipPath={`url(#motif-clip-${k})`}>
@@ -174,7 +175,7 @@ export default function MotifLayer() {
               </g>
             );
           })}
-          <path ref={gold} d={MONOGRAM.B} fill="#C3AE87" style={{ opacity: 0 }} />
+          <path ref={gold} d={MONOGRAM.A} fill="#C3AE87" style={{ opacity: 0 }} />
           {PIECES.map((k) => (
             <path key={k} d={MONOGRAM[k]} {...STROKE} />
           ))}

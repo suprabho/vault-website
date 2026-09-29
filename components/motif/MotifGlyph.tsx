@@ -3,7 +3,7 @@ import { MONOGRAM, MONOGRAM_VIEWBOX } from "@/components/brand/monogram";
 
 type Props = {
   className?: string;
-  /** fill A, C and D with the photographs and B with brass, as the choreography does at its peak */
+  /** fill B, C and D with the photographs and A with brass, as the choreography does at its peak */
   photos?: boolean;
   title?: string;
 };
@@ -29,13 +29,13 @@ export default function MotifGlyph({ className, photos = false, title }: Props) 
       {photos && (
         <>
           <defs>
-            <clipPath id={`${id}A`} clipPathUnits="userSpaceOnUse"><path d={MONOGRAM.A} /></clipPath>
+            <clipPath id={`${id}B`} clipPathUnits="userSpaceOnUse"><path d={MONOGRAM.B} /></clipPath>
             <clipPath id={`${id}C`} clipPathUnits="userSpaceOnUse"><path d={MONOGRAM.C} /></clipPath>
             <clipPath id={`${id}D`} clipPathUnits="userSpaceOnUse"><path d={MONOGRAM.D} /></clipPath>
           </defs>
-          <g clipPath={`url(#${id}A)`}>
-            <path d={MONOGRAM.A} fill="#0b0a17" />
-            <image x="-6" y="-11" width="370" height="405" preserveAspectRatio="xMidYMid slice" href="/images/roundtable.webp" />
+          <g clipPath={`url(#${id}B)`}>
+            <path d={MONOGRAM.B} fill="#0b0a17" />
+            <image x="390" y="-3" width="275" height="346" preserveAspectRatio="xMidYMid slice" href="/images/roundtable.webp" />
           </g>
           <g clipPath={`url(#${id}C)`}>
             <path d={MONOGRAM.C} fill="#0b0a17" />
@@ -45,7 +45,7 @@ export default function MotifGlyph({ className, photos = false, title }: Props) 
             <path d={MONOGRAM.D} fill="#0b0a17" />
             <image x="269" y="381" width="396" height="449" preserveAspectRatio="xMidYMid slice" href="/images/executive-breakfast.webp" />
           </g>
-          <path d={MONOGRAM.B} fill="#C3AE87" />
+          <path d={MONOGRAM.A} fill="#C3AE87" />
         </>
       )}
       {PIECES.map((k) => (

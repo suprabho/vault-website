@@ -81,7 +81,7 @@ export default function Request() {
         <div className={styles.stage}>
           <div className={styles.field} aria-hidden="true" />
           {/* the identity assembles around the invitation: four pieces, one letter */}
-          <svg className={styles.art} ref={art} viewBox="0 0 662 827" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <svg data-motif-field className={styles.art} ref={art} viewBox="0 0 662 827" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
             <defs>
               <clipPath id="rqA" clipPathUnits="userSpaceOnUse"><path d={MONOGRAM.A} /></clipPath>
               <clipPath id="rqD" clipPathUnits="userSpaceOnUse"><path d={MONOGRAM.D} /></clipPath>

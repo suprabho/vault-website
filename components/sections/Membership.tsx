@@ -37,7 +37,7 @@ export default function Membership() {
               <path d="M220 42 357 279H83Z" className={styles.triangle} />
               <circle cx="220" cy="200" r="88" className={styles.innerRing} />
               <circle cx="220" cy="200" r="76" className={styles.innerRule} />
-              <svg x="192" y="153" width="56" height="70" viewBox="0 0 662 827">
+              <svg data-motif-dock="membership" x="192" y="153" width="56" height="70" viewBox="0 0 662 827">
                 <path d={MONOGRAM_FULL} fill="none" stroke="#c3ae87" strokeWidth="10" />
               </svg>
               <text x="220" y="249" textAnchor="middle" className={styles.sealWord}>VAULT</text>
@@ -52,7 +52,7 @@ export default function Membership() {
           </div>
         </div>
 
-        <div className={styles.panels}>
+        <div id="membership-panels" className={styles.panels}>
           <div className={`${styles.builtPanel} reveal`} data-reveal>
             <div className={styles.panelHeader}>
               <h3 className="sr-only">Built for</h3><Icon name="check" className={styles.headerIcon} />

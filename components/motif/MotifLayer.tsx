@@ -8,6 +8,7 @@ import {
   GLYPH_CENTRE,
   PHOTO_HOLDS,
   camera,
+  continueMotif,
   ellipseRadii,
   keyframeY,
   motifKeyframes,
@@ -84,6 +85,8 @@ export default function MotifLayer() {
     if (!L || !S || !oG || !pG || !el) return;
 
     let frames: Resolved[] = [];
+    let continuationStart = Infinity;
+    let disposed = false;
     let holds: Record<Photo, readonly [number, number]> | null = null;
     const measure = () => {
       const tracks = {} as TrackRects;
@@ -101,6 +104,27 @@ export default function MotifLayer() {
       }
       const vh = window.innerHeight;
       frames = resolve(motifKeyframes(window.innerWidth, vh), tracks, vh, pieces);
+      const section = (id: string) => {
+        const node = document.getElementById(id);
+        return node ? { top: node.getBoundingClientRect().top + window.scrollY, height: node.offsetHeight } : null;
+      };
+      const dock = (name: string) => {
+        const node = document.querySelector<SVGSVGElement>(`[data-motif-dock="${name}"]`);
+        if (!node) return null;
+        const r = node.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2 + window.scrollY, height: r.height };
+      };
+      document.documentElement.dataset.motifContinues = "true";
+      const intelligence = section("intelligence"), pulse = section("pulse"), membership = section("membership");
+      const membershipPanels = section("membership-panels");
+      const process = section("process"), request = section("request");
+      const peopleDock = dock("people"), membershipDock = dock("membership");
+      if (intelligence && pulse && membership && membershipPanels && process && request && peopleDock && membershipDock) {
+        continuationStart = frames[frames.length - 1].y;
+        frames = continueMotif(frames, { intelligence, pulse, membership, membershipPanels, process, request, peopleDock, membershipDock }, window.innerWidth, vh);
+        document.documentElement.dataset.motifContinues = "true";
+      }
+
       const at = (k: Photo) => PHOTO_HOLDS[k].map((a) => keyframeY(tracks.continuation, a, vh)) as [number, number];
       holds = { B: at("B"), C: at("C"), D: at("D") };
     };
@@ -108,6 +132,7 @@ export default function MotifLayer() {
     const draw = () => {
       if (!frames.length) return;
       const s = sample(frames, window.scrollY);
+      L.dataset.continued = window.scrollY >= continuationStart ? "true" : "false";
       const shown = s.outline > 0.001 || s.photo > 0.001 || s.ellipse > 0.001;
       L.style.visibility = shown ? "visible" : "hidden";
       if (!shown) return;
@@ -138,15 +163,17 @@ export default function MotifLayer() {
     };
 
     let ticking = false;
+    let raf = 0;
     const onScroll = () => {
-      if (ticking) return;
+      if (disposed || ticking) return;
       ticking = true;
-      requestAnimationFrame(() => {
+      raf = requestAnimationFrame(() => {
         draw();
         ticking = false;
       });
     };
     const onResize = () => {
+      if (disposed) return;
       measure();
       onScroll();
     };
@@ -158,6 +185,9 @@ export default function MotifLayer() {
     const ro = new ResizeObserver(onResize);
     ro.observe(document.body);
     return () => {
+      disposed = true;
+      cancelAnimationFrame(raf);
+      delete document.documentElement.dataset.motifContinues;
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
       ro.disconnect();

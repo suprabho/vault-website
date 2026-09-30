@@ -7,7 +7,7 @@ import styles from "./Intelligence.module.css";
 export default function Intelligence() {
   return (
     <section id="intelligence" className={`section-pad ${styles.intelligence}`}>
-      <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 1400 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <svg data-motif-field className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 1400 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
         <g fill="none" stroke="#010016">
           <circle cx="1290" cy="200" r="300" strokeOpacity=".05" />
           <circle cx="1290" cy="200" r="470" strokeOpacity=".04" />

@@ -68,7 +68,7 @@ export default function Process() {
     <section id="process" className={styles.process}>
       <div className={styles.seq} ref={seq}>
         <div className={styles.stage}>
-          <svg className={styles.mark} viewBox="0 0 662 827" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <svg data-motif-field className={styles.mark} viewBox="0 0 662 827" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
             <g fill="none" stroke="#8A7754" strokeOpacity=".055" strokeWidth="1.4">
               <path d={MONOGRAM.A} />
               <path d={MONOGRAM.B} />

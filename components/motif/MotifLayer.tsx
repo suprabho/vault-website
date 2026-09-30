@@ -134,6 +134,12 @@ export default function MotifLayer() {
         PIECES.forEach((k, index) => {
           const path = outPaths.current[k];
           if (!path) return;
+          if (s.assemble >= 0.999) {
+            path.removeAttribute("transform");
+            path.style.removeProperty("stroke-dasharray");
+            path.style.removeProperty("stroke-dashoffset");
+            return;
+          }
           const { centre, length } = metrics[k];
           const move = Math.max(0, Math.min(1, s.assemble * 1.08 - index * 0.025));
           const draw = Math.max(0, Math.min(1, s.assemble * 1.22 - index * 0.055));

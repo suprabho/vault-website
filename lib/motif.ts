@@ -66,6 +66,8 @@ export type MotifState = {
   h: number;
   /** degrees, positive = clockwise */
   rot: number;
+  /** 0 = the four outline pieces sit beyond their viewport corners; 1 = assembled */
+  assemble: number;
   outline: number;
   photo: number;
   gold: number;
@@ -109,9 +111,9 @@ export const motifKeyframes = (vw: number, vh: number): Keyframe[] => {
   const BETWEEN_KEY = { anchor: between.anchor, sx: between.sx, sy: between.sy, h: between.h };
   return [
     // 01 · hero: the mark surfaces once the copy has gone
-    { track: "hero", at: 0, ...HOME, h: 50, outline: 0, photo: 0, gold: 0, ellipse: 0, ellipseCover: 0 },
-    { track: "hero", at: 0.3, ...HOME, h: 50, outline: 0 },
-    { track: "hero", at: 0.65, ...HOME, outline: 1 },
+    { track: "hero", at: 0, ...HOME, h: 50, assemble: 0, outline: 0, photo: 0, gold: 0, ellipse: 0, ellipseCover: 0 },
+    { track: "hero", at: 0.28, ...HOME, h: 50, assemble: 0, outline: 1 },
+    { track: "hero", at: 0.68, ...HOME, assemble: 1, outline: 1 },
     { track: "hero", at: 1, ...HOME },
     // 02 · problem: it swells to frame the headline while the cream sheet slides up
     { track: "problem", at: 0, ...CENTRE, sx: 0.5, sy: 0.61, h: 142 },
@@ -168,7 +170,7 @@ export function resolve(keys: Keyframe[], tracks: TrackRects, vh: number, pieces
     const { track, at, anchor, ease, ...pose } = k;
     const base: MotifState = prev ?? {
       ax: GLYPH_CENTRE.x, ay: GLYPH_CENTRE.y, sx: 0.5, sy: 0.5, h: 56, rot: 0,
-      outline: 0, photo: 0, gold: 0, ellipse: 0, ellipseCover: 0,
+      assemble: 0, outline: 0, photo: 0, gold: 0, ellipse: 0, ellipseCover: 0,
     };
     const a = anchor === undefined ? null : anchor === "centre" ? GLYPH_CENTRE : typeof anchor === "string" ? pieces[anchor] : anchor;
     const state: MotifState = { ...base, ...pose, ...(a ? { ax: a.x, ay: a.y } : {}) };
@@ -197,7 +199,7 @@ export function sample(frames: Resolved[], y: number): MotifState {
   return {
     ax: mix(A.ax, B.ax, e), ay: mix(A.ay, B.ay, e),
     sx: mix(A.sx, B.sx, e), sy: mix(A.sy, B.sy, e),
-    h: mixLog(A.h, B.h, e), rot: mix(A.rot, B.rot, e),
+    h: mixLog(A.h, B.h, e), rot: mix(A.rot, B.rot, e), assemble: mix(A.assemble, B.assemble, e),
     outline: mix(A.outline, B.outline, e), photo: mix(A.photo, B.photo, e), gold: mix(A.gold, B.gold, e),
     ellipse: mix(A.ellipse, B.ellipse, e), ellipseCover: mix(A.ellipseCover, B.ellipseCover, e),
   };
@@ -217,7 +219,7 @@ export function camera(state: MotifState, vw: number, vh: number) {
   const p = rotated({ x: state.ax, y: state.ay }, state.rot);
   const w = vw / px, h = vh / px;
   const x = p.x - state.sx * w, y = p.y - state.sy * h;
-  return { viewBox: `${x.toFixed(2)} ${y.toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)}`, rotate: state.rot };
+  return { viewBox: `${x.toFixed(2)} ${y.toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)}`, rotate: state.rot, x, y, w, h };
 }
 
 /**

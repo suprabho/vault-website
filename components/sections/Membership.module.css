@@ -17,7 +17,7 @@
 .contribution { top: 74%; right: 0; }
 .confidence { top: 74%; left: 5%; }
 .sealCaption { text-align: center; margin-top: -6px; color: #6e6c7e; font-size: 13px; font-style: italic; }
-.panels { display: grid; grid-template-columns: 1.65fr 1fr; gap: 24px; }
+.panels { position: relative; z-index: 4; display: grid; grid-template-columns: 1.65fr 1fr; gap: 24px; }
 .builtPanel { background: #151326; color: #f2f1f3; padding: 30px; border: 1px solid #29263d; }
 .panelHeader { display: flex; justify-content: flex-end; }
 .headerIcon { width: 22px; height: 22px; color: #c3ae87; }
@@ -35,7 +35,7 @@
 .exclusions { list-style: none; margin: 0; padding: 0; }
 .exclusions li { display: grid; grid-template-columns: 24px 1fr; align-items: start; gap: 15px; border-top: 1px solid #dcd9e0; padding: 20px 0; font-size: 14px; line-height: 1.6; color: #5d596d; }
 .exclusions svg { width: 23px; height: 23px; color: #817b8d; }
-.trust { display: flex; align-items: center; gap: 17px; margin-top: 28px; padding-top: 24px; border-top: 1px solid #dcd9e0; }
+.trust { position: relative; z-index: 4; display: flex; align-items: center; gap: 17px; margin-top: 28px; padding-top: 24px; border-top: 1px solid #dcd9e0; }
 .trust > svg { width: 27px; height: 27px; flex-shrink: 0; color: #8a7754; }
 .trustText { font-size: 13px; line-height: 1.6; color: #4a485e; }
 .links { margin-left: auto; display: flex; gap: 18px; flex-shrink: 0; font-size: 11px; color: #7a6a48; }

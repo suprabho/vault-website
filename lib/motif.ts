@@ -143,16 +143,14 @@ export const motifKeyframes = (vw: number, vh: number): Keyframe[] => {
     // 05 · between: upright again, outline only, at the left, framing the cadence dial
     { track: "between", at: 0, ...BETWEEN_KEY, rot: 0, outline: 1, photo: 0, gold: 0, ellipseCover: 0 },
     { track: "between", at: 1, ...BETWEEN_KEY, outline: 1 },
-    // the stage scrolls away under the intelligence section: the mark leaves with it, then hides
-    { track: "between", at: 2, ...BETWEEN_KEY, sy: between.sy - 1, outline: 1, ease: linear },
-    { track: "between", at: 2.05, ...BETWEEN_KEY, sy: between.sy - 1, outline: 0 },
+
   ];
 };
 
 // ── resolution ────────────────────────────────────────────────────────────────
 export type TrackRect = { top: number; height: number };
 export type TrackRects = Record<TrackKey, TrackRect>;
-export type Resolved = { y: number; state: MotifState; ease: Ease };
+export type Resolved = { y: number; state: MotifState; ease: Ease; outlineEase?: Ease };
 
 /** `{track, at}` → document scrollY. Pinned span S = height − viewport (0 for unpinned sections). */
 export const keyframeY = (r: TrackRect, at: number, vh: number) => {
@@ -194,12 +192,13 @@ export function sample(frames: Resolved[], y: number): MotifState {
   const a = frames[i], b = frames[i + 1];
   const span = b.y - a.y;
   const e = span <= 0 ? 1 : b.ease((y - a.y) / span);
+  const outlineE = b.outlineEase && span > 0 ? b.outlineEase((y - a.y) / span) : e;
   const A = a.state, B = b.state;
   return {
     ax: mix(A.ax, B.ax, e), ay: mix(A.ay, B.ay, e),
     sx: mix(A.sx, B.sx, e), sy: mix(A.sy, B.sy, e),
     h: mixLog(A.h, B.h, e), rot: mix(A.rot, B.rot, e), assemble: mix(A.assemble, B.assemble, e),
-    outline: mix(A.outline, B.outline, e), photo: mix(A.photo, B.photo, e), gold: mix(A.gold, B.gold, e),
+    outline: mix(A.outline, B.outline, outlineE), photo: mix(A.photo, B.photo, e), gold: mix(A.gold, B.gold, e),
     ellipse: mix(A.ellipse, B.ellipse, e), ellipseCover: mix(A.ellipseCover, B.ellipseCover, e),
   };
 }
@@ -237,4 +236,66 @@ export function ellipseRadii(state: MotifState, vw: number, vh: number) {
   }
   const grow = 1 + (k - 1) * state.ellipseCover;
   return { rx: ELLIPSE.rx * grow, ry: ELLIPSE.ry * grow };
+}
+
+
+export type MotifDock = { x: number; y: number; height: number };
+export type LaterGeometry = {
+  intelligence: TrackRect;
+  pulse: TrackRect;
+  membership: TrackRect;
+  membershipPanels: TrackRect;
+  process: TrackRect;
+  request: TrackRect;
+  peopleDock: MotifDock;
+  membershipDock: MotifDock;
+};
+
+/** Continue the original camera from the cadence hold; no replacement glyph or handoff. */
+export function continueMotif(frames: Resolved[], g: LaterGeometry, vw: number, vh: number): Resolved[] {
+  const last = frames[frames.length - 1];
+  const base = { ...last.state, ax: GLYPH_CENTRE.x, ay: GLYPH_CENTRE.y, rot: 0 };
+  const add = (y: number, pose: Partial<MotifState>, ease: Ease = easeCubic) => {
+    frames.push({ y, state: { ...base, ...pose }, ease });
+  };
+  // The large cadence outline moves across to become the quiet, cropped right-hand motif.
+  // Its actual curves provide the background texture through both editorial sections.
+  const field = { sx: 1.04, sy: .43, h: 180, outline: .16 };
+  add(g.intelligence.top + vh * .12, field);
+  add(Math.max(g.intelligence.top + vh * .13, g.pulse.top - vh * .55), field, linear);
+  add(g.pulse.top + vh * .12, { ...field, outline: .14 });
+  const arrival = Math.max(g.pulse.top + vh * .4, g.peopleDock.y - vh * .68);
+  const dock = (d: MotifDock, y: number) => ({ sx: d.x / vw, sy: (d.y - y) / vh, h: d.height / vh * 100, outline: 1 });
+  add(Math.max(g.pulse.top + vh * .13, arrival - vh * .9), { ...field, outline: .14 }, linear);
+  add(arrival, dock(g.peopleDock, arrival));
+  // Stay quiet while crossing the outer seats; brighten only during the final approach.
+  // Opacity has its own timing so the existing camera trajectory stays unchanged.
+  frames[frames.length - 1].outlineEase = (v) => easeCubic(Math.max(0, Math.min(1, (v - .8) / .2)));
+  const leave = Math.max(arrival + 1, g.membership.top - vh * .85);
+  add(leave, dock(g.peopleDock, leave), linear);
+  const sealArrival = Math.max(leave + vh * .5, g.membershipDock.y - vh * .53);
+  add(sealArrival, dock(g.membershipDock, sealArrival));
+  // Hold the seal until the membership panels reach the top of the reading area.
+  // Then expand behind those panels on the way into the process section.
+  const sealLeave = Math.max(sealArrival + 1, g.membershipPanels.top - vh * .12);
+  add(sealLeave, dock(g.membershipDock, sealLeave), linear);
+  const processApproach = Math.max(sealLeave + vh * .6, g.process.top - vh * .6);
+  const processPose = { sx: .94, sy: .54, h: 110, outline: .1 };
+  add(processApproach, processPose);
+  add(g.process.top, processPose, linear);
+  // A slow drift accompanies the four existing step reveals without competing with them.
+  const processSpan = Math.max(0, g.process.height - vh);
+  add(g.process.top + processSpan * .35, { ...processPose, sx: .90, h: 114 });
+  add(g.process.top + processSpan * .7, { ...processPose, sx: .86, h: 118 });
+  add(g.process.top + processSpan, { ...processPose, sx: .82, h: 122 });
+  // Turn the original mark on its side to frame the invitation in its open counter.
+  const requestSpan = Math.max(0, g.request.height - vh);
+  const closingHeight = Math.max(120, Math.min(190, (vw * .72 * GLYPH_H) / (vh * (COUNTER.bottom - COUNTER.top)) * 100));
+  const close = { sx: .5, sy: .55, h: closingHeight, rot: 90, outline: .38 };
+  add(g.request.top + requestSpan * .14, { ...close, outline: .2 });
+  add(g.request.top + requestSpan * .56, close);
+  add(g.request.top + requestSpan, close, linear);
+  // Release with the closing stage rather than leaving a fixed mark over the footer.
+  add(g.request.top + g.request.height, { ...close, sy: close.sy - 1, outline: 0 }, linear);
+  return frames;
 }

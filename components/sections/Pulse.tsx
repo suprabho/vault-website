@@ -29,7 +29,7 @@ const SEATS = Array.from({ length: 12 }, (_, i) => {
 export default function Pulse() {
   return (
     <section id="pulse" className="section-pad relative overflow-hidden bg-night">
-      <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <svg data-motif-field className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
         <g fill="none" stroke="#C3AE87">
           <circle cx="1080" cy="120" r="230" strokeOpacity=".22" />
           <circle cx="1080" cy="120" r="360" strokeOpacity=".16" />

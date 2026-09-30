@@ -1,9 +1,11 @@
 .foot {
   position: relative;
-  z-index: 2;
+  z-index: 4;
   border-top: 1px solid var(--hair);
   padding-block: 56px;
-  background: var(--color-night);
+  background: rgba(1, 0, 22, 0.78);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
 }
 .cols {
   display: grid;

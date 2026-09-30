@@ -29,3 +29,18 @@
 @media (prefers-reduced-motion: reduce) {
   .photo { animation: none; }
 }
+
+/* The original camera continues above later section surfaces, below editorial copy. */
+.layer[data-continued="true"] { z-index: 3; }
+:global(html[data-motif-continues="true"] #intelligence),
+:global(html[data-motif-continues="true"] #pulse),
+:global(html[data-motif-continues="true"] #people),
+:global(html[data-motif-continues="true"] #membership) { z-index: auto; }
+:global(html[data-motif-continues="true"] #intelligence > .canvas),
+:global(html[data-motif-continues="true"] #pulse > .canvas),
+:global(html[data-motif-continues="true"] #people > .c5-sheet) { position: relative; z-index: 4; }
+:global(html[data-motif-continues="true"] [data-motif-field]),
+:global(html[data-motif-continues="true"] [data-motif-dock]) { visibility: hidden; }
+/* Dock geometry must not move with the independent entrance reveals. */
+:global(html[data-motif-continues="true"] [data-reveal]:has([data-motif-dock])),
+:global(html[data-motif-continues="true"] g:has(> [data-motif-dock])) { transform: none; transition-property: opacity; }

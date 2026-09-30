@@ -85,7 +85,7 @@ export default function People() {
               ))}
             </g>
             <g className={styles.markG}>
-              <svg x="565" y="464" width="70" height="88" viewBox="0 0 662 827">
+              <svg data-motif-dock="people" x="565" y="464" width="70" height="88" viewBox="0 0 662 827">
                 <g fill="none" stroke="#C3AE87" strokeWidth="10" strokeLinejoin="round">
                   <path d={MONOGRAM.A} />
                   <path d={MONOGRAM.B} />

@@ -8,6 +8,7 @@ import { CONTINUATION } from "@/lib/choreography";
 import { easeQuad, t } from "@/lib/scrub";
 import Lines from "@/components/type/Lines";
 import styles from "./Continuation.module.css";
+import ConveningVisual from "./ConveningVisual";
 
 /** the three convenings. Described, never named: no venues, no guests. */
 const CONVENINGS = [
@@ -60,6 +61,7 @@ export default function Continuation() {
       if (!el) return;
       const v = win(c.in, c.out);
       el.style.opacity = v.toFixed(3);
+      el.style.setProperty("--visual-play", v > 0.01 ? "running" : "paused");
       el.style.transform = `translateY(${(12 - 12 * v).toFixed(1)}px)`;
     });
     const ground = p >= CONTINUATION.ground ? "cream" : "";
@@ -68,6 +70,7 @@ export default function Continuation() {
   const settle = useCallback(() => {
     [sheet.current, close.current, msg.current, ...caps.current].forEach((el) => {
       if (!el) return;
+      el.style.removeProperty("--visual-play");
       el.style.opacity = "";
       el.style.transform = "";
     });
@@ -118,6 +121,7 @@ export default function Continuation() {
           {/* the three convenings, as the camera reaches each photograph */}
           {CONVENINGS.map((c, i) => (
             <div key={c.name} className={`${styles.cap} ${styles[`cap${i}`]}`} ref={(el) => { caps.current[i] = el; }}>
+              <div className={styles.conveningVisual}><ConveningVisual variant={i} /></div>
               <h3 className={styles.capName}>{c.name}</h3>
               <p className={styles.capText}>{c.text}</p>
             </div>

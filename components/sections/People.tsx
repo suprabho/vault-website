@@ -12,11 +12,12 @@ const SPOKES = [
 ];
 const ARCS = ["M470 540A130 130 0 0 1 730 540", "M370 540A230 230 0 0 1 830 540", "M270 540A330 330 0 0 1 930 540", "M180 540A420 420 0 0 1 1020 540"];
 
+// Connector origins sit on the innermost arc (radius 130, centre 600, 540).
 const NODES: { icon: IconName; from: [number, number]; to: [number, number] }[] = [
-  { icon: "exchange", from: [335.1, 399.2], to: [229.2, 342.8] },
-  { icon: "bank", from: [507.3, 254.7], to: [470.2, 140.6] },
-  { icon: "scales", from: [692.7, 254.7], to: [729.8, 140.6] },
-  { icon: "person", from: [864.9, 399.2], to: [970.8, 342.8] },
+  { icon: "exchange", from: [485.222, 478.959], to: [229.2, 342.8] },
+  { icon: "bank", from: [559.820, 416.365], to: [470.2, 140.6] },
+  { icon: "scales", from: [640.180, 416.365], to: [729.8, 140.6] },
+  { icon: "person", from: [714.778, 478.959], to: [970.8, 342.8] },
 ];
 
 const WHO: { icon: IconName; label: string; text: string }[] = [

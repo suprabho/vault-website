@@ -73,6 +73,7 @@ export default function MotifLayer() {
   const svg = useRef<SVGSVGElement>(null);
   const outG = useRef<SVGGElement>(null);
   const outPaths = useRef<Record<Piece, SVGPathElement | null>>({ A: null, B: null, C: null, D: null });
+  const pieceMetrics = useRef<Record<Piece, { centre: Point; length: number }> | null>(null);
   const oval = useRef<SVGEllipseElement>(null);
   const phG = useRef<SVGGElement>(null);
   const gold = useRef<SVGPathElement>(null);
@@ -93,12 +94,15 @@ export default function MotifLayer() {
         tracks[k] = { top: t.getBoundingClientRect().top + window.scrollY, height: t.offsetHeight };
       }
       const pieces = {} as Record<Piece, Point>;
+      const metrics = {} as Record<Piece, { centre: Point; length: number }>;
       for (const k of PIECES) {
         const p = outPaths.current[k];
         if (!p) return;
         const b = p.getBBox();
         pieces[k] = b.width ? { x: b.x + b.width / 2, y: b.y + b.height / 2 } : GLYPH_CENTRE;
+        metrics[k] = { centre: pieces[k], length: p.getTotalLength() };
       }
+      pieceMetrics.current = metrics;
       const vh = window.innerHeight;
       frames = resolve(motifKeyframes(window.innerWidth, vh), tracks, vh, pieces);
       const at = (k: Photo) => PHOTO_HOLDS[k].map((a) => keyframeY(tracks.continuation, a, vh)) as [number, number];
@@ -118,6 +122,34 @@ export default function MotifLayer() {
       oG.setAttribute("transform", rot);
       pG.setAttribute("transform", rot);
       oG.style.opacity = s.outline.toFixed(3);
+      const metrics = pieceMetrics.current;
+      if (metrics) {
+        const margin = Math.min(cam.w, cam.h) * 0.08;
+        const corners: Record<Piece, Point> = {
+          A: { x: cam.x - margin, y: cam.y - margin },
+          B: { x: cam.x + cam.w + margin, y: cam.y - margin },
+          C: { x: cam.x - margin, y: cam.y + cam.h + margin },
+          D: { x: cam.x + cam.w + margin, y: cam.y + cam.h + margin },
+        };
+        PIECES.forEach((k, index) => {
+          const path = outPaths.current[k];
+          if (!path) return;
+          if (s.assemble >= 0.999) {
+            path.removeAttribute("transform");
+            path.style.removeProperty("stroke-dasharray");
+            path.style.removeProperty("stroke-dashoffset");
+            return;
+          }
+          const { centre, length } = metrics[k];
+          const move = Math.max(0, Math.min(1, s.assemble * 1.08 - index * 0.025));
+          const draw = Math.max(0, Math.min(1, s.assemble * 1.22 - index * 0.055));
+          const dx = (corners[k].x - centre.x) * (1 - move);
+          const dy = (corners[k].y - centre.y) * (1 - move);
+          path.setAttribute("transform", `translate(${dx.toFixed(2)} ${dy.toFixed(2)})`);
+          path.style.strokeDasharray = `${length.toFixed(2)} ${length.toFixed(2)}`;
+          path.style.strokeDashoffset = (length * (1 - draw)).toFixed(2);
+        });
+      }
       pG.style.opacity = s.photo.toFixed(3);
       // the drift loop only runs while the photographs are up
       const photos = s.photo > 0.001 ? "on" : "";

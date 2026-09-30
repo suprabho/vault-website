@@ -4,11 +4,11 @@
 .amph { --c: 1 / span 12; margin-top: clamp(24px, 4vh, 48px); }
 .amphSvg { display: block; width: 100%; height: auto; overflow: visible; }
 .spokes line { stroke: var(--color-brass); stroke-opacity: 0.08; stroke-width: 1; opacity: 0; transition: opacity 1200ms var(--ease-editorial) 300ms; }
-.arc { fill: none; stroke: var(--color-brass); stroke-width: 1; stroke-opacity: 0.35; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1800ms var(--ease-editorial); }
-.arc:nth-child(1) { transition-delay: 100ms; stroke-opacity: 0.5; }
-.arc:nth-child(2) { transition-delay: 260ms; stroke-dasharray: 0.004 0.006; stroke-opacity: 0.45; }
-.arc:nth-child(3) { transition-delay: 420ms; stroke-dasharray: 0.004 0.006; stroke-opacity: 0.45; }
-.arc:nth-child(4) { transition-delay: 580ms; }
+.arc { fill: none; stroke: var(--color-brass); stroke-width: 1; stroke-opacity: 0.35; }
+.arc:nth-child(1) { stroke-opacity: 0.5; }
+.arc:nth-child(2), .arc:nth-child(3) { stroke-dasharray: 0.004 0.006; stroke-opacity: 0.45; }
+.arcReveal { fill: none; stroke: white; stroke-width: 3; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1800ms var(--ease-editorial) var(--arc-delay); }
+.badge { transform-box: view-box; }
 .markG { opacity: 0; transform: translateY(8px); transition: opacity 900ms var(--ease-editorial) 500ms, transform 900ms var(--ease-editorial) 500ms; }
 .nl { stroke: var(--color-brass); stroke-opacity: 0.5; stroke-width: 1; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 900ms var(--ease-editorial); }
 .nd { fill: var(--color-brass); opacity: 0; transition: opacity 500ms var(--ease-editorial); }
@@ -17,40 +17,32 @@
 .node.on .nc { stroke-opacity: 1; }
 /* sequence: spokes → arcs → mark → nodes one by one → the panel */
 .amph:global(.in) .spokes line { opacity: 1; }
-.amph:global(.in) .arc { stroke-dashoffset: 0; }
+.amph:global(.in) .arcReveal { stroke-dashoffset: 0; }
 .amph:global(.in) .markG { opacity: 1; transform: none; }
 .amph:global(.in) .nd { opacity: 1; }
 .amph:global(.in) .nl { stroke-dashoffset: 0; }
 .amph:global(.in) .nc, .amph:global(.in) .nfo { opacity: 1; }
 .amph:global(.in) .node * { transition-delay: calc(1100ms + var(--i) * 250ms); }
-/* Keep the diagram alive after its entrance, with a soft reset between draws. */
+/* The entrance runs once. After formation, the dashes travel clockwise and
+   each badge takes a four-second turn growing and settling back into place. */
 @media (prefers-reduced-motion: no-preference) {
-  .amph:global(.in) .arc {
-    animation: drawCycle 8s var(--ease-editorial) infinite both;
+  .amph:global(.in) .arc:nth-child(2),
+  .amph:global(.in) .arc:nth-child(3) {
+    animation: dashOrbit 600ms linear 2800ms infinite;
   }
-  .amph:global(.in) .arc:nth-child(1) { animation-delay: 100ms; }
-  .amph:global(.in) .arc:nth-child(2) { animation-delay: 260ms; }
-  .amph:global(.in) .arc:nth-child(3) { animation-delay: 420ms; }
-  .amph:global(.in) .arc:nth-child(4) { animation-delay: 580ms; }
-  .amph:global(.in) .nl {
-    animation: drawCycle 8s var(--ease-editorial) infinite both;
-    animation-delay: calc(1100ms + var(--i) * 250ms);
-  }
-  .amph:global(.in) .nd {
-    animation: dotCycle 8s ease-in-out infinite both;
-    animation-delay: calc(1100ms + var(--i) * 250ms);
+  .amph:global(.in) .badge {
+    animation: badgePulse 16s ease-in-out infinite;
+    animation-delay: calc(2800ms + var(--i) * 4s);
   }
 }
-@keyframes drawCycle {
-  0% { stroke-dashoffset: 1; opacity: 0; }
-  5% { opacity: 1; }
-  25%, 70% { stroke-dashoffset: 0; opacity: 1; }
-  85%, 100% { stroke-dashoffset: 0; opacity: 0; }
+/* One full dash-and-gap per iteration makes the seam invisible. */
+@keyframes dashOrbit {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -0.01; }
 }
-@keyframes dotCycle {
-  0%, 100% { opacity: 0; }
-  25%, 70% { opacity: 1; }
-  85% { opacity: 0; }
+@keyframes badgePulse {
+  0%, 25%, 100% { transform: scale(1); }
+  12.5% { transform: scale(1.18); }
 }
 /* the constituencies: one quiet glass panel, four columns */
 .who {
@@ -92,5 +84,5 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .spokes line, .markG, .nd, .nc, .nfo, .who { opacity: 1; transform: none; transition: none; }
-  .arc, .nl { stroke-dashoffset: 0; transition: none; }
+  .arcReveal, .nl { stroke-dashoffset: 0; transition: none; }
 }

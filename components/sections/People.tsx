@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { MONOGRAM } from "@/components/brand/monogram";
 import { Icon, type IconName } from "@/lib/icons";
 import Lines from "@/components/type/Lines";
@@ -42,6 +42,7 @@ const SEATS = [
 
 /** 09 · people: the room as an amphitheatre around the mark. Hovering a constituency lights its seat. */
 export default function People() {
+  const arcMaskId = useId();
   const [lit, setLit] = useState<number | null>(null);
 
   return (
@@ -65,14 +66,21 @@ export default function People() {
             role="img"
             aria-label="Four constituencies arranged around the Vault mark: exchanges and custodians, financial institutions, regulators and investigators, legal and advisory."
           >
+            <defs>
+              {ARCS.map((d, i) => (
+                <mask key={d} id={`${arcMaskId}-${i}`} maskUnits="userSpaceOnUse" x="0" y="0" width="1200" height="560">
+                  <path className={styles.arcReveal} pathLength={1} d={d} style={{ "--arc-delay": `${[100, 260, 420, 580][i]}ms` } as React.CSSProperties} />
+                </mask>
+              ))}
+            </defs>
             <g className={styles.spokes}>
               {SPOKES.map(([x, y]) => (
                 <line key={`${x}-${y}`} x1="600" y1="540" x2={x} y2={y} />
               ))}
             </g>
             <g className={styles.arcs}>
-              {ARCS.map((d) => (
-                <path key={d} className={styles.arc} pathLength={1} d={d} />
+              {ARCS.map((d, i) => (
+                <path key={d} className={styles.arc} pathLength={1} d={d} mask={`url(#${arcMaskId}-${i})`} />
               ))}
             </g>
             <g className={styles.markG}>
@@ -89,12 +97,14 @@ export default function People() {
               <g key={n.icon} className={`${styles.node} ${lit === i ? styles.on : ""}`} style={{ "--i": i } as React.CSSProperties}>
                 <line className={styles.nl} pathLength={1} x1={n.from[0]} y1={n.from[1]} x2={n.to[0]} y2={n.to[1]} />
                 <circle className={styles.nd} cx={n.from[0]} cy={n.from[1]} r="4" />
-                <circle className={styles.nc} cx={n.to[0]} cy={n.to[1]} r="22" />
-                <foreignObject x={n.to[0] - 11} y={n.to[1] - 11} width="22" height="22">
-                  <div className={styles.nfo}>
-                    <Icon name={n.icon} strokeWidth={1.4} className="h-[18px] w-[18px] text-brass" />
-                  </div>
-                </foreignObject>
+                <g className={styles.badge} style={{ transformOrigin: `${n.to[0]}px ${n.to[1]}px` }}>
+                  <circle className={styles.nc} cx={n.to[0]} cy={n.to[1]} r="22" />
+                  <foreignObject x={n.to[0] - 11} y={n.to[1] - 11} width="22" height="22">
+                    <div className={styles.nfo}>
+                      <Icon name={n.icon} strokeWidth={1.4} className="h-[18px] w-[18px] text-brass" />
+                    </div>
+                  </foreignObject>
+                </g>
               </g>
             ))}
           </svg>

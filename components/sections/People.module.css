@@ -23,6 +23,35 @@
 .amph:global(.in) .nl { stroke-dashoffset: 0; }
 .amph:global(.in) .nc, .amph:global(.in) .nfo { opacity: 1; }
 .amph:global(.in) .node * { transition-delay: calc(1100ms + var(--i) * 250ms); }
+/* Keep the diagram alive after its entrance, with a soft reset between draws. */
+@media (prefers-reduced-motion: no-preference) {
+  .amph:global(.in) .arc {
+    animation: drawCycle 8s var(--ease-editorial) infinite both;
+  }
+  .amph:global(.in) .arc:nth-child(1) { animation-delay: 100ms; }
+  .amph:global(.in) .arc:nth-child(2) { animation-delay: 260ms; }
+  .amph:global(.in) .arc:nth-child(3) { animation-delay: 420ms; }
+  .amph:global(.in) .arc:nth-child(4) { animation-delay: 580ms; }
+  .amph:global(.in) .nl {
+    animation: drawCycle 8s var(--ease-editorial) infinite both;
+    animation-delay: calc(1100ms + var(--i) * 250ms);
+  }
+  .amph:global(.in) .nd {
+    animation: dotCycle 8s ease-in-out infinite both;
+    animation-delay: calc(1100ms + var(--i) * 250ms);
+  }
+}
+@keyframes drawCycle {
+  0% { stroke-dashoffset: 1; opacity: 0; }
+  5% { opacity: 1; }
+  25%, 70% { stroke-dashoffset: 0; opacity: 1; }
+  85%, 100% { stroke-dashoffset: 0; opacity: 0; }
+}
+@keyframes dotCycle {
+  0%, 100% { opacity: 0; }
+  25%, 70% { opacity: 1; }
+  85% { opacity: 0; }
+}
 /* the constituencies: one quiet glass panel, four columns */
 .who {
   --c: 1 / span 12; margin-top: -8px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); position: relative;

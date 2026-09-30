@@ -110,10 +110,9 @@ export const motifKeyframes = (vw: number, vh: number): Keyframe[] => {
   const between = betweenPose(vw, vh);
   const BETWEEN_KEY = { anchor: between.anchor, sx: between.sx, sy: between.sy, h: between.h };
   return [
-    // 01 · hero: the mark surfaces once the copy has gone
-    { track: "hero", at: 0, ...HOME, h: 50, assemble: 0, outline: 0, photo: 0, gold: 0, ellipse: 0, ellipseCover: 0 },
-    { track: "hero", at: 0.28, ...HOME, h: 50, assemble: 0, outline: 1 },
-    { track: "hero", at: 0.68, ...HOME, assemble: 1, outline: 1 },
+    // 01 · hero: the oversized pieces draw in from the corners and settle behind the departing copy
+    { track: "hero", at: 0, ...HOME, h: 170, assemble: 0, outline: 1, photo: 0, gold: 0, ellipse: 0, ellipseCover: 0 },
+    { track: "hero", at: 0.56, ...HOME, h: 50, assemble: 1, outline: 1 },
     { track: "hero", at: 1, ...HOME },
     // 02 · problem: it swells to frame the headline while the cream sheet slides up
     { track: "problem", at: 0, ...CENTRE, sx: 0.5, sy: 0.61, h: 142 },

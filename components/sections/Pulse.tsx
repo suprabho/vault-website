@@ -1,5 +1,5 @@
 import { Icon, type IconName } from "@/lib/icons";
-import { LEAD } from "@/lib/briefing";
+import { EDITION } from "@/lib/briefing";
 import Invitation from "./Invitation";
 import styles from "./Pulse.module.css";
 
@@ -62,10 +62,10 @@ export default function Pulse() {
                 <span className={styles.sheetShort} />
               </div>
               <div>
-                <h3 className={styles.title}>{LEAD.title}</h3>
-                <p className={styles.text}>{LEAD.context[0].text}</p>
+                <h3 className={styles.title}>{EDITION.lead.title}</h3>
+                <p className={styles.text}>{EDITION.lead.dek}</p>
                 <p className={styles.meta}>
-                  <span>{LEAD.theme}</span>
+                  <span>{EDITION.lead.theme}</span>
                   <span>Four more inside</span>
                 </p>
               </div>

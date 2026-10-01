@@ -8,14 +8,15 @@ type Props = { open: boolean; onClose: () => void };
 export default function MobileSheet({ open, onClose }: Props) {
   return (
     <div
-      className={`fixed inset-0 z-[110] flex-col bg-night px-[var(--gutter)] pb-10 pt-6 ${open ? "flex" : "hidden"}`}
+      className={`fixed inset-0 z-[110] flex-col overflow-y-auto overscroll-contain bg-night px-[var(--gutter)] pb-10 ${open ? "flex" : "hidden"}`}
       role="dialog"
       aria-modal="true"
       aria-label="Menu"
     >
-      <div className="flex w-full items-center justify-between gap-6">
+      {/* the same row as the header, so the logo and the button stay put as the sheet opens */}
+      <div className="flex h-[var(--navh)] w-full shrink-0 items-center justify-between gap-6">
         <span className="flex items-center gap-2.5 text-white">
-          <VaultLogo className="block h-[30px] w-auto" />
+          <VaultLogo className="block h-9 w-auto" />
         </span>
         <button
           type="button"
@@ -27,7 +28,7 @@ export default function MobileSheet({ open, onClose }: Props) {
           <i className="absolute block h-px w-[18px] -rotate-45 bg-cream" />
         </button>
       </div>
-      <nav className="mt-12 flex flex-col gap-2">
+      <nav className="mb-10 mt-10 flex shrink-0 flex-col gap-2">
         {NAV_LINKS.map(({ href, label }) => (
           <a
             key={href}
@@ -42,7 +43,7 @@ export default function MobileSheet({ open, onClose }: Props) {
           Member access
         </a>
       </nav>
-      <a className="btn btn-brass mt-auto" href={CTA.href} onClick={onClose}>
+      <a className="btn btn-brass mt-auto shrink-0" href={CTA.href} onClick={onClose}>
         {CTA.label}
       </a>
     </div>

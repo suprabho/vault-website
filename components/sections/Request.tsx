@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { MONOGRAM } from "@/components/brand/monogram";
 import { useStillMedia } from "@/hooks/useStillMedia";
-import { easeCubic, t, trackProgress } from "@/lib/scrub";
+import { easeCubic, entryProgress, t, trackProgress } from "@/lib/scrub";
 import Lines from "@/components/type/Lines";
 import { CTA } from "@/lib/site";
 import styles from "./Request.module.css";
@@ -45,7 +45,7 @@ export default function Request() {
     }
 
     const at = (pr: number) => {
-      const born = easeCubic(t(pr, 0, 0.16)); // stage is fully on screen before anything shows
+      const born = easeCubic(t(pr, 0, 0.16)); // on a wide screen the stage is fully in view before anything shows
       A.style.opacity = born.toFixed(3);
       // gather from the edges to a resting composition that keeps clear air around the copy — then hold
       const sep = 1 - (1 - REST) * easeCubic(t(pr, 0.14, 0.7));
@@ -61,18 +61,25 @@ export default function Request() {
       ct.style.opacity = b.toFixed(3);
       ct.style.transform = `translateY(${(8 - 8 * b).toFixed(1)}px)`;
     };
+    // on a phone the stage would scroll in empty and hold a blank screen before anything shows:
+    // there the close counts from the stage's arrival, so it assembles as it rises
+    const narrow = window.matchMedia("(max-width:899px)");
     let ticking = false;
     const onScroll = () => {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
-        at(trackProgress(tr));
+        at(narrow.matches ? entryProgress(tr) : trackProgress(tr));
         ticking = false;
       });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
     onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, [still]);
 
   return (

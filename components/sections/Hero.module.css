@@ -34,6 +34,26 @@
 }
 .ctas { margin-top: clamp(40px, 6.5vh, 64px); }
 
+/* the scroll cue at the foot of the stage: the words, then a light running down a hairline */
+.cue {
+  position: absolute; left: 50%; bottom: clamp(24px, 4.5vh, 44px); transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 14px; pointer-events: none; will-change: opacity, transform;
+}
+.cueText { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-cream-2); white-space: nowrap; }
+.cueLine { position: relative; display: block; width: 1px; height: 52px; overflow: hidden; background: rgba(195, 174, 135, 0.2); }
+.cueLine i {
+  position: absolute; left: 0; top: 0; width: 1px; height: 40%;
+  background: linear-gradient(180deg, rgba(195, 174, 135, 0), var(--color-brass));
+  animation: cueRun 2.2s var(--ease-editorial) infinite;
+}
+@keyframes cueRun {
+  0% { transform: translateY(-100%); }
+  70%, 100% { transform: translateY(260%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cueLine i { animation: none; transform: translateY(75%); }
+}
+
 @media (max-width: 599px) {
   .ctas { flex-direction: column; align-items: stretch; max-width: 320px; margin-inline: auto; }
 }

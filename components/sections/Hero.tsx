@@ -8,26 +8,34 @@ import { CTA } from "@/lib/site";
 import { easeQuad, t } from "@/lib/scrub";
 import styles from "./Hero.module.css";
 
-/** 01 · two beats on one pinned track: the copy over the aura, then the copy clears for the mark. */
+/**
+ * 01 · two beats on one pinned track: the copy over the aura, then the copy clears for the mark.
+ * A scroll cue waits at the foot of the stage and leaves with the first movement.
+ */
 export default function Hero() {
   const still = useStillMedia();
   const track = useRef<HTMLDivElement>(null);
   const copy = useRef<HTMLDivElement>(null);
+  const cue = useRef<HTMLDivElement>(null);
 
   const at = useCallback((p: number) => {
-    const el = copy.current;
-    if (!el) return;
+    const el = copy.current, cu = cue.current;
+    if (!el || !cu) return;
     const v = 1 - easeQuad(t(p, HERO.copyOut[0], HERO.copyOut[1]));
     el.style.opacity = v.toFixed(3);
     el.style.transform = `translateY(${(-28 * (1 - v)).toFixed(1)}px)`;
     el.style.pointerEvents = v < 0.05 ? "none" : "";
+    const c = 1 - easeQuad(t(p, HERO.cueOut[0], HERO.cueOut[1]));
+    cu.style.opacity = c.toFixed(3);
+    cu.style.transform = `translate(-50%, ${(12 * (1 - c)).toFixed(1)}px)`;
   }, []);
   const settle = useCallback(() => {
-    const el = copy.current;
-    if (!el) return;
-    el.style.opacity = "";
-    el.style.transform = "";
-    el.style.pointerEvents = "";
+    [copy.current, cue.current].forEach((el) => {
+      if (!el) return;
+      el.style.opacity = "";
+      el.style.transform = "";
+      el.style.pointerEvents = "";
+    });
   }, []);
   useTrackScrub(track, still, at, settle);
 
@@ -57,10 +65,16 @@ export default function Hero() {
               <a className="btn btn-brass" href={CTA.href}>
                 {CTA.label}
               </a>
-              <a className="btn btn-ghost-brass" href="#room">
-                See what happens inside
-              </a>
             </div>
+          </div>
+          {/* the scroll cue: a word, and a light running down a line */}
+          <div className={styles.cue} ref={cue} aria-hidden="true">
+            <span className={`enter ${styles.cueText}`} style={{ animationDelay: "900ms" }}>
+              Scroll to see what happens
+            </span>
+            <span className={`enter ${styles.cueLine}`} style={{ animationDelay: "1050ms" }}>
+              <i />
+            </span>
           </div>
         </div>
       </div>

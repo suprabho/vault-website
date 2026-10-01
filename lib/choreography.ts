@@ -13,7 +13,9 @@ export type Window = readonly [number, number];
 export const TRACK_VH = { hero: 200, problem: 400, continuation: 1000, between: 500 } as const;
 
 export const HERO = {
-  /** headline, lead and buttons fade and lift away */
+  /** the scroll cue gives way as soon as the page moves */
+  cueOut: [0, 0.07] as Window,
+  /** headline, lead and button fade and lift away */
   copyOut: [0.1, 0.35] as Window,
 };
 

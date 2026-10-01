@@ -56,14 +56,9 @@
 .place.on .wi { border-color: var(--color-brass); background: rgba(195, 174, 135, 0.08); }
 .seatList { list-style: none; margin: 20px 0 0; padding: 0; }
 .seat { padding: 18px 0 20px; border-top: 1px solid var(--hair); }
-/* where the name would be on the place card: a hatched redaction bar */
-.name {
-  --ink: rgba(195, 174, 135, 0.34);
-  display: block; height: 10px; margin-bottom: 14px; border: 1px solid var(--ink);
-  background: repeating-linear-gradient(-45deg, var(--ink) 0 1px, transparent 1px 4px);
-  transition: border-color var(--fast);
-}
-.place.on .name { --ink: rgba(195, 174, 135, 0.6); }
+/* each seat's role mark; a lit constituency brings its seat rings up to full */
+.mark { margin-bottom: 16px; }
+.place.on { --seat: 1; }
 .seatTitle { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(17px, 1.45vw, 20px); line-height: 1.2; letter-spacing: -0.015em; color: var(--color-cream); }
 .from { margin: 7px 0 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--color-brass-lo); }
 .logoRow { --c: 1 / span 12; margin-top: clamp(48px, 7vh, 80px); }

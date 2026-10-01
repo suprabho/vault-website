@@ -1,0 +1,4 @@
+/* the role marks: one brass line weight, the seat ring a step quieter than what sits in it */
+.mark { display: block; width: 40px; height: 40px; overflow: visible; stroke: var(--color-brass); stroke-width: 1.1; stroke-linejoin: round; }
+.seat { stroke-opacity: var(--seat, 0.42); transition: stroke-opacity var(--fast); }
+.dot, .fill { fill: var(--color-brass); stroke: none; }

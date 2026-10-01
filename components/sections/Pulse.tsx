@@ -1,6 +1,6 @@
-import { MONOGRAM_FULL, MONOGRAM_VIEWBOX } from "@/components/brand/monogram";
 import { Icon, type IconName } from "@/lib/icons";
 import { LEAD } from "@/lib/briefing";
+import Invitation from "./Invitation";
 import styles from "./Pulse.module.css";
 
 /*
@@ -26,12 +26,6 @@ const RESOURCE = {
   contents: ["Coverage map by product and chain", "Scenario-to-typology matrix", "Threshold tuning log", "Alert quality review", "Board reporting template"],
 };
 
-/** twelve seats around an oval table, drawn over the photograph */
-const SEATS = Array.from({ length: 12 }, (_, i) => {
-  const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
-  return [60 + 50 * Math.cos(a), 34 + 24 * Math.sin(a)] as const;
-});
-
 /** 07 · vault pulse: the next table carries the window, with this week's briefing and the newest resource beside it. */
 export default function Pulse() {
   return (
@@ -53,24 +47,7 @@ export default function Pulse() {
         <div className={styles.grid}>
           {/* next private table */}
           <article className={`reveal ${styles.feature}`} data-reveal>
-            <div className={styles.photo}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/private-dinner.webp" alt="" loading="lazy" />
-              <svg className={styles.seats} viewBox="0 0 120 68" aria-hidden="true">
-                <ellipse cx="60" cy="34" rx="36" ry="14" />
-                {SEATS.map(([x, y]) => (
-                  <circle key={`${x}-${y}`} cx={x} cy={y} r="2.1" />
-                ))}
-              </svg>
-              <p className={styles.seal}>
-                <span className={styles.sealMark} aria-hidden="true">
-                  <svg viewBox={MONOGRAM_VIEWBOX}>
-                    <path d={MONOGRAM_FULL} />
-                  </svg>
-                </span>
-                Invitation only
-              </p>
-            </div>
+            <Invitation />
             <h3 className={`${styles.title} ${styles.featureTitle}`}>{TABLE.title}</h3>
             <p className={styles.text}>{TABLE.text}</p>
             <ul className={styles.details}>

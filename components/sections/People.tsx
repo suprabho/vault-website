@@ -4,6 +4,7 @@ import { useId, useState } from "react";
 import { MONOGRAM } from "@/components/brand/monogram";
 import { Icon, type IconName } from "@/lib/icons";
 import Lines from "@/components/type/Lines";
+import RoleMark, { type RoleName } from "./RoleMark";
 import styles from "./People.module.css";
 
 const SPOKES = [
@@ -22,40 +23,40 @@ const NODES: { icon: IconName; from: [number, number]; to: [number, number] }[] 
 
 /*
  * The seating plan: two seats per constituency, in the diagram's order, each a seniority and
- * the kind of institution it comes from. These describe the seats the room is built for, never
- * who sits in them: the name is always withheld. `name` is the width of the redaction bar.
+ * the kind of institution it comes from, under the role's mark. These describe the seats the
+ * room is built for, never who sits in them.
  */
-const TABLE: { icon: IconName; label: string; seats: { title: string; from: string; name: number }[] }[] = [
+const TABLE: { icon: IconName; label: string; seats: { title: string; from: string; mark: RoleName }[] }[] = [
   {
     icon: "exchange",
     label: "Exchanges & custodians",
     seats: [
-      { title: "Chief Compliance Officer", from: "Global exchange", name: 64 },
-      { title: "MLRO", from: "Digital asset custodian", name: 48 },
+      { title: "Chief Compliance Officer", from: "Global exchange", mark: "cco" },
+      { title: "MLRO", from: "Digital asset custodian", mark: "mlro" },
     ],
   },
   {
     icon: "bank",
     label: "Financial institutions",
     seats: [
-      { title: "Head of Financial Crime", from: "International bank", name: 56 },
-      { title: "Chief Risk Officer", from: "Broker-dealer", name: 70 },
+      { title: "Head of Financial Crime", from: "International bank", mark: "finCrime" },
+      { title: "Chief Risk Officer", from: "Broker-dealer", mark: "risk" },
     ],
   },
   {
     icon: "scales",
     label: "Regulators & investigators",
     seats: [
-      { title: "Senior supervisor", from: "Financial regulator", name: 52 },
-      { title: "Head of Investigations", from: "Law enforcement", name: 66 },
+      { title: "Senior supervisor", from: "Financial regulator", mark: "supervisor" },
+      { title: "Head of Investigations", from: "Law enforcement", mark: "investigations" },
     ],
   },
   {
     icon: "person",
     label: "Legal & advisory",
     seats: [
-      { title: "General Counsel", from: "Digital asset group", name: 60 },
-      { title: "Partner", from: "Financial crime practice", name: 50 },
+      { title: "General Counsel", from: "Digital asset group", mark: "counsel" },
+      { title: "Partner", from: "Financial crime practice", mark: "partner" },
     ],
   },
 ];
@@ -155,8 +156,7 @@ export default function People() {
               <ul className={styles.seatList}>
                 {c.seats.map((s) => (
                   <li key={s.title} className={styles.seat}>
-                    <span className={styles.name} style={{ width: `${s.name}%` }} aria-hidden="true" />
-                    <span className="sr-only">Name withheld. </span>
+                    <RoleMark role={s.mark} className={styles.mark} />
                     <p className={styles.seatTitle}>{s.title}</p>
                     <p className={styles.from}>{s.from}</p>
                   </li>

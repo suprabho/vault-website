@@ -28,6 +28,22 @@ export type AssetVisual =
   /** two sides and the gap between them */
   | { type: "gap"; left: string; right: string };
 
+/**
+ * The motif composition behind a card's visual, from the site's own marks: a monogram piece
+ * (arc = A, gate = B, hook = C, bowl = D), the section rings, the seal, or the cream ellipse
+ * round the whole mark. Optional: left out, one is picked from the card's id.
+ */
+export const ASSET_MOTIFS = ["arc", "gate", "hook", "bowl", "rings", "seal", "ellipse"] as const;
+export type AssetMotif = (typeof ASSET_MOTIFS)[number];
+
+/** the card's own motif, or a stable pick from its id so a CMS entry without one still varies */
+export function motifFor(asset: Pick<BriefingAsset, "id" | "motif">): AssetMotif {
+  if (asset.motif) return asset.motif;
+  let h = 0;
+  for (const ch of asset.id) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return ASSET_MOTIFS[h % ASSET_MOTIFS.length];
+}
+
 export type BriefingAsset = {
   id: string;
   /** the editorial desk: Regulation, Enforcement, Sanctions… */
@@ -37,6 +53,8 @@ export type BriefingAsset = {
   /** one line; the card is the visual, not the copy */
   title: string;
   visual: AssetVisual;
+  /** the composition behind the visual */
+  motif?: AssetMotif;
   /** locked assets are shown out of focus with the invitation over them */
   locked?: boolean;
 };
@@ -53,6 +71,7 @@ export type BriefingEdition = {
 export const EDITION: BriefingEdition = {
   lead: {
     id: "travel-rule-exceptions",
+    motif: "arc",
     theme: "Regulation",
     kind: "Lead",
     title: "Travel Rule supervision now asks one thing: show us your exceptions.",
@@ -66,6 +85,7 @@ export const EDITION: BriefingEdition = {
   support: [
     {
       id: "where-it-fails",
+    motif: "hook",
       theme: "Regulation",
       kind: "Where it fails",
       title: "Three exception types draw the questions.",
@@ -80,6 +100,7 @@ export const EDITION: BriefingEdition = {
     },
     {
       id: "who-it-lands-on",
+    motif: "seal",
       theme: "Regulation",
       kind: "Who it lands on",
       title: "Three owners, one queue.",
@@ -87,6 +108,7 @@ export const EDITION: BriefingEdition = {
     },
     {
       id: "this-week",
+    motif: "gate",
       theme: "Regulation",
       kind: "This week",
       title: "Audit last quarter’s exceptions.",
@@ -96,6 +118,7 @@ export const EDITION: BriefingEdition = {
   more: [
     {
       id: "aml-thresholds",
+    motif: "rings",
       theme: "Enforcement",
       kind: "Analysis",
       title: "What a “reasonable” monitoring threshold now looks like.",
@@ -104,6 +127,7 @@ export const EDITION: BriefingEdition = {
     },
     {
       id: "scam-stablecoin-pairs",
+    motif: "ellipse",
       theme: "Financial crime",
       kind: "Typology",
       title: "Scam proceeds through new stablecoin pairs.",
@@ -112,6 +136,7 @@ export const EDITION: BriefingEdition = {
     },
     {
       id: "bridge-gap",
+    motif: "bowl",
       theme: "Sanctions",
       kind: "Control gap",
       title: "The cross-chain bridge gap in screening.",
@@ -120,6 +145,7 @@ export const EDITION: BriefingEdition = {
     },
     {
       id: "board-report",
+    motif: "gate",
       theme: "Action",
       kind: "Checklist",
       title: "Three questions before your board report.",

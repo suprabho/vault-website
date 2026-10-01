@@ -7,7 +7,7 @@ export default function AssetVisual({ visual }: { visual: Visual }) {
   switch (visual.type) {
     case "flow":
       return (
-        <ol className={styles.flow}>
+        <ol className={`${styles.glass} ${styles.flow}`}>
           {visual.steps.map((s, i) => {
             const broken = visual.breaks.includes(i);
             return (
@@ -46,7 +46,7 @@ export default function AssetVisual({ visual }: { visual: Visual }) {
 
     case "checklist":
       return (
-        <ul className={styles.checklist}>
+        <ul className={`${styles.glass} ${styles.checklist}`}>
           {visual.items.map((it, i) => (
             <li key={it} className={i < visual.done ? styles.done : undefined}>
               <span className={styles.box} aria-hidden="true">
@@ -61,10 +61,12 @@ export default function AssetVisual({ visual }: { visual: Visual }) {
     case "bars": {
       const max = Math.max(...visual.values);
       return (
-        <div className={styles.bars} aria-hidden="true">
-          {visual.values.map((v, i) => (
-            <span key={i} className={i === visual.highlight ? styles.barHi : undefined} style={{ height: `${(v / max) * 100}%` }} />
-          ))}
+        <div className={styles.glass} aria-hidden="true">
+          <div className={styles.bars}>
+            {visual.values.map((v, i) => (
+              <span key={i} className={i === visual.highlight ? styles.barHi : undefined} style={{ height: `${(v / max) * 100}%` }} />
+            ))}
+          </div>
         </div>
       );
     }
@@ -76,15 +78,17 @@ export default function AssetVisual({ visual }: { visual: Visual }) {
         return [Math.round((60 + Math.cos(a) * 44) * 10) / 10, Math.round((50 + Math.sin(a) * 36) * 10) / 10];
       });
       return (
-        <svg className={styles.network} viewBox="0 0 120 100" aria-hidden="true">
-          {pts.map(([x, y], i) => (
-            <line key={`l${i}`} x1="60" y1="50" x2={x} y2={y} />
-          ))}
-          {pts.map(([x, y], i) => (
-            <circle key={`c${i}`} cx={x} cy={y} r="4.5" />
-          ))}
-          <circle className={styles.hub} cx="60" cy="50" r="8" />
-        </svg>
+        <div className={styles.glass} aria-hidden="true">
+          <svg className={styles.network} viewBox="0 0 120 100">
+            {pts.map(([x, y], i) => (
+              <line key={`l${i}`} x1="60" y1="50" x2={x} y2={y} />
+            ))}
+            {pts.map(([x, y], i) => (
+              <circle key={`c${i}`} cx={x} cy={y} r="4.5" />
+            ))}
+            <circle className={styles.hub} cx="60" cy="50" r="8" />
+          </svg>
+        </div>
       );
     }
 

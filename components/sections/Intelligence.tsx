@@ -1,17 +1,28 @@
 import { Icon } from "@/lib/icons";
-import { EDITION, type BriefingAsset } from "@/lib/briefing";
+import { EDITION, motifFor, type BriefingAsset } from "@/lib/briefing";
 import { CTA } from "@/lib/site";
+import AssetBackdrop from "./AssetBackdrop";
 import AssetVisual from "./AssetVisual";
 import styles from "./Intelligence.module.css";
 
 const COUNT = ["None", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
 
+/** the card's picture: the motif ground, and the visual over it as glass */
+function Thumb({ asset, className = "" }: { asset: BriefingAsset; className?: string }) {
+  return (
+    <div className={`${styles.thumb} ${className}`}>
+      <AssetBackdrop motif={motifFor(asset)} uid={asset.id} />
+      <div className={styles.fg} aria-hidden={asset.locked ? true : undefined}>
+        <AssetVisual visual={asset.visual} />
+      </div>
+    </div>
+  );
+}
+
 function AssetCard({ asset, index, className = "" }: { asset: BriefingAsset; index?: number; className?: string }) {
   return (
     <article className={`${styles.card} ${asset.locked ? styles.locked : ""} ${className}`} style={{ "--i": index ?? 0 } as React.CSSProperties}>
-      <div className={styles.visual} aria-hidden={asset.locked ? true : undefined}>
-        <AssetVisual visual={asset.visual} />
-      </div>
+      <Thumb asset={asset} />
       <div className={styles.body}>
         <p className={styles.kicker}>
           {index !== undefined && <span className={styles.num}>{String(index + 2).padStart(2, "0")}</span>}
@@ -59,9 +70,7 @@ export default function Intelligence() {
               <h3 className={styles.leadTitle}>{lead.title}</h3>
               <p className={styles.dek}>{lead.dek}</p>
             </div>
-            <div className={styles.leadVisual}>
-              <AssetVisual visual={lead.visual} />
-            </div>
+            <Thumb asset={lead} className={styles.leadThumb} />
           </article>
 
           {support.map((a) => (

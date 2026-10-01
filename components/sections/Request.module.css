@@ -13,7 +13,8 @@
 @media (max-width: 899px) {
   .track { height: 220vh; }
   .art { height: 70svh; }
-  .h2 { font-size: clamp(36px, 10vw, 56px); }
+  /* the floor gives way below 360px so "If this is your room," keeps to one line */
+  .h2 { font-size: clamp(30px, 10vw, 56px); }
 }
 @media (prefers-reduced-motion: reduce) {
   .track { height: auto; }

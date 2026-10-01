@@ -64,10 +64,15 @@
     background: radial-gradient(closest-side, rgba(1, 0, 22, 0.72) 0%, rgba(1, 0, 22, 0.44) 56%, rgba(1, 0, 22, 0) 100%);
   }
 }
-/* still: one screen, no pin */
+/* still: one screen, no pin. The cue takes its own row at the foot, so on a short or landscape
+   screen it moves down below the button instead of over it. */
 @media (max-width: 899px), (prefers-reduced-motion: reduce) {
   .track { height: auto; min-height: 100svh; display: flex; }
   .aura { position: absolute; inset: 0; height: 100%; }
-  .stage { position: relative; height: auto; min-height: 100svh; padding: 104px 0 72px; }
-  .copy { opacity: 1 !important; transform: none !important; }
+  .stage {
+    position: relative; width: 100%; height: auto; min-height: 100svh; flex-direction: column;
+    padding: 104px 0 clamp(24px, 4.5vh, 44px);
+  }
+  .copy { opacity: 1 !important; transform: none !important; margin-block: auto; }
+  .cue { position: static; transform: none; margin-top: 40px; }
 }

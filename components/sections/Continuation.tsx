@@ -30,7 +30,8 @@ const CONVENINGS = [
  * 03 → 04 · one pinned track. The mark itself is drawn by the motif layer; this stage carries
  * the words that answer each of its poses: the continuation, the closing line, the room, then
  * the three convenings as the camera moves through the photographs. Past `CONTINUATION.ground`
- * the stage turns cream to match the ellipse that has just covered it.
+ * the stage turns cream to match the ellipse that has just covered it. In still mode the same turn
+ * is a cream ground under a domed edge, holding the room, the mark and the convenings.
  */
 export default function Continuation() {
   const still = useStillMedia();
@@ -101,31 +102,34 @@ export default function Continuation() {
             </p>
           </div>
 
-          {/* 04 · inside the room, on the cream ellipse */}
-          <div className={styles.roomMsg} ref={msg}>
-            <h2 className={styles.roomH2}>
-              A community of pioneers, brought together in exceptional rooms for a reason.
-            </h2>
-            <p className={styles.roomCopy}>Every table is built around people who should genuinely know one another.</p>
-          </div>
-
-          {/* still mode only: the photographs in the mark, as one picture */}
-          <figure className={styles.still}>
-            <MotifGlyph
-              photos
-              className={styles.stillGlyph}
-              title="The Vault monogram holding photographs of a private dinner, an executive breakfast and a closed-door roundtable."
-            />
-          </figure>
-
-          {/* the three convenings, as the camera reaches each photograph */}
-          {CONVENINGS.map((c, i) => (
-            <div key={c.name} className={`${styles.cap} ${styles[`cap${i}`]}`} ref={(el) => { caps.current[i] = el; }}>
-              <div className={styles.conveningVisual}><ConveningVisual variant={i} /></div>
-              <h3 className={styles.capName}>{c.name}</h3>
-              <p className={styles.capText}>{c.text}</p>
+          {/* the room: no box of its own on the pinned stage; in still mode, the cream ground the ellipse opens onto */}
+          <div className={styles.room}>
+            {/* 04 · inside the room, on the cream ellipse */}
+            <div className={styles.roomMsg} ref={msg}>
+              <h2 className={styles.roomH2}>
+                A community of pioneers, brought together in exceptional rooms for a reason.
+              </h2>
+              <p className={styles.roomCopy}>Every table is built around people who should genuinely know one another.</p>
             </div>
-          ))}
+
+            {/* still mode only: the photographs in the mark, as one picture */}
+            <figure className={styles.still}>
+              <MotifGlyph
+                photos
+                className={styles.stillGlyph}
+                title="The Vault monogram holding photographs of a private dinner, an executive breakfast and a closed-door roundtable."
+              />
+            </figure>
+
+            {/* the three convenings, as the camera reaches each photograph */}
+            {CONVENINGS.map((c, i) => (
+              <div key={c.name} className={`${styles.cap} ${styles[`cap${i}`]}`} ref={(el) => { caps.current[i] = el; }}>
+                <div className={styles.conveningVisual}><ConveningVisual variant={i} /></div>
+                <h3 className={styles.capName}>{c.name}</h3>
+                <p className={styles.capText}>{c.text}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

@@ -218,7 +218,8 @@
   .c5-sheet { position: relative; max-width: 1280px; margin-inline: auto; padding-inline: var(--gutter); }
   .c5-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 0 clamp(16px, 2vw, 32px); }
   .c5c { grid-column: var(--c); }
-  .c5-h2 { margin: 0; font-family: var(--font-display); font-weight: 500; letter-spacing: -0.035em; font-size: clamp(30px, 3.9vw, 58px); line-height: 1; color: var(--color-cream); }
+  /* below ~385px the floor follows the viewport, so each masked line still fits between the gutters */
+  .c5-h2 { margin: 0; font-family: var(--font-display); font-weight: 500; letter-spacing: -0.035em; font-size: clamp(min(30px, 7.8vw), 3.9vw, 58px); line-height: 1; color: var(--color-cream); }
   .c5-h3 { margin: 0; font-family: var(--font-body); font-weight: 600; font-size: clamp(22px, 2.3vw, 32px); line-height: 1.15; letter-spacing: -0.02em; }
   .c5-lab { font-family: var(--font-body); font-weight: 600; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-brass); }
   .c5-folio { font-family: var(--font-body); font-size: 12px; letter-spacing: 0.04em; color: var(--color-cream-3); }
@@ -227,7 +228,8 @@
 
   /* editorial reveals: line, fade, rule, drawn path */
   .c5-ln { display: block; overflow: hidden; }
-  .c5-ln > span { display: block; transform: translateY(105%); transition: transform 900ms var(--ease-editorial); }
+  /* a line that still has to wrap on a very narrow screen splits evenly rather than leaving one word behind */
+  .c5-ln > span { display: block; text-wrap: balance; transform: translateY(105%); transition: transform 900ms var(--ease-editorial); }
   .in .c5-ln > span, .c5-h2.in .c5-ln > span { transform: none; }
   .in .c5-ln:nth-child(2) > span { transition-delay: 80ms; }
   .in .c5-ln:nth-child(3) > span { transition-delay: 160ms; }

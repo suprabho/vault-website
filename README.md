@@ -34,14 +34,17 @@ components/
     Problem         02  pinned, inside the mark: headline, the promise, the three themes (light ground)
     Continuation    03→04  pinned: the introduction/relationship line, the room on a cream ellipse, the three convenings
     Between         05  pinned: the mark at the left, its counter a 365-day dial; each stop lights its days
-                        (52 Mondays, signals, 12 months, 4 quarters, every day) with a preview in the middle
+                        (52 Mondays, signals, 12 months, 4 quarters, every day) with a preview in the middle;
+                        unpinned, each stop is a card headed by its preview (on a phone a swipe, with one row of
+                        week ticks held beneath that turns to each stop's rhythm as its card arrives)
     CadenceAssets       placeholder previews for the five stops (swap for real renders)
     Intelligence    06  the weekly briefing: one item open, four out of focus
     Pulse           07  vault pulse: the next table and its setting, with this week's briefing and the newest resource beside it
     Invitation          the next table as an envelope: opens in view, the card glances up on hover, pops out on click;
                         the card carries the photograph and the table's title and details
                         (envelope shapes are SVG, not clip-paths, which Chrome can drop once the card settles)
-    People          08  the amphitheatre, and its seating plan: two seats per constituency under each role's mark
+    People          08  the amphitheatre, and its seating plan: two seats per constituency under each role's mark;
+                        on a phone a swipe of constituency cards, the one at rest lighting its badge above
     RoleMark            the role marks: a seat ring with triangles, circles and dots inside, one per role
     Membership      09  the standard: built for / not built for, two lists either side of one rule
     Process         10  pinned scrub: interest → review → conversation → invitation

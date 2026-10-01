@@ -52,10 +52,14 @@
 .cap2 .capText { max-width: 46ch; }
 
 .still { display: none; }
+/* the room has no box of its own on the pinned stage: its parts are placed on the stage itself */
+.room { display: contents; }
 
-/* still: no pin, the beats stack, the photographs come as one picture */
+/* still: no pin. The headline, then the turn from introduction to relationship as two points on one
+   line, then the room on a cream ground under a domed edge (the ellipse, opened out): its line, the
+   mark holding the photographs, and the three convenings set like a printed menu. */
 @media (max-width: 899px), (prefers-reduced-motion: reduce) {
-  .continuation { padding-block: 88px; }
+  .continuation { padding-block: 88px 0; }
   .continuation[data-ground="cream"] { background: var(--color-night); }
   .track { height: auto; }
   .stage { position: static; height: auto; padding-top: 0; overflow: visible; display: block; }
@@ -63,19 +67,48 @@
   .st { --c: 1 / span 12; }
   .close, .roomMsg, .still, .cap {
     position: static; transform: none !important; opacity: 1 !important; pointer-events: auto;
-    width: auto; max-width: 1280px; margin: 40px auto 0; padding-inline: var(--gutter); text-align: left;
-    box-sizing: border-box;
+    width: auto; max-width: 1280px; margin: 0 auto; padding-inline: var(--gutter); box-sizing: border-box;
   }
-  .close p { max-width: 18ch; }
-  .roomMsg, .roomH2 { color: var(--color-cream); }
-  .roomCopy { margin-inline: 0; color: var(--color-cream-2); font-size: clamp(15px, 1.15vw, 17px); max-width: 52ch; }
-  .roomH2 { font-size: clamp(24px, 2.8vw, 44px); }
-  .still { display: block; margin-top: 56px; }
-  .stillGlyph { display: block; width: min(100%, 520px); height: auto; }
-  .cap { width: auto; margin-top: 36px; }
-  .capName { color: var(--color-cream); white-space: normal; font-size: clamp(22px, 2.4vw, 28px); }
-  .capText { color: var(--color-cream-2); margin-top: 10px; }
-  .cap0 { margin-top: 40px; }
+
+  /* the turn: a hollow point for the introduction, a lit one for the relationship, one line between */
+  .close { margin-top: 48px; text-align: left; }
+  .close p { --fa: clamp(20px, 5.8vw, 30px); --fb: clamp(24px, 7.2vw, 38px); --gap: 24px; max-width: 640px; }
+  .close span { position: relative; padding-left: 32px; }
+  .closeA { font-size: var(--fa); }
+  .closeB { font-size: var(--fb); margin-top: var(--gap); }
+  .close span::before {
+    content: ""; position: absolute; left: 3px; top: calc(0.52em - 5px);
+    width: 10px; height: 10px; box-sizing: border-box; border-radius: 50%;
+  }
+  .closeA::before { border: 1px solid var(--color-cream-3); }
+  .closeB::before { background: var(--color-brass); box-shadow: 0 0 0 5px rgba(195, 174, 135, 0.14); }
+  .closeA::after {
+    content: ""; position: absolute; left: 7.5px; width: 1px;
+    top: calc(0.52em + 9px); bottom: calc(9px - var(--gap) - 0.52 * var(--fb));
+    background: linear-gradient(180deg, rgba(153, 153, 162, 0.6), var(--color-brass));
+  }
+
+  .room {
+    display: block; margin-top: clamp(88px, 14vw, 140px);
+    padding: clamp(80px, 14vw, 136px) 0 clamp(88px, 14vw, 152px);
+    background: #f2f1f3; color: #010016;
+    border-radius: 50% 50% 0 0 / clamp(44px, 10vw, 104px) clamp(44px, 10vw, 104px) 0 0;
+  }
+  .roomMsg { text-align: center; }
+  .roomH2 { max-width: 20ch; margin-inline: auto; font-size: clamp(26px, 7vw, 44px); color: #010016; }
+  .roomCopy { margin: 16px auto 0; font-size: clamp(15px, 1.15vw, 17px); color: #3e3c52; max-width: 32ch; }
+  .still { display: block; margin-top: clamp(48px, 9vw, 72px); }
+  .stillGlyph { display: block; width: min(76%, 380px); height: auto; margin-inline: auto; }
+
+  .cap { margin-top: clamp(64px, 12vw, 96px); text-align: center; }
+  /* a short brass rule between courses */
+  .cap + .cap::before {
+    content: ""; display: block; width: 40px; height: 1px; margin: 0 auto clamp(56px, 10vw, 80px);
+    background: var(--color-brass-ink); opacity: 0.55;
+  }
+  .cap + .cap { margin-top: clamp(56px, 10vw, 80px); }
+  .capName { color: #010016; white-space: normal; font-size: clamp(24px, 2.4vw, 30px); }
+  .capText, .cap2 .capText { margin: 10px auto 0; color: #3e3c52; max-width: 30ch; text-wrap: balance; }
 }
 
 /* Artwork sits outside the copy box so the photo choreography keeps its anchors. */
@@ -84,9 +117,9 @@
 .cap0 .conveningVisual { top: calc(100% + 28px); bottom: auto; }
 .cap2 .conveningVisual svg { width: clamp(140px, 13vw, 190px); }
 @media (max-width: 899px), (prefers-reduced-motion: reduce) {
-  .conveningVisual, .cap0 .conveningVisual { position: static; margin-bottom: 22px; }
+  .conveningVisual, .cap0 .conveningVisual { position: static; display: flex; justify-content: center; margin-bottom: 20px; }
   .conveningVisual svg * { animation-play-state: running; }
-  .cap2 .conveningVisual svg { width: 200px; }
+  .cap2 .conveningVisual svg { width: 180px; }
 }
 @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
   .cap2 { display: flex; flex-direction: column; bottom: 2%; }

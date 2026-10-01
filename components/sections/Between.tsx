@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import MotifGlyph from "@/components/motif/MotifGlyph";
 import Lines from "@/components/type/Lines";
 import { useStillMedia } from "@/hooks/useStillMedia";
@@ -61,12 +61,111 @@ function Beat({ beat }: { beat: Stop["beat"] }) {
   );
 }
 
+/** a week tick's pose, as [height scale, opacity]: off, on, or folded into the always-on line */
+const TICK_OFF = [4 / 14, 0.28] as const;
+const TICK_ON = [1, 1] as const;
+const TICK_LINE = [1.4 / 14, 1] as const;
+const WEEKS = 13;
+const tickPose = (stop: Stop, week: number) =>
+  stop.beat === "always" ? TICK_LINE : stop.beat.includes(week) ? TICK_ON : TICK_OFF;
+const lerp = (a: number, b: number, v: number) => a + (b - a) * v;
+const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+
+/**
+ * still mode, narrow only: the swipe's timeline. One row of week ticks stays at the foot of the
+ * section and turns from each stop's rhythm into the next as the cards move, the change sweeping
+ * across the quarter; "always" folds the ticks into one line. Beneath it, five segments say where
+ * the swipe rests and jump to a stop.
+ */
+function Timeline({ list }: { list: RefObject<HTMLOListElement | null> }) {
+  const [at, setAt] = useState(0);
+  const ticks = useRef<(HTMLElement | null)[]>([]);
+  const line = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const el = list.current;
+    if (!el) return;
+    let frame = 0;
+    const draw = () => {
+      frame = 0;
+      const items = Array.from(el.children) as HTMLElement[];
+      if (items.length < 2) return;
+      const s = el.scrollLeft, max = el.scrollWidth - el.clientWidth;
+      if (max <= 0) return; // not a swipe here
+      // where each card rests (the row ends in a spacer so the last one reaches the start too)
+      const rest = items.map((it) => Math.min(it.offsetLeft - items[0].offsetLeft, max));
+      let k = 0;
+      while (k < rest.length - 2 && s > rest[k + 1]) k++;
+      const span = rest[k + 1] - rest[k];
+      const along = span > 0 ? clamp01((s - rest[k]) / span) : 0;
+      const from = RHYTHM[k], to = RHYTHM[k + 1];
+      ticks.current.forEach((tk, w) => {
+        if (!tk) return;
+        // the change runs left to right across the weeks
+        const v = clamp01((along - (w / (WEEKS - 1)) * 0.35) / 0.65);
+        const a = tickPose(from, w), b = tickPose(to, w);
+        tk.style.transform = `scaleY(${lerp(a[0], b[0], v).toFixed(3)})`;
+        tk.style.opacity = lerp(a[1], b[1], v).toFixed(3);
+      });
+      if (line.current) {
+        const v = lerp(from.beat === "always" ? 1 : 0, to.beat === "always" ? 1 : 0, along);
+        line.current.style.transform = `scaleX(${v.toFixed(3)})`;
+      }
+      setAt(Math.round(k + along));
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(draw);
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    draw();
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      cancelAnimationFrame(frame);
+    };
+  }, [list]);
+
+  const go = (i: number) => {
+    const el = list.current;
+    const items = el ? (Array.from(el.children) as HTMLElement[]) : [];
+    if (el && items[i]) el.scrollTo({ left: items[i].offsetLeft - items[0].offsetLeft, behavior: "smooth" });
+  };
+
+  return (
+    <div className={styles.timeline}>
+      <div className={styles.weeks} aria-hidden="true">
+        <span className={styles.weeksLine} ref={line} />
+        {Array.from({ length: WEEKS }, (_, w) => (
+          <i key={w} ref={(el) => { ticks.current[w] = el; }} />
+        ))}
+      </div>
+      <div className={styles.pager}>
+        {RHYTHM.map((r, i) => (
+          <button
+            key={r.when}
+            type="button"
+            className={styles.pagerStop}
+            aria-label={`Show ${r.when}`}
+            aria-current={at === i ? "true" : undefined}
+            onClick={() => go(i)}
+          />
+        ))}
+        <span className={styles.pagerCount} aria-hidden="true">
+          {String(at + 1).padStart(2, "0")} / {String(RHYTHM.length).padStart(2, "0")}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 /**
  * 05 · one pinned track inside the mark. The motif layer holds the mark to the left; this stage
  * turns its counter into a year dial of 365 spokes. Each stop in turn lights the days it lands on
  * — 52 Mondays, the signals between, 12 months, 4 quarters, then every day — with a preview of
- * what it delivers in the middle of the dial and its copy to the right. In still mode the stops
- * are a trail: each one named, with its week ticks beside the name.
+ * what it delivers in the middle of the dial and its copy to the right. In still mode each stop
+ * is a card: the same preview, then its name, its week ticks and what it delivers; a row of five
+ * where there is room, a swipe on a phone.
  */
 export default function Between() {
   const still = useStillMedia();
@@ -238,16 +337,24 @@ export default function Between() {
           </div>
 
           <ol className={styles.box} ref={box} aria-label="The Vault cadence">
-            {RHYTHM.map((r, i) => (
-              <li key={r.when} className={styles.rm} ref={(el) => { stops.current[i] = el; }}>
-                <p className={styles.rmWhen}>
-                  <span>{r.when}</span>
-                  <Beat beat={r.beat} />
-                </p>
-                <p className={styles.rmWhat}>{r.what}</p>
-              </li>
-            ))}
+            {RHYTHM.map((r, i) => {
+              const Asset = CADENCE_ASSETS[i];
+              return (
+                <li key={r.when} className={styles.rm} ref={(el) => { stops.current[i] = el; }}>
+                  {/* still mode: the stop's preview heads its card (on the pinned stage it sits in the dial) */}
+                  <div className={styles.rmArt} aria-hidden="true">
+                    <Asset />
+                  </div>
+                  <p className={styles.rmWhen}>
+                    <span>{r.when}</span>
+                    <Beat beat={r.beat} />
+                  </p>
+                  <p className={styles.rmWhat}>{r.what}</p>
+                </li>
+              );
+            })}
           </ol>
+          <Timeline list={box} />
         </div>
       </div>
     </section>

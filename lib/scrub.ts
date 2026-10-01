@@ -9,3 +9,8 @@ export const trackProgress = (track: HTMLElement) => {
   const span = track.offsetHeight - window.innerHeight;
   return span <= 0 ? 1 : Math.max(0, Math.min(1, -track.getBoundingClientRect().top / span));
 };
+/** Progress (0..1) of a pinned track from the moment its top enters the viewport to the end of its pin. */
+export const entryProgress = (track: HTMLElement) => {
+  const span = track.offsetHeight;
+  return span <= 0 ? 1 : Math.max(0, Math.min(1, (window.innerHeight - track.getBoundingClientRect().top) / span));
+};

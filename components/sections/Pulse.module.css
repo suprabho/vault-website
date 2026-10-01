@@ -8,7 +8,8 @@
 
 .title { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(19px, 1.6vw, 23px); line-height: 1.2; letter-spacing: -0.022em; color: var(--color-cream); text-wrap: balance; }
 .text { margin: 12px 0 0; font-size: 15px; line-height: 1.6; color: var(--color-cream-2); max-width: 42ch; }
-.meta { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 16px 0 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--color-brass-lo); }
+/* the dots sit in the gap before each item; one that wraps to the start of a line falls outside and is clipped */
+.meta { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 16px 0 0; overflow: hidden; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--color-brass-lo); }
 .meta span + span { position: relative; }
 .meta span + span::before { content: ""; position: absolute; left: -12px; top: 50%; width: 3px; height: 3px; border-radius: 50%; background: currentColor; }
 

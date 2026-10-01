@@ -34,7 +34,8 @@ components/
     Problem         02  pinned, inside the mark: headline, the promise, the three themes (light ground)
     Continuation    03→04  pinned: the introduction/relationship line, the room on a cream ellipse, the three convenings
     Between         05  pinned: the mark at the left, its counter a 365-day dial; each stop lights its days
-                        (52 Mondays, signals, 12 months, 4 quarters, every day) with a preview in the middle
+                        (52 Mondays, signals, 12 months, 4 quarters, every day) with a preview in the middle;
+                        unpinned, each stop is a card headed by its preview (a swipe with a pager on a phone)
     CadenceAssets       placeholder previews for the five stops (swap for real renders)
     Intelligence    06  the weekly briefing: one item open, four out of focus
     Pulse           07  vault pulse: the next table and its setting, with this week's briefing and the newest resource beside it

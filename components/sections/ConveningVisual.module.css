@@ -15,9 +15,9 @@
 @keyframes trace { to { stroke-dashoffset: -1; } }
 @keyframes dawn { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 @keyframes orbit { to { transform: rotate(360deg); } }
+/* still mode sets them on the same cream ground as the pinned stage, so they keep its inks */
 @media (max-width: 899px), (prefers-reduced-motion: reduce) {
-  .visual { color: var(--color-brass); width: 200px; }
-  .ink { stroke: var(--color-cream); stroke-opacity: 0.55; }
+  .visual { width: 180px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .visual * { animation: none; }

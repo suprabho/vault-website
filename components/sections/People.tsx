@@ -152,7 +152,7 @@ export default function People() {
               <span className={styles.wi}>
                 <Icon name={c.icon} strokeWidth={1.4} className="h-[18px] w-[18px] text-brass" />
               </span>
-              <h3 className="sr-only">{c.label}</h3>
+              <h3 className={styles.placeLabel}>{c.label}</h3>
               <ul className={styles.seatList}>
                 {c.seats.map((s) => (
                   <li key={s.title} className={styles.seat}>

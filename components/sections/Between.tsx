@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import MotifGlyph from "@/components/motif/MotifGlyph";
 import Lines from "@/components/type/Lines";
 import { useStillMedia } from "@/hooks/useStillMedia";
@@ -62,11 +62,57 @@ function Beat({ beat }: { beat: Stop["beat"] }) {
 }
 
 /**
+ * still mode, narrow only: where the swipe through the stops rests, as five segments that also
+ * jump to a stop. Hidden wherever the stops are not a swipe.
+ */
+function Pager({ list }: { list: RefObject<HTMLOListElement | null> }) {
+  const [at, setAt] = useState(0);
+  useEffect(() => {
+    const el = list.current;
+    if (!el) return;
+    const onScroll = () => {
+      const items = Array.from(el.children) as HTMLElement[];
+      if (items.length < 2) return;
+      const stride = items[1].offsetLeft - items[0].offsetLeft || 1;
+      // the last card cannot reach the start of the row, so the end of the row counts as it
+      const end = el.scrollLeft >= el.scrollWidth - el.clientWidth - 2;
+      setAt(end ? items.length - 1 : Math.round(el.scrollLeft / stride));
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [list]);
+  const go = (i: number) => {
+    const el = list.current;
+    const items = el ? (Array.from(el.children) as HTMLElement[]) : [];
+    if (el && items[i]) el.scrollTo({ left: items[i].offsetLeft - items[0].offsetLeft, behavior: "smooth" });
+  };
+  return (
+    <div className={styles.pager}>
+      {RHYTHM.map((r, i) => (
+        <button
+          key={r.when}
+          type="button"
+          className={styles.pagerStop}
+          aria-label={`Show ${r.when}`}
+          aria-current={at === i ? "true" : undefined}
+          onClick={() => go(i)}
+        />
+      ))}
+      <span className={styles.pagerCount} aria-hidden="true">
+        {String(at + 1).padStart(2, "0")} / {String(RHYTHM.length).padStart(2, "0")}
+      </span>
+    </div>
+  );
+}
+
+/**
  * 05 · one pinned track inside the mark. The motif layer holds the mark to the left; this stage
  * turns its counter into a year dial of 365 spokes. Each stop in turn lights the days it lands on
  * — 52 Mondays, the signals between, 12 months, 4 quarters, then every day — with a preview of
- * what it delivers in the middle of the dial and its copy to the right. In still mode the stops
- * are a trail: each one named, with its week ticks beside the name.
+ * what it delivers in the middle of the dial and its copy to the right. In still mode each stop
+ * is a card: the same preview, then its name, its week ticks and what it delivers; a row of five
+ * where there is room, a swipe on a phone.
  */
 export default function Between() {
   const still = useStillMedia();
@@ -238,16 +284,24 @@ export default function Between() {
           </div>
 
           <ol className={styles.box} ref={box} aria-label="The Vault cadence">
-            {RHYTHM.map((r, i) => (
-              <li key={r.when} className={styles.rm} ref={(el) => { stops.current[i] = el; }}>
-                <p className={styles.rmWhen}>
-                  <span>{r.when}</span>
-                  <Beat beat={r.beat} />
-                </p>
-                <p className={styles.rmWhat}>{r.what}</p>
-              </li>
-            ))}
+            {RHYTHM.map((r, i) => {
+              const Asset = CADENCE_ASSETS[i];
+              return (
+                <li key={r.when} className={styles.rm} ref={(el) => { stops.current[i] = el; }}>
+                  {/* still mode: the stop's preview heads its card (on the pinned stage it sits in the dial) */}
+                  <div className={styles.rmArt} aria-hidden="true">
+                    <Asset />
+                  </div>
+                  <p className={styles.rmWhen}>
+                    <span>{r.when}</span>
+                    <Beat beat={r.beat} />
+                  </p>
+                  <p className={styles.rmWhat}>{r.what}</p>
+                </li>
+              );
+            })}
           </ol>
+          <Pager list={box} />
         </div>
       </div>
     </section>

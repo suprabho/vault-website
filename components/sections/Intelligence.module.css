@@ -7,36 +7,67 @@
 .h2 { font-size: clamp(34px, 4.4vw, 64px); line-height: 1.04; text-wrap: balance; }
 .judge { color: var(--i-brass); }
 
-/* one editorial sheet, not a stack of cards */
-.paper {
-  position: relative; max-width: 960px; margin-top: clamp(56px, 8vh, 96px);
-  background: #fbfbfc; border: 1px solid var(--i-rule); border-radius: 4px;
-  box-shadow: 0 40px 80px -48px rgba(1, 0, 22, 0.22);
-  padding: clamp(28px, 4vw, 56px) clamp(22px, 4.4vw, 64px) 0;
-  overflow: hidden;
+/* the edition as asset cards: the lead across the top, three cards unpacking it below */
+.grid {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(12px, 1.4vw, 20px);
+  max-width: 1080px; margin-top: clamp(56px, 8vh, 96px);
 }
-.leadTitle { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(24px, 2.6vw, 36px); line-height: 1.12; letter-spacing: -0.028em; color: #010016; max-width: 24ch; }
-.summary { margin: 22px 0 0; font-size: clamp(16px, 1.25vw, 17.5px); line-height: 1.65; color: var(--i-body); max-width: 60ch; }
 
-.context { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px clamp(20px, 2.4vw, 36px); margin: 36px 0 0; padding-top: 24px; border-top: 1px solid var(--i-rule); }
-.context p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--i-body); }
+.card {
+  position: relative; display: flex; flex-direction: column; overflow: hidden; isolation: isolate;
+  background: #fbfbfc; border: 1px solid var(--i-rule); border-radius: 16px;
+  box-shadow: 0 30px 60px -48px rgba(1, 0, 22, 0.28);
+  transition: transform 320ms var(--ease-editorial), box-shadow 320ms var(--ease-editorial);
+}
+.card:not(.locked):hover { transform: translateY(-3px); box-shadow: 0 36px 70px -44px rgba(1, 0, 22, 0.36); }
+.fill { height: 100%; }
+
+/* the thumbnail: deep-blue motif ground, the visual floating over it as glass */
+.thumb {
+  position: relative; overflow: hidden; background: #0c0b33;
+  min-height: 200px; display: flex; flex-direction: column; justify-content: center;
+}
+.fg { position: relative; z-index: 1; padding: clamp(18px, 1.8vw, 26px); }
+.body { margin-top: auto; display: grid; gap: 8px; padding: clamp(18px, 1.8vw, 24px) clamp(20px, 2vw, 28px) clamp(20px, 2vw, 28px); }
+
+.kicker {
+  display: flex; align-items: center; gap: 10px; margin: 0;
+  font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--i-brass);
+}
+.num { font-variant-numeric: tabular-nums; color: rgba(1, 0, 22, 0.4); }
+.lockIcon { width: 14px; height: 14px; margin-left: auto; color: rgba(1, 0, 22, 0.45); }
+
+.cardTitle {
+  margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(17px, 1.4vw, 20px);
+  line-height: 1.25; letter-spacing: -0.02em; color: #010016; text-wrap: balance;
+}
+
+/* lead: copy on the left, the broken message path in the thumbnail on the right */
+.lead { grid-column: 1 / -1; flex-direction: row; align-items: stretch; }
+.leadText { flex: 1 1 0; min-width: 0; display: grid; gap: 14px; align-content: center; padding: clamp(26px, 3.4vw, 48px); }
+.leadThumb { flex: 1.25 1 0; min-width: 0; min-height: 300px; }
+.leadThumb .fg { padding: clamp(22px, 3vw, 44px); }
+.leadTitle {
+  margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(24px, 2.4vw, 34px);
+  line-height: 1.12; letter-spacing: -0.028em; color: #010016; max-width: 22ch; text-wrap: balance;
+}
+.dek { margin: 0; font-size: clamp(15px, 1.2vw, 17px); line-height: 1.55; color: var(--i-body); max-width: 40ch; }
 
 /* the rest of the edition: present, in order, out of focus */
-.locked { position: relative; margin-top: clamp(40px, 5vh, 56px); }
-.list { list-style: none; margin: 0; padding: 0; }
-.item { padding: 22px 0; border-top: 1px solid var(--i-rule); opacity: calc(1 - var(--i) * 0.2); }
-.blur {
-  margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(18px, 1.7vw, 22px); line-height: 1.3; letter-spacing: -0.02em;
-  color: #010016; max-width: 40ch; filter: blur(5px); user-select: none; transition: filter 500ms var(--ease-editorial);
-}
-.item:hover .blur { filter: blur(4px); }
+.more { position: relative; max-width: 1080px; margin-top: clamp(12px, 1.4vw, 20px); padding-bottom: 112px; }
+.moreGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(12px, 1.4vw, 20px); }
+.locked { user-select: none; }
+.locked .body { opacity: calc(1 - var(--i) * 0.12); }
+.locked .thumb { min-height: 168px; }
+.locked .fg, .locked .cardTitle { filter: blur(5px); transition: filter 500ms var(--ease-editorial); }
+.locked:hover .fg, .locked:hover .cardTitle { filter: blur(4px); }
 
-/* the veil rises over the lower half of the list and carries the one way in */
+/* the veil rises over the lower half of the locked row and carries the one way in */
 .veil {
-  position: absolute; inset: 38% calc(-1 * clamp(22px, 4.4vw, 64px)) 0;
+  position: absolute; inset: 52% -24px 0;
   display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 14px;
-  padding-bottom: clamp(36px, 5vh, 56px); text-align: center;
-  background: linear-gradient(180deg, rgba(251, 251, 252, 0) 0%, rgba(251, 251, 252, 0.92) 45%, #fbfbfc 70%);
+  padding-bottom: 8px; text-align: center;
+  background: linear-gradient(180deg, rgba(246, 246, 248, 0) 0%, rgba(246, 246, 248, 0.9) 45%, #f6f6f8 72%);
 }
 .veil p { margin: 0; font-size: 15px; color: var(--i-body); }
 .veil a {
@@ -46,10 +77,17 @@
 }
 .veil a:hover { color: var(--i-brass); border-color: var(--i-brass); gap: 14px; }
 
+@media (max-width: 1023px) {
+  .lead { flex-direction: column; }
+  .leadThumb { order: -1; min-height: 240px; }
+  .moreGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .veil { inset: 62% -24px 0; }
+}
 @media (max-width: 767px) {
-  .context { grid-template-columns: 1fr; gap: 18px; }
-  .veil { inset: 30% calc(-1 * clamp(22px, 4.4vw, 64px)) 0; }
+  .grid { grid-template-columns: 1fr; }
+  .moreGrid > :nth-child(n + 3) { display: none; }
+  .veil { inset: 48% -24px 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .blur { transition: none; }
+  .card, .locked .fg, .locked .cardTitle { transition: none; }
 }

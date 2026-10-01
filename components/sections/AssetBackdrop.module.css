@@ -1,0 +1,10 @@
+.backdrop { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+/* the motif leans in a touch when its card is hovered */
+.drift { transform-box: view-box; transform-origin: 70% 40%; transition: transform 900ms var(--ease-editorial); }
+:global(article:hover) .drift { transform: scale(1.05) rotate(-1.5deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .drift { transition: none; }
+  :global(article:hover) .drift { transform: none; }
+}

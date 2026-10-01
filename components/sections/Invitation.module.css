@@ -3,15 +3,16 @@
  * inside it and then come out in front of it. The card is always the size of the frame; its
  * poses are transforms, scaled about its top-left corner, in fractions of the frame:
  * sealed in the envelope, resting with its top edge showing, glancing up, the top of its pop.
+ * The envelope's shapes are SVG, not clip-paths: Chrome can drop a clip-path from the paint once
+ * the card behind it stops moving, which closed the envelope's V over the resting card.
  */
 .stage {
   --sealed: translate(20%, 28%) scale(0.6);
   --rest: translate(20%, 21%) scale(0.6);
   --glance: translate(20%, 7%) scale(0.6) rotate(-1.5deg);
   --peak: translate(20%, -16%) scale(0.6) rotate(-2.5deg);
-  position: relative; display: block; width: 100%; aspect-ratio: 16 / 10; margin: 0 0 30px; padding: 0;
-  border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer;
-  isolation: isolate; container-type: inline-size; -webkit-tap-highlight-color: transparent;
+  position: relative; width: 100%; aspect-ratio: 16 / 10; margin: 0 0 28px;
+  isolation: isolate; container-type: inline-size;
 }
 /* a pool of warm light on the table the envelope lies on */
 .stage::before {
@@ -20,6 +21,12 @@
   transition: opacity 600ms var(--ease-editorial);
 }
 .stage[data-state="out"]::before { opacity: 0; }
+
+/* the whole frame is the control */
+.hit {
+  position: absolute; inset: 0; z-index: 10; margin: 0; padding: 0; border: 0; border-radius: 4px;
+  background: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
 
 /* the envelope's three parts share its footprint, and leave together when the card is out */
 .back, .pocket, .flapWrap {
@@ -42,22 +49,18 @@
 }
 
 /* the front: the folds, open in a V down to the middle */
-.pocket {
-  z-index: 3; clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
-  background: linear-gradient(180deg, #1f1b36 0%, #161329 55%, #100e21 100%);
-}
-.pocket svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.pocket path { fill: none; stroke: rgba(195, 174, 135, 0.22); stroke-width: 1; vector-effect: non-scaling-stroke; }
-.pocket .lip { stroke: rgba(195, 174, 135, 0.55); }
+.pocket { z-index: 3; display: block; overflow: visible; }
+.seam { fill: none; stroke: rgba(195, 174, 135, 0.22); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.lip { stroke: rgba(195, 174, 135, 0.55); }
 
 /* the flap: closed over the V, then swung up behind the card */
-.flapWrap { z-index: 4; height: 35.8%; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.45)); }
+.flapWrap { z-index: 4; height: 35.8%; }
 .flap {
-  position: absolute; inset: 0; transform-origin: 50% 0; clip-path: polygon(0 0, 100% 0, 50% 100%);
-  background: linear-gradient(180deg, #2a2545, #1b1832 85%);
-  transform: perspective(900px) rotateX(0deg);
+  position: absolute; inset: 0; display: block; width: 100%; height: 100%; overflow: visible;
+  transform-origin: 50% 0; transform: perspective(900px) rotateX(0deg);
   transition: transform 700ms cubic-bezier(0.55, 0.05, 0.25, 1);
 }
+.flapShade { fill: rgba(0, 0, 0, 0.32); }
 .stage:not([data-state="sealed"]) .flap { transform: perspective(900px) rotateX(180deg); }
 .stage[data-state="opening"] .flap { transition-delay: 350ms; }
 /* the flap goes behind the card at the moment it stands on edge */
@@ -75,16 +78,17 @@
 .seal svg { width: 36%; height: auto; fill: rgba(1, 0, 22, 0.6); }
 .stage:not([data-state="sealed"]) .seal { opacity: 0; transform: translate(-50%, -62%) scale(1.3); }
 
-/* the invitation */
+/* the invitation: the photograph on top, its details printed beneath */
 .card {
-  position: absolute; inset: 0; z-index: 2; display: block; overflow: hidden; border-radius: 4px; background: #0b0a17;
+  position: absolute; inset: 0; z-index: 2; display: grid; grid-template-rows: minmax(0, 1fr) auto;
+  overflow: hidden; border-radius: 4px; background: #0d0b1d;
   transform-origin: 0 0; transform: var(--sealed);
   box-shadow: 0 22px 44px -14px rgba(0, 0, 0, 0.7);
   transition: transform 600ms var(--ease-editorial);
 }
 .stage[data-state="opening"] .card { transform: var(--rest); transition-duration: 700ms; transition-delay: 900ms; }
 .stage[data-state="in"] .card { transform: var(--rest); }
-.stage[data-state="in"]:is(:hover, :focus-visible) .card { transform: var(--glance); }
+.stage[data-state="in"]:is(:hover, :has(.hit:focus-visible)) .card { transform: var(--glance); }
 .stage[data-state="out"] .card { animation: popOut 950ms cubic-bezier(0.3, 0.6, 0.4, 1) forwards; }
 .stage[data-state="back"] .card { animation: tuckIn 850ms cubic-bezier(0.4, 0, 0.6, 1) forwards; }
 /* no hover to ask with on touch: the card rests at a glance, waiting for the tap */
@@ -106,18 +110,17 @@
   100% { transform: var(--glance); z-index: 2; }
 }
 
-.card img {
+.photo { position: relative; min-height: 0; overflow: hidden; }
+.photo img {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 44% 62%;
   transform: scale(1.3); transform-origin: 42% 62%;
 }
-.card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(1, 0, 22, 0.45) 0%, rgba(1, 0, 22, 0) 30%, rgba(1, 0, 22, 0) 45%, rgba(1, 0, 22, 0.8)); }
-.seats { position: absolute; left: 50%; bottom: 8%; width: min(40%, 240px); transform: translateX(-50%); z-index: 1; overflow: visible; }
+.photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(1, 0, 22, 0.45) 0%, rgba(1, 0, 22, 0) 30%, rgba(1, 0, 22, 0) 55%, #0d0b1d 100%); }
+.seats { position: absolute; left: 50%; bottom: 6%; width: min(40%, 240px); transform: translateX(-50%); z-index: 1; overflow: visible; }
 .seats ellipse { fill: none; stroke: #c3ae87; stroke-opacity: 0.6; stroke-width: 0.6; }
 .seats circle { fill: #c3ae87; }
-/* the foil keyline of a printed card */
-.keyline { position: absolute; inset: clamp(8px, 1.4cqw, 14px); z-index: 2; border: 1px solid rgba(195, 174, 135, 0.5); border-radius: 2px; pointer-events: none; }
 .label {
-  position: absolute; top: clamp(18px, 3.2cqw, 30px); left: clamp(18px, 3.2cqw, 30px); z-index: 2; display: flex; align-items: center; gap: 12px;
+  position: absolute; top: clamp(18px, 3.2cqw, 30px); left: clamp(18px, 3.2cqw, 30px); z-index: 2; display: flex; align-items: center; gap: 12px; margin: 0;
   font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-cream);
 }
 .labelMark {
@@ -127,8 +130,20 @@
 }
 .labelMark svg { width: 15px; height: auto; fill: var(--color-brass); }
 
+/* the printed details: sized to the card, so the invitation keeps its proportions at any width */
+.panel { position: relative; z-index: 1; padding: clamp(10px, 2.4cqw, 20px) clamp(18px, 4.4cqw, 34px) clamp(14px, 3.2cqw, 26px); }
+.title { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(17px, 4cqw, 30px); line-height: 1.1; letter-spacing: -0.022em; color: var(--color-cream); }
+.details { list-style: none; display: grid; grid-template-columns: 1fr 1fr; column-gap: clamp(14px, 4cqw, 36px); margin: clamp(8px, 1.8cqw, 16px) 0 0; padding: 0; }
+.details li {
+  display: flex; align-items: center; gap: clamp(8px, 1.6cqw, 12px); padding: clamp(6px, 1.3cqw, 10px) 0;
+  border-top: 1px solid rgba(195, 174, 135, 0.18); font-size: clamp(12px, 2.1cqw, 15px); line-height: 1.25; color: var(--color-cream);
+}
+.details svg { width: clamp(14px, 2.8cqw, 20px); height: auto; flex: none; color: var(--color-brass); }
+/* the foil keyline of a printed card */
+.keyline { position: absolute; inset: clamp(8px, 1.4cqw, 14px); z-index: 2; border: 1px solid rgba(195, 174, 135, 0.5); border-radius: 2px; pointer-events: none; }
+
 @media (max-width: 599px) {
-  .stage { aspect-ratio: 4 / 3; margin-bottom: 24px; }
+  .stage { aspect-ratio: 4 / 3; margin-bottom: 22px; }
   .label { gap: 10px; font-size: 10px; }
   .labelMark { width: 32px; height: 32px; }
   .labelMark svg { width: 12px; }

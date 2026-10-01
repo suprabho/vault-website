@@ -12,12 +12,8 @@
 .meta span + span { position: relative; }
 .meta span + span::before { content: ""; position: absolute; left: -12px; top: 50%; width: 3px; height: 3px; border-radius: 50%; background: currentColor; }
 
-/* the table arrives as an invitation: see Invitation.tsx */
-.featureTitle { font-size: clamp(26px, 2.4vw, 34px); }
-/* the setting, two by two under the title: what makes the table, never where it is */
-.details { list-style: none; display: grid; grid-template-columns: 1fr 1fr; column-gap: clamp(20px, 2.6vw, 40px); margin: 26px 0 0; padding: 0; }
-.details li { display: flex; align-items: center; gap: 14px; padding: 15px 0; border-top: 1px solid rgba(195, 174, 135, 0.16); font-size: 15px; line-height: 1.3; color: var(--color-cream); }
-.details svg { width: 22px; height: 22px; flex: none; color: var(--color-brass); }
+/* the table arrives as an invitation (Invitation.tsx), its details printed on the card; only its topic sits beneath */
+.topic { margin: 0; font-size: 16px; line-height: 1.6; color: var(--color-cream-2); max-width: 44ch; }
 
 /* beside the table: two entries split by one hairline */
 .side { display: grid; }
@@ -50,8 +46,6 @@
   .grid { grid-template-columns: 1fr; gap: 48px; }
 }
 @media (max-width: 599px) {
-  .details li { gap: 10px; font-size: 14px; }
-  .details svg { width: 20px; height: 20px; }
   .brief { grid-template-columns: 52px minmax(0, 1fr); gap: 18px; }
 }
 @media (prefers-reduced-motion: reduce) {

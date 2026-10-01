@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import type { AnimationEvent } from "react";
 import { MONOGRAM_FULL, MONOGRAM_VIEWBOX } from "@/components/brand/monogram";
+import { Icon, type IconName } from "@/lib/icons";
 import styles from "./Invitation.module.css";
 
 /**
@@ -24,8 +25,9 @@ const SEATS = Array.from({ length: 12 }, (_, i) => {
 const reduced = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /** 07 · the next table, delivered: the envelope opens as it comes into view, and the invitation inside pops out on a click. */
-export default function Invitation() {
-  const stage = useRef<HTMLButtonElement>(null);
+export default function Invitation({ title, details }: { title: string; details: { icon: IconName; label: string }[] }) {
+  const stage = useRef<HTMLDivElement>(null);
+  const ids = useId();
   const [state, setState] = useState<State>("sealed");
 
   useEffect(() => {
@@ -59,56 +61,83 @@ export default function Invitation() {
   }, []);
 
   return (
-    <button
-      type="button"
-      ref={stage}
-      className={styles.stage}
-      data-state={state}
-      aria-pressed={state === "out"}
-      aria-label="Open the invitation"
-      onClick={toggle}
-      onAnimationEnd={settle}
-    >
-      <span className={styles.back} />
+    <div ref={stage} className={styles.stage} data-state={state} onAnimationEnd={settle}>
+      <span className={styles.back} aria-hidden="true" />
 
-      {/* the invitation: the table itself, with its seats and the foil keyline of a printed card */}
-      <span className={styles.card}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/private-dinner.webp" alt="" loading="lazy" />
-        <svg className={styles.seats} viewBox="0 0 120 68" aria-hidden="true">
-          <ellipse cx="60" cy="34" rx="36" ry="14" />
-          {SEATS.map(([x, y]) => (
-            <circle key={`${x}-${y}`} cx={x} cy={y} r="2.1" />
-          ))}
-        </svg>
-        <span className={styles.keyline} />
-        <span className={styles.label}>
-          <span className={styles.labelMark}>
-            <svg viewBox={MONOGRAM_VIEWBOX} aria-hidden="true">
-              <path d={MONOGRAM_FULL} />
-            </svg>
-          </span>
-          Invitation only
-        </span>
-      </span>
+      {/* the invitation: the table on top, its details printed beneath, inside the foil keyline of a card */}
+      <div className={styles.card}>
+        <div className={styles.photo}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/private-dinner.webp" alt="" loading="lazy" />
+          <svg className={styles.seats} viewBox="0 0 120 68" aria-hidden="true">
+            <ellipse cx="60" cy="34" rx="36" ry="14" />
+            {SEATS.map(([x, y]) => (
+              <circle key={`${x}-${y}`} cx={x} cy={y} r="2.1" />
+            ))}
+          </svg>
+          <p className={styles.label}>
+            <span className={styles.labelMark} aria-hidden="true">
+              <svg viewBox={MONOGRAM_VIEWBOX}>
+                <path d={MONOGRAM_FULL} />
+              </svg>
+            </span>
+            Invitation only
+          </p>
+        </div>
+        <div className={styles.panel}>
+          <h3 className={styles.title}>{title}</h3>
+          <ul className={styles.details}>
+            {details.map((d) => (
+              <li key={d.label}>
+                <Icon name={d.icon} strokeWidth={1.4} />
+                <span>{d.label}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <span className={styles.keyline} aria-hidden="true" />
+      </div>
 
-      {/* the front of the envelope: the side and bottom folds, open in a V at the top */}
-      <span className={styles.pocket}>
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <path className={styles.lip} d="M0 0 50 50 100 0" />
-          <path d="M0 100 50 57 100 100" />
-        </svg>
-      </span>
+      {/*
+        the front of the envelope: the side and bottom folds, open in a V at the top. Drawn as a
+        shape rather than a clipped box: Chrome can drop a clip-path once the card behind it settles.
+      */}
+      <svg className={styles.pocket} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id={`${ids}-front`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#1f1b36" />
+            <stop offset="0.55" stopColor="#161329" />
+            <stop offset="1" stopColor="#100e21" />
+          </linearGradient>
+        </defs>
+        <path d="M0 0 50 50 100 0V100H0Z" fill={`url(#${ids}-front)`} />
+        <path className={styles.seam} d="M0 100 50 57 100 100" />
+        <path className={`${styles.seam} ${styles.lip}`} d="M0 0 50 50 100 0" />
+      </svg>
 
       {/* the flap, and the seal that holds it */}
-      <span className={styles.flapWrap}>
-        <span className={styles.flap} />
+      <span className={styles.flapWrap} aria-hidden="true">
+        <svg className={styles.flap} viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id={`${ids}-flap`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#2a2545" />
+              <stop offset="0.85" stopColor="#1b1832" />
+            </linearGradient>
+          </defs>
+          {/* the flap's shadow on the folds: the same triangle, reaching a little lower */}
+          <path className={styles.flapShade} d="M0 0H100L50 106Z" />
+          <path d="M0 0H100L50 100Z" fill={`url(#${ids}-flap)`} />
+          <path className={styles.seam} d="M0 0 50 100 100 0" />
+        </svg>
         <span className={styles.seal}>
-          <svg viewBox={MONOGRAM_VIEWBOX} aria-hidden="true">
+          <svg viewBox={MONOGRAM_VIEWBOX}>
             <path d={MONOGRAM_FULL} />
           </svg>
         </span>
       </span>
-    </button>
+
+      {/* the whole frame is the control; the card's words stay readable outside it */}
+      <button type="button" className={styles.hit} aria-pressed={state === "out"} aria-label="Open the invitation" onClick={toggle} />
+    </div>
   );
 }

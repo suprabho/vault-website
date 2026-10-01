@@ -38,7 +38,9 @@ components/
     CadenceAssets       placeholder previews for the five stops (swap for real renders)
     Intelligence    06  the weekly briefing: one item open, four out of focus
     Pulse           07  vault pulse: the next table and its setting, with this week's briefing and the newest resource beside it
-    Invitation          the next table as an envelope: opens in view, the card glances up on hover, pops out on click
+    Invitation          the next table as an envelope: opens in view, the card glances up on hover, pops out on click;
+                        the card carries the photograph and the table's title and details
+                        (envelope shapes are SVG, not clip-paths, which Chrome can drop once the card settles)
     People          08  the amphitheatre, and its seating plan: two seats per constituency under each role's mark
     RoleMark            the role marks: a seat ring with triangles, circles and dots inside, one per role
     Membership      09  the standard: built for / not built for, two lists either side of one rule

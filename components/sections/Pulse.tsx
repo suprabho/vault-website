@@ -47,17 +47,8 @@ export default function Pulse() {
         <div className={styles.grid}>
           {/* next private table */}
           <article className={`reveal ${styles.feature}`} data-reveal>
-            <Invitation />
-            <h3 className={`${styles.title} ${styles.featureTitle}`}>{TABLE.title}</h3>
-            <p className={styles.text}>{TABLE.text}</p>
-            <ul className={styles.details}>
-              {TABLE.details.map((d) => (
-                <li key={d.label}>
-                  <Icon name={d.icon} strokeWidth={1.4} />
-                  <span>{d.label}</span>
-                </li>
-              ))}
-            </ul>
+            <Invitation title={TABLE.title} details={TABLE.details} />
+            <p className={styles.topic}>{TABLE.text}</p>
           </article>
 
           <div className={styles.side}>

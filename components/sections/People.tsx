@@ -20,28 +20,56 @@ const NODES: { icon: IconName; from: [number, number]; to: [number, number] }[] 
   { icon: "person", from: [714.778, 478.959], to: [970.8, 342.8] },
 ];
 
-const WHO: { icon: IconName; label: string; text: string }[] = [
-  { icon: "exchange", label: "Exchanges & custodians", text: "The teams running compliance for platforms and custody at scale." },
-  { icon: "bank", label: "Financial institutions", text: "Banks and brokers bringing digital asset risk inside the perimeter." },
-  { icon: "scales", label: "Regulators & investigators", text: "The people who set the standard, and the ones who test it." },
-  { icon: "person", label: "Legal & advisory", text: "Counsel and specialist advisers on the hardest calls." },
+/*
+ * The seating plan: two seats per constituency, in the diagram's order, each a seniority and
+ * the kind of institution it comes from. These describe the seats the room is built for, never
+ * who sits in them: the name is always withheld. `name` is the width of the redaction bar.
+ */
+const TABLE: { icon: IconName; label: string; seats: { title: string; from: string; name: number }[] }[] = [
+  {
+    icon: "exchange",
+    label: "Exchanges & custodians",
+    seats: [
+      { title: "Chief Compliance Officer", from: "Global exchange", name: 64 },
+      { title: "MLRO", from: "Digital asset custodian", name: 48 },
+    ],
+  },
+  {
+    icon: "bank",
+    label: "Financial institutions",
+    seats: [
+      { title: "Head of Financial Crime", from: "International bank", name: 56 },
+      { title: "Chief Risk Officer", from: "Broker-dealer", name: 70 },
+    ],
+  },
+  {
+    icon: "scales",
+    label: "Regulators & investigators",
+    seats: [
+      { title: "Senior supervisor", from: "Financial regulator", name: 52 },
+      { title: "Head of Investigations", from: "Law enforcement", name: 66 },
+    ],
+  },
+  {
+    icon: "person",
+    label: "Legal & advisory",
+    seats: [
+      { title: "General Counsel", from: "Digital asset group", name: 60 },
+      { title: "Partner", from: "Financial crime practice", name: 50 },
+    ],
+  },
 ];
 
 /*
  * Social proof. Only add organisations here once their names and marks are approved for
- * use; until then the room is described by the seats it is built for, never by who is in it.
+ * use; until then the seating plan stands for the room on its own.
  */
 const APPROVED_LOGOS: { name: string; src: string }[] = [];
-const SEATS = [
-  "Chief Compliance Officers",
-  "MLROs",
-  "Heads of Financial Crime",
-  "Heads of Investigations",
-  "Chief Risk Officers",
-  "General Counsel",
-];
 
-/** 09 · people: the room as an amphitheatre around the mark. Hovering a constituency lights its seat. */
+/**
+ * 09 · people: the room as an amphitheatre around the mark, and its seating plan beneath.
+ * Hovering a constituency's seats lights its badge in the diagram.
+ */
 export default function People() {
   const arcMaskId = useId();
   const [lit, setLit] = useState<number | null>(null);
@@ -111,19 +139,35 @@ export default function People() {
           </svg>
         </div>
 
-        <div className={`c5c ${styles.who}`} data-reveal>
-          {WHO.map((w, i) => (
-            <div key={w.label} className={styles.wc} onMouseEnter={() => setLit(i)} onMouseLeave={() => setLit(null)}>
+        {/* the seating plan: each constituency's seats under its badge, names withheld */}
+        <div className={`c5c ${styles.table}`} data-reveal>
+          {TABLE.map((c, i) => (
+            <div
+              key={c.label}
+              className={`${styles.place} ${lit === i ? styles.on : ""}`}
+              onMouseEnter={() => setLit(i)}
+              onMouseLeave={() => setLit(null)}
+            >
               <span className={styles.wi}>
-                <Icon name={w.icon} strokeWidth={1.4} className="h-[18px] w-[18px] text-brass" />
+                <Icon name={c.icon} strokeWidth={1.4} className="h-[18px] w-[18px] text-brass" />
               </span>
-              <p>{w.text}</p>
+              <h3 className="sr-only">{c.label}</h3>
+              <ul className={styles.seatList}>
+                {c.seats.map((s) => (
+                  <li key={s.title} className={styles.seat}>
+                    <span className={styles.name} style={{ width: `${s.name}%` }} aria-hidden="true" />
+                    <span className="sr-only">Name withheld. </span>
+                    <p className={styles.seatTitle}>{s.title}</p>
+                    <p className={styles.from}>{s.from}</p>
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>
 
-        <div className={`c5c c5-fade ${styles.seats}`} data-reveal>
-          {APPROVED_LOGOS.length > 0 ? (
+        {APPROVED_LOGOS.length > 0 && (
+          <div className={`c5c c5-fade ${styles.logoRow}`} data-reveal>
             <ul className={styles.logos} aria-label="Organisations represented">
               {APPROVED_LOGOS.map((l) => (
                 <li key={l.name}>
@@ -132,14 +176,8 @@ export default function People() {
                 </li>
               ))}
             </ul>
-          ) : (
-            <ul className={styles.roles}>
-              {SEATS.map((r) => (
-                <li key={r}>{r}</li>
-              ))}
-            </ul>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </section>
   );

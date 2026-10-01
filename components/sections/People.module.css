@@ -44,45 +44,43 @@
   0%, 25%, 100% { transform: scale(1); }
   12.5% { transform: scale(1.18); }
 }
-/* the constituencies: one quiet glass panel, four columns */
-.who {
-  --c: 1 / span 12; margin-top: -8px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); position: relative;
-  background: var(--glass); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-edge); box-shadow: var(--shadow);
+/* the seating plan: one column per constituency under its badge, two seats each, names withheld */
+.table {
+  --c: 1 / span 12; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 clamp(20px, 2.6vw, 40px);
+  margin-top: clamp(8px, 2vh, 24px);
   opacity: 0; transform: translateY(12px);
   transition: opacity 900ms var(--ease-editorial) 2100ms, transform 900ms var(--ease-editorial) 2100ms;
 }
-.who:global(.in) { opacity: 1; transform: none; }
-.wc { display: grid; grid-template-columns: 40px 1fr; gap: 16px; padding: clamp(20px, 2.4vw, 30px) clamp(18px, 2vw, 26px); border-left: 1px solid var(--hair); transition: background-color var(--fast); }
-.wc:first-child { border-left: 0; }
-.wc:hover { background: rgba(242, 241, 243, 0.03); }
-.wi { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--hair2); display: flex; align-items: center; justify-content: center; }
-.wc p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--color-cream-3); }
-/* who the seats are built for: set as a quiet line of titles under the panel */
-.seats { --c: 1 / span 12; display: flex; flex-wrap: wrap; align-items: baseline; gap: 16px 40px; margin-top: clamp(48px, 7vh, 80px); }
-.roles { display: flex; flex-wrap: wrap; gap: 12px 36px; list-style: none; margin: 0; padding: 0; }
-.roles li {
-  font-family: var(--font-display); font-weight: 500; font-size: clamp(17px, 1.5vw, 21px); letter-spacing: -0.015em; color: var(--color-cream-2);
+.table:global(.in) { opacity: 1; transform: none; }
+.wi { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--hair2); display: flex; align-items: center; justify-content: center; transition: border-color var(--fast), background-color var(--fast); }
+.place.on .wi { border-color: var(--color-brass); background: rgba(195, 174, 135, 0.08); }
+.seatList { list-style: none; margin: 20px 0 0; padding: 0; }
+.seat { padding: 18px 0 20px; border-top: 1px solid var(--hair); }
+/* where the name would be on the place card: a hatched redaction bar */
+.name {
+  --ink: rgba(195, 174, 135, 0.34);
+  display: block; height: 10px; margin-bottom: 14px; border: 1px solid var(--ink);
+  background: repeating-linear-gradient(-45deg, var(--ink) 0 1px, transparent 1px 4px);
+  transition: border-color var(--fast);
 }
-.roles li { display: flex; align-items: flex-start; gap: 12px; }
-.roles li::before { content: ""; width: 8px; height: 1px; flex: 0 0 8px; margin-top: 0.65em; background: var(--color-brass); }
+.place.on .name { --ink: rgba(195, 174, 135, 0.6); }
+.seatTitle { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(17px, 1.45vw, 20px); line-height: 1.2; letter-spacing: -0.015em; color: var(--color-cream); }
+.from { margin: 7px 0 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--color-brass-lo); }
+.logoRow { --c: 1 / span 12; margin-top: clamp(48px, 7vh, 80px); }
 .logos { display: flex; flex-wrap: wrap; align-items: center; gap: 28px 56px; list-style: none; margin: 0; padding: 0; }
 .logos img { height: 28px; width: auto; opacity: 0.7; filter: grayscale(1) brightness(1.6); }
 @media (max-width: 899px) {
   .head, .co { --c: 1 / span 12; }
   .co { margin-top: 24px; }
-  .who { grid-template-columns: 1fr 1fr; transition-delay: 600ms; }
-  .wc { border-left: 0; border-top: 1px solid var(--hair); }
-  .wc:nth-child(-n + 2) { border-top: 0; }
+  .table { grid-template-columns: 1fr 1fr; gap: 40px 24px; transition-delay: 600ms; }
 }
 @media (max-width: 599px) {
-  .roles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
-  .roles li { font-size: 16px; }
-  .who { grid-template-columns: 1fr; }
-  .wc:nth-child(2) { border-top: 1px solid var(--hair); }
+  .table { gap: 36px 18px; }
+  .seatTitle { font-size: 16px; }
+  .from { font-size: 10px; letter-spacing: 0.11em; }
   .nfo { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .spokes line, .markG, .nd, .nc, .nfo, .who { opacity: 1; transform: none; transition: none; }
+  .spokes line, .markG, .nd, .nc, .nfo, .table { opacity: 1; transform: none; transition: none; }
   .arcReveal, .nl { stroke-dashoffset: 0; transition: none; }
 }

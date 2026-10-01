@@ -37,9 +37,9 @@ components/
                         (52 Mondays, signals, 12 months, 4 quarters, every day) with a preview in the middle
     CadenceAssets       placeholder previews for the five stops (swap for real renders)
     Intelligence    06  the weekly briefing: one item open, four out of focus
-    Pulse           07  vault pulse: this week's intelligence, the next table, the newest resource
-    People          08  the amphitheatre, and the seats the room is built for
-    Membership      09  the standard: built for / not built for
+    Pulse           07  vault pulse: the next table and its setting, with this week's briefing and the newest resource beside it
+    People          08  the amphitheatre, and its seating plan: two seats per constituency, names withheld
+    Membership      09  the standard: built for / not built for, two lists either side of one rule
     Process         10  pinned scrub: interest → review → conversation → invitation
     Request         11  pinned close: one line, one button
 hooks/useStillMedia.ts  "settle instead of animate" media query (narrow / reduced motion)
@@ -86,5 +86,6 @@ public/fonts            New York (Apple) subset, 400/500/600
 - `VAULT_REQUEST_WEBHOOK_URL` — where invitation requests are sent (any endpoint accepting a JSON POST).
 - `lib/briefing.ts`, `Pulse.tsx` — sample briefing, next table and resource are illustrative placeholders.
 - `CadenceAssets.tsx` — the five cadence previews are placeholder mock-ups.
-- `People.tsx` — `APPROVED_LOGOS` stays empty until organisations approve the use of their marks.
+- `People.tsx` — the seating plan's titles and institution types are illustrative; confirm them against the
+  real membership. `APPROVED_LOGOS` stays empty until organisations approve the use of their marks.
 - `app/privacy`, `app/terms` — plain-language summaries; have them reviewed before launch.

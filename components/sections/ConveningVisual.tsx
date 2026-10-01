@@ -1,6 +1,12 @@
 import type { CSSProperties } from "react";
 import styles from "./ConveningVisual.module.css";
 
+/** twelve seats around the table in the first drawing (rounded so server and client agree) */
+const SEATS = Array.from({ length: 12 }, (_, i) => {
+  const a = i * Math.PI / 6;
+  return [(120 + 88 * Math.cos(a)).toFixed(2), (56 + 42 * Math.sin(a)).toFixed(2)] as const;
+});
+
 /** Decorative line drawings share the site's brass dial and arc language. */
 export default function ConveningVisual({ variant }: { variant: number }) {
   return (
@@ -9,10 +15,9 @@ export default function ConveningVisual({ variant }: { variant: number }) {
         <ellipse className={styles.faint} cx="120" cy="56" rx="100" ry="48" />
         <ellipse className={styles.ink} cx="120" cy="56" rx="70" ry="30" />
         <ellipse className={styles.faint} cx="120" cy="56" rx="59" ry="22" />
-        {Array.from({ length: 12 }, (_, i) => {
-          const a = i * Math.PI / 6;
-          return <circle key={i} className={styles.seat} cx={120 + 88 * Math.cos(a)} cy={56 + 42 * Math.sin(a)} r="3" style={{ "--delay": `${i * -0.5}s` } as CSSProperties} />;
-        })}
+        {SEATS.map(([x, y], i) => (
+          <circle key={i} className={styles.seat} cx={x} cy={y} r="3" style={{ "--delay": `${i * -0.5}s` } as CSSProperties} />
+        ))}
         <path className={styles.trace} pathLength="1" d="M50 56a70 30 0 1 1 140 0a70 30 0 1 1-140 0" />
         <path d="M112 56h16m-8-8v16" />
         <circle className={styles.faint} cx="120" cy="56" r="13" />

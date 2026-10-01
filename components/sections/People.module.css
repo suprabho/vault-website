@@ -8,7 +8,8 @@
 .arc:nth-child(1) { stroke-opacity: 0.5; }
 .arc:nth-child(2), .arc:nth-child(3) { stroke-dasharray: 0.004 0.006; stroke-opacity: 0.45; }
 .arcReveal { fill: none; stroke: white; stroke-width: 3; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1800ms var(--ease-editorial) var(--arc-delay); }
-.badge { transform-box: view-box; }
+/* --badge sizes the badges up where the diagram is drawn small */
+.badge { transform-box: view-box; transform: scale(var(--badge, 1)); }
 .markG { opacity: 0; transform: translateY(8px); transition: opacity 900ms var(--ease-editorial) 500ms, transform 900ms var(--ease-editorial) 500ms; }
 .nl { stroke: var(--color-brass); stroke-opacity: 0.5; stroke-width: 1; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 900ms var(--ease-editorial); }
 .nd { fill: var(--color-brass); opacity: 0; transition: opacity 500ms var(--ease-editorial); }
@@ -41,8 +42,8 @@
   to { stroke-dashoffset: -0.01; }
 }
 @keyframes badgePulse {
-  0%, 25%, 100% { transform: scale(1); }
-  12.5% { transform: scale(1.18); }
+  0%, 25%, 100% { transform: scale(var(--badge, 1)); }
+  12.5% { transform: scale(calc(var(--badge, 1) * 1.18)); }
 }
 /* the seating plan: one column per constituency under its badge, two seats each, names withheld */
 .table {
@@ -66,12 +67,56 @@
 .logoRow { --c: 1 / span 12; margin-top: clamp(48px, 7vh, 80px); }
 .logos { display: flex; flex-wrap: wrap; align-items: center; gap: 28px 56px; list-style: none; margin: 0; padding: 0; }
 .logos img { height: 28px; width: auto; opacity: 0.7; filter: grayscale(1) brightness(1.6); }
-/* narrow: each constituency is named beside its icon, its two seats listed beneath as rows */
+/* narrow: the amphitheatre is drawn larger, past the column, and the seating plan beneath it is a
+   swipe of cards, one per constituency: its name beside its icon, its two seats as rows. The card
+   at rest lights its badge in the diagram, and the other three step back. */
 @media (max-width: 899px) {
   .head, .co { --c: 1 / span 12; }
   .co { margin-top: 24px; }
-  .table { grid-template-columns: 1fr 1fr; gap: 48px 28px; margin-top: 32px; transition-delay: 600ms; }
-  .place { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; align-content: start; column-gap: 12px; }
+
+  .amph { --badge: 1.6; margin: 8px calc(-1 * var(--gutter)) 0; overflow: clip; }
+  /* the arcs span the middle 70% of the drawing; widen it so they fill the screen, and lift off the empty top */
+  .amphSvg { width: 132%; margin: -8% 0 0 -16%; }
+  .nfo { display: flex; }
+  .amph:global(.in) .badge { animation: none; }
+  .badge { transition: transform 500ms var(--ease-editorial); }
+  .node { transition: opacity 500ms var(--ease-editorial); }
+  .amphSvg:has(.on) .node:not(.on) { opacity: 0.4; }
+  .node.on .badge { transform: scale(calc(var(--badge) * 1.15)); }
+  .node.on .nc { fill: #1d1a2b; stroke-opacity: 1; }
+  .node.on .nl { stroke-opacity: 1; }
+  /* the lighting follows the swipe at once; only the entrance waits its turn */
+  .amph:global(.in) .node .badge { transition-delay: 0s; }
+  .amph:global(.in) .node .nc {
+    transition-property: opacity, stroke-opacity, fill; transition-duration: 700ms, 500ms, 500ms;
+    transition-delay: calc(1100ms + var(--i) * 250ms), 0s, 0s;
+  }
+  .amph:global(.in) .node .nl {
+    transition-property: stroke-dashoffset, stroke-opacity; transition-duration: 900ms, 500ms;
+    transition-delay: calc(1100ms + var(--i) * 250ms), 0s;
+  }
+
+  .table {
+    --card: min(84%, 320px);
+    display: flex; gap: 14px; margin: 20px calc(-1 * var(--gutter)) 0; padding: 4px var(--gutter);
+    scroll-padding-inline: var(--gutter); overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scrollbar-width: none; transition-delay: 600ms;
+    /* clear where the resting card is; past its edge the next one fades away */
+    --card-end: calc(var(--gutter) + min(0.84 * (100% - 2 * var(--gutter)), 320px));
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--gutter), #000 var(--card-end), rgb(0 0 0 / 0.08) 100%);
+    mask-image: linear-gradient(90deg, transparent, #000 var(--gutter), #000 var(--card-end), rgb(0 0 0 / 0.08) 100%);
+  }
+  .table::-webkit-scrollbar { display: none; }
+  /* room after the last card, so it rests where the others do */
+  .table::after { content: ""; flex: 0 0 calc(100% - var(--card) - 14px); }
+  .place {
+    flex: 0 0 var(--card); box-sizing: border-box; scroll-snap-align: start;
+    display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; align-content: start; column-gap: 12px;
+    padding: 22px 20px 6px; border: 1px solid var(--hair); border-radius: 16px;
+    background: linear-gradient(180deg, rgba(195, 174, 135, 0.05), rgba(195, 174, 135, 0) 55%);
+    transition: border-color 500ms var(--ease-editorial);
+  }
+  .place.on { border-color: var(--hair2); }
   .wi { width: auto; height: auto; border: 0; border-radius: 0; }
   .place.on .wi { background: none; }
   .placeLabel {
@@ -85,10 +130,8 @@
   .from { margin-top: 5px; }
 }
 @media (max-width: 599px) {
-  .table { grid-template-columns: 1fr; gap: 40px; }
   .seatTitle { font-size: 17px; }
   .from { font-size: 10px; letter-spacing: 0.11em; }
-  .nfo { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .spokes line, .markG, .nd, .nc, .nfo, .table { opacity: 1; transform: none; transition: none; }

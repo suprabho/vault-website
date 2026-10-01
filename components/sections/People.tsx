@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { MONOGRAM } from "@/components/brand/monogram";
 import { Icon, type IconName } from "@/lib/icons";
 import Lines from "@/components/type/Lines";
@@ -69,11 +69,41 @@ const APPROVED_LOGOS: { name: string; src: string }[] = [];
 
 /**
  * 09 · people: the room as an amphitheatre around the mark, and its seating plan beneath.
- * Hovering a constituency's seats lights its badge in the diagram.
+ * Hovering a constituency's seats lights its badge in the diagram; on a phone, where the plan
+ * is a swipe, the constituency the swipe rests on lights it instead.
  */
 export default function People() {
   const arcMaskId = useId();
   const [lit, setLit] = useState<number | null>(null);
+  const table = useRef<HTMLDivElement>(null);
+
+  // the swipe: light the constituency whose card is at rest (nothing to do where the plan is not a swipe)
+  useEffect(() => {
+    const el = table.current;
+    if (!el) return;
+    let frame = 0;
+    const read = () => {
+      frame = 0;
+      const items = Array.from(el.children) as HTMLElement[];
+      if (el.scrollWidth - el.clientWidth <= 0 || items.length < 2) {
+        setLit(null);
+        return;
+      }
+      const stride = items[1].offsetLeft - items[0].offsetLeft || 1;
+      setLit(Math.max(0, Math.min(items.length - 1, Math.round(el.scrollLeft / stride))));
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(read);
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    read();
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
 
   return (
     <section id="people" className={`c5 ${styles.people}`}>
@@ -141,13 +171,13 @@ export default function People() {
         </div>
 
         {/* the seating plan: each constituency's seats under its badge, names withheld */}
-        <div className={`c5c ${styles.table}`} data-reveal>
+        <div className={`c5c ${styles.table}`} ref={table} data-reveal>
           {TABLE.map((c, i) => (
             <div
               key={c.label}
               className={`${styles.place} ${lit === i ? styles.on : ""}`}
-              onMouseEnter={() => setLit(i)}
-              onMouseLeave={() => setLit(null)}
+              onPointerEnter={(e) => e.pointerType === "mouse" && setLit(i)}
+              onPointerLeave={(e) => e.pointerType === "mouse" && setLit(null)}
             >
               <span className={styles.wi}>
                 <Icon name={c.icon} strokeWidth={1.4} className="h-[18px] w-[18px] text-brass" />

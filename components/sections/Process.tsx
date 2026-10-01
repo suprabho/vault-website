@@ -77,7 +77,7 @@ export default function Process() {
             </g>
           </svg>
           <div className="canvas relative w-full">
-            <h2 className="h2 max-w-[12ch] text-night">A considered way in.</h2>
+            <h2 className={`h2 text-night ${styles.title}`}>A considered way in.</h2>
             <div className={styles.steps}>
               {STEPS.map((s, i) => (
                 <div key={s.num} className={styles.step} data-step>

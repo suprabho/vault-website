@@ -2,6 +2,8 @@
 .seq { height: 300vh; }
 .stage { position: sticky; top: 0; height: 100svh; box-sizing: border-box; padding-top: var(--navh); display: flex; align-items: center; overflow: hidden; }
 .mark { position: absolute; right: -6%; top: 50%; transform: translateY(-50%); height: 78%; width: auto; pointer-events: none; }
+/* the heading holds one line at every width */
+.title { white-space: nowrap; }
 .steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 clamp(20px, 2.6vw, 40px); margin-top: clamp(48px, 9vh, 104px); }
 .head { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 24px); }
 .badge { display: flex; align-items: center; justify-content: center; width: 72px; height: 72px; flex: 0 0 72px; border-radius: 50%; background: rgba(195, 174, 135, 0.2); opacity: 0; transform: scale(0.94); }
@@ -19,6 +21,8 @@
   .badge, .num, .desc { opacity: 1; transform: none; }
 }
 @media (max-width: 599px) {
+  /* below 360px the size follows the viewport so the one line still fits between the gutters */
+  .title { font-size: min(36px, 10vw); }
   .steps { grid-template-columns: 1fr; gap: 32px; }
   .step { display: grid; grid-template-columns: 52px 1fr; column-gap: 20px; }
   .head { grid-row: span 2; align-self: start; }

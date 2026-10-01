@@ -18,7 +18,7 @@ const DAY = Array.from({ length: DAYS }, (_, d) => d);
 const MONTHS = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
 
 type Stop = {
-  /** read out with the stop but not shown: the dial, its preview and the week ticks say when */
+  /** named in the still list; on the pinned stage the dial and its preview say when, so it is only read out */
   when: string;
   what: string;
   /** the days this stop lands on, or "all" */
@@ -66,7 +66,7 @@ function Beat({ beat }: { beat: Stop["beat"] }) {
  * turns its counter into a year dial of 365 spokes. Each stop in turn lights the days it lands on
  * — 52 Mondays, the signals between, 12 months, 4 quarters, then every day — with a preview of
  * what it delivers in the middle of the dial and its copy to the right. In still mode the stops
- * are a plain list.
+ * are a trail: each one named, with its week ticks beside the name.
  */
 export default function Between() {
   const still = useStillMedia();
@@ -240,11 +240,11 @@ export default function Between() {
           <ol className={styles.box} ref={box} aria-label="The Vault cadence">
             {RHYTHM.map((r, i) => (
               <li key={r.when} className={styles.rm} ref={(el) => { stops.current[i] = el; }}>
-                <Beat beat={r.beat} />
-                <p className={styles.rmWhat}>
-                  <span className="sr-only">{r.when}: </span>
-                  {r.what}
+                <p className={styles.rmWhen}>
+                  <span>{r.when}</span>
+                  <Beat beat={r.beat} />
                 </p>
+                <p className={styles.rmWhat}>{r.what}</p>
               </li>
             ))}
           </ol>

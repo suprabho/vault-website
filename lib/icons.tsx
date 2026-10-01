@@ -220,6 +220,27 @@ export const ICONS = {
       <path d="M14.4 11.6v1.6" />
     </>
   ),
+  doorClosed: (
+    <>
+      <path d="M6.4 20.4V4.4a.8.8 0 0 1 .8-.8h9.6a.8.8 0 0 1 .8.8v16" />
+      <path d="M3.6 20.4h16.8" />
+      <circle cx="14.6" cy="12.4" r=".9" fill="currentColor" stroke="none" />
+    </>
+  ),
+  lamp: (
+    <>
+      <path d="M12 2.8v4.6" />
+      <path d="M5.2 14.2a6.8 6.8 0 0 1 13.6 0Z" />
+      <path d="M10.2 17.2a1.9 1.9 0 0 0 3.6 0" />
+    </>
+  ),
+  chef: (
+    <>
+      <path d="M7.6 14.6a3.4 3.4 0 0 1-.2-6.7 4.8 4.8 0 0 1 9.2 0 3.4 3.4 0 0 1-.2 6.7" />
+      <path d="M7.6 12.6v6.8h8.8v-6.8" />
+      <path d="M7.6 16.6h8.8" />
+    </>
+  ),
 } as const;
 
 export type IconName = keyof typeof ICONS;

@@ -30,7 +30,7 @@ export default function Footer() {
           </nav>
           {CONTACT_EMAIL && (
             <div className={styles.folio}>
-              Contact
+              Contact{" "}
               <br />
               <a className="text-cream-2" href={`mailto:${CONTACT_EMAIL}`}>
                 {CONTACT_EMAIL}

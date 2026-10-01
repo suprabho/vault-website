@@ -24,7 +24,11 @@ export default function Membership() {
       <div className="canvas">
         <div className={styles.intro}>
           <div className="reveal" data-reveal>
-            <h2 id="membership-title" className={styles.heading}>Not open to everyone.<br />Built for the people who carry the responsibility.</h2>
+            {/* the space before the break keeps the two sentences apart when the break is not rendered */}
+            <h2 id="membership-title" className={styles.heading}>
+              Not open to everyone.{" "}<br />
+              Built for the people who carry the responsibility.
+            </h2>
             <p className={styles.description}>
               Vault is for people directly responsible for the decisions, controls and investigations shaping digital asset
               compliance.
@@ -52,26 +56,23 @@ export default function Membership() {
           </div>
         </div>
 
+        {/* built for | not built for: two lists either side of one rule */}
         <div id="membership-panels" className={styles.panels}>
-          <div className={`${styles.builtPanel} reveal`} data-reveal>
-            <div className={styles.panelHeader}>
-              <h3 className="sr-only">Built for</h3><Icon name="check" className={styles.headerIcon} />
-            </div>
-            <ul className={styles.cards}>
+          <div className={`${styles.built} reveal`} data-reveal>
+            <h3 className="sr-only">Built for</h3>
+            <Icon name="check" className={styles.headerIcon} />
+            <ul className={styles.builtList}>
               {BUILT_FOR.map((item) => (
-                <li key={item.title} className={styles.card}>
-                  <div className={styles.cardTop}>
-                    <span className={styles.badge}><Icon name={item.icon} strokeWidth={1.3} /></span>
-                  </div>
-                  <h4>{item.title}</h4>
+                <li key={item.title}>
+                  <Icon name={item.icon} strokeWidth={1.3} />
+                  <span>{item.title}</span>
                 </li>
               ))}
             </ul>
           </div>
           <div className={`${styles.boundaries} reveal`} data-reveal>
-            <div className={styles.panelHeader}>
-              <h3 className="sr-only">Not built for</h3><Icon name="xCircle" className={styles.headerIcon} />
-            </div>
+            <h3 className="sr-only">Not built for</h3>
+            <Icon name="xCircle" className={styles.headerIcon} />
             <p className={styles.boundaryIntro}>Clear boundaries protect the room.</p>
             <ul className={styles.exclusions}>
               {NOT_FOR.map((item) => (

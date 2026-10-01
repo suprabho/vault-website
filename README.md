@@ -30,16 +30,20 @@ components/
                         (lib/motif.ts also holds INNER_LOOP + betweenPose(), which the cadence dial is drawn from)
   motif/MotifGlyph.tsx  the mark as a static picture, for narrow viewports and reduced motion
   sections/             one component (+ CSS module) per section:
-    Hero            01  pinned: the copy over the aura, then the mark alone
+    Hero            01  pinned: the copy over the aura and one button, a scroll cue at the foot; then the mark alone
     Problem         02  pinned, inside the mark: headline, the promise, the three themes (light ground)
     Continuation    03→04  pinned: the introduction/relationship line, the room on a cream ellipse, the three convenings
     Between         05  pinned: the mark at the left, its counter a 365-day dial; each stop lights its days
                         (52 Mondays, signals, 12 months, 4 quarters, every day) with a preview in the middle
     CadenceAssets       placeholder previews for the five stops (swap for real renders)
     Intelligence    06  the weekly briefing: one item open, four out of focus
-    Pulse           07  vault pulse: this week's intelligence, the next table, the newest resource
-    People          08  the amphitheatre, and the seats the room is built for
-    Membership      09  the standard: built for / not built for
+    Pulse           07  vault pulse: the next table and its setting, with this week's briefing and the newest resource beside it
+    Invitation          the next table as an envelope: opens in view, the card glances up on hover, pops out on click;
+                        the card carries the photograph and the table's title and details
+                        (envelope shapes are SVG, not clip-paths, which Chrome can drop once the card settles)
+    People          08  the amphitheatre, and its seating plan: two seats per constituency under each role's mark
+    RoleMark            the role marks: a seat ring with triangles, circles and dots inside, one per role
+    Membership      09  the standard: built for / not built for, two lists either side of one rule
     Process         10  pinned scrub: interest → review → conversation → invitation
     Request         11  pinned close: one line, one button
 hooks/useStillMedia.ts  "settle instead of animate" media query (narrow / reduced motion)
@@ -86,5 +90,6 @@ public/fonts            New York (Apple) subset, 400/500/600
 - `VAULT_REQUEST_WEBHOOK_URL` — where invitation requests are sent (any endpoint accepting a JSON POST).
 - `lib/briefing.ts`, `Pulse.tsx` — sample briefing, next table and resource are illustrative placeholders.
 - `CadenceAssets.tsx` — the five cadence previews are placeholder mock-ups.
-- `People.tsx` — `APPROVED_LOGOS` stays empty until organisations approve the use of their marks.
+- `People.tsx` — the seating plan's titles and institution types are illustrative; confirm them against the
+  real membership. `APPROVED_LOGOS` stays empty until organisations approve the use of their marks.
 - `app/privacy`, `app/terms` — plain-language summaries; have them reviewed before launch.

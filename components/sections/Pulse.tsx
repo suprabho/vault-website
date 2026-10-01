@@ -1,15 +1,22 @@
-import { Icon } from "@/lib/icons";
+import { Icon, type IconName } from "@/lib/icons";
 import { LEAD } from "@/lib/briefing";
+import Invitation from "./Invitation";
 import styles from "./Pulse.module.css";
 
 /*
  * What is open inside Vault right now. City and format only for convenings: venues and
  * guests are never published. Update these three when the briefing, table or resource changes.
  */
-const TABLE = {
+const TABLE: { title: string; text: string; details: { icon: IconName; label: string }[] } = {
   title: "Private dinner, London",
-  text: "Twelve seats. A private dining room. One conversation around where crypto enforcement is heading next.",
-  meta: ["Invitation only", "Twelve seats"],
+  text: "One conversation around where crypto enforcement is heading next.",
+  /** the setting, never the venue */
+  details: [
+    { icon: "lamp", label: "Private dining room" },
+    { icon: "convening", label: "Twelve seats" },
+    { icon: "chef", label: "Chef-led table" },
+    { icon: "doorClosed", label: "Closed door" },
+  ],
 };
 const RESOURCE = {
   title: "Transaction Monitoring Control Pack",
@@ -19,13 +26,7 @@ const RESOURCE = {
   contents: ["Coverage map by product and chain", "Scenario-to-typology matrix", "Threshold tuning log", "Alert quality review", "Board reporting template"],
 };
 
-/** twelve seats around an oval table, drawn over the photograph */
-const SEATS = Array.from({ length: 12 }, (_, i) => {
-  const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
-  return [60 + 50 * Math.cos(a), 34 + 24 * Math.sin(a)] as const;
-});
-
-/** 07 · vault pulse: a glimpse of what members are opening now. */
+/** 07 · vault pulse: the next table carries the window, with this week's briefing and the newest resource beside it. */
 export default function Pulse() {
   return (
     <section id="pulse" className="section-pad relative overflow-hidden bg-night">
@@ -44,69 +45,52 @@ export default function Pulse() {
         </h2>
 
         <div className={styles.grid}>
-          {/* this week's intelligence */}
-          <article className={`reveal ${styles.col}`} data-reveal>
-            <div className={`${styles.visual} ${styles.docVisual}`} aria-hidden="true">
-              <div className={styles.doc}>
-                <p className={styles.docHead}>
-                  <span>Monday briefing</span>
-                </p>
-                <span className={`${styles.docLine} ${styles.headLine}`} />
-                <span className={`${styles.docLine} ${styles.headLine} ${styles.mid}`} />
-                <span className={styles.docLine} />
-                <span className={styles.docLine} />
-                <span className={`${styles.docLine} ${styles.short}`} />
-              </div>
-            </div>
-            <h3 className={styles.title}>{LEAD.title}</h3>
-            <p className={styles.text}>{LEAD.context[0].text}</p>
-            <p className={styles.meta}>
-              <span>{LEAD.theme}</span>
-              <span>Four more inside</span>
-            </p>
-          </article>
-
           {/* next private table */}
-          <article className={`reveal ${styles.col} ${styles.feature}`} data-reveal>
-            <div className={`${styles.visual} ${styles.photo}`}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/private-dinner.webp" alt="" loading="lazy" />
-              <svg className={styles.seats} viewBox="0 0 120 68" aria-hidden="true">
-                <ellipse cx="60" cy="34" rx="36" ry="14" />
-                {SEATS.map(([x, y]) => (
-                  <circle key={`${x}-${y}`} cx={x} cy={y} r="2.1" />
-                ))}
-              </svg>
-            </div>
-            <h3 className={styles.title}>{TABLE.title}</h3>
-            <p className={styles.text}>{TABLE.text}</p>
-            <p className={styles.meta}>
-              {TABLE.meta.map((m) => (
-                <span key={m}>{m}</span>
-              ))}
-            </p>
+          <article className={`reveal ${styles.feature}`} data-reveal>
+            <Invitation title={TABLE.title} details={TABLE.details} />
+            <p className={styles.topic}>{TABLE.text}</p>
           </article>
 
-          {/* new member resource */}
-          <article className={`reveal ${styles.col}`} data-reveal>
-            <div className={`${styles.visual} ${styles.packVisual}`} aria-hidden="true">
-              <ul className={styles.pack}>
+          <div className={styles.side}>
+            {/* this week's intelligence */}
+            <article className={`reveal ${styles.entry} ${styles.brief}`} data-reveal>
+              <div className={styles.sheet} aria-hidden="true">
+                <span className={styles.sheetHead} />
+                <span className={styles.sheetHead} />
+                <span />
+                <span />
+                <span className={styles.sheetShort} />
+              </div>
+              <div>
+                <h3 className={styles.title}>{LEAD.title}</h3>
+                <p className={styles.text}>{LEAD.context[0].text}</p>
+                <p className={styles.meta}>
+                  <span>{LEAD.theme}</span>
+                  <span>Four more inside</span>
+                </p>
+              </div>
+            </article>
+
+            {/* new member resource */}
+            <article className={`reveal ${styles.entry}`} data-reveal>
+              <h3 className={styles.title}>{RESOURCE.title}</h3>
+              <p className={styles.text}>{RESOURCE.text}</p>
+              <ul className={styles.pack} aria-label="What the pack contains">
                 {RESOURCE.contents.map((c, i) => (
                   <li key={c} className={i > 1 ? styles.packLocked : undefined}>
                     <Icon name={i > 1 ? "lock" : "check"} strokeWidth={1.5} className={styles.packIcon} />
-                    <span>{c}</span>
+                    <span aria-hidden={i > 1 ? true : undefined}>{c}</span>
+                    {i > 1 && <span className="sr-only">Reserved for members.</span>}
                   </li>
                 ))}
               </ul>
-            </div>
-            <h3 className={styles.title}>{RESOURCE.title}</h3>
-            <p className={styles.text}>{RESOURCE.text}</p>
-            <p className={styles.meta}>
-              {RESOURCE.meta.map((m) => (
-                <span key={m}>{m}</span>
-              ))}
-            </p>
-          </article>
+              <p className={styles.meta}>
+                {RESOURCE.meta.map((m) => (
+                  <span key={m}>{m}</span>
+                ))}
+              </p>
+            </article>
+          </div>
         </div>
 
         <p className={`reveal ${styles.note}`} data-reveal>

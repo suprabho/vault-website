@@ -1,0 +1,192 @@
+/* 02 → 04 · one pinned track: the intro, the three themes inside the mark, the room, the experiences.
+   Landscape follows the 1440 × 900 arrangement, type scaling with the narrower of the two; portrait
+   follows the storyboard's 1080 × 1440 frames (see the portrait block below and lib/signals.ts). */
+.signals { padding: 0; background: var(--color-night); }
+.track { position: relative; height: var(--track); }
+.roomAnchor { position: absolute; left: 0; top: var(--at); width: 1px; height: 1px; pointer-events: none; }
+.stage { position: sticky; top: 0; height: 100vh; z-index: 2; overflow: clip; }
+
+/* the mark, its photographs and the window are placed in px by Signals.tsx */
+.mark { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.still { display: none; margin: 0; }
+
+/* ── the copy: one column on the left of the canvas, centred on the space under the header ──
+   Blocks fill the stage, so only their links take the pointer, and only while shown (--pe). */
+.block {
+  position: absolute; left: 0; right: 0; top: var(--navh); bottom: 0;
+  max-width: 1280px; margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box;
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+  pointer-events: none; will-change: opacity, transform;
+}
+.block a { pointer-events: var(--pe, auto); }
+.topic, .room { opacity: 0; --pe: none; }
+.copy { width: min(560px, 42vw); }
+
+/* headlines are set in the serif, as the storyboard sets them */
+.introH2, .topicName, .roomH2, .capName { font-family: var(--font-body); font-weight: 400; color: var(--color-cream); }
+
+.eyebrow {
+  font-family: var(--font-body); font-weight: 600; font-size: 11px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--color-brass);
+}
+.introH2 { margin-top: 24px; font-size: clamp(40px, min(4.3vw, 6.8vh), 64px); line-height: 1.04; letter-spacing: -0.015em; text-wrap: balance; }
+.promise { margin-top: 28px; max-width: 420px; font-size: clamp(16px, min(1.32vw, 2.1vh), 19px); line-height: 1.5; color: var(--color-cream-2); }
+.action { margin-top: 36px; }
+.cta { gap: 10px; }
+.ctaIcon { width: 14px; height: 14px; }
+
+.folio { display: flex; align-items: center; gap: 20px; font-size: 12px; letter-spacing: 0.08em; color: var(--color-cream-2); }
+.folio i { display: block; width: 90px; height: 1px; background: var(--color-brass); }
+.topicName { margin-top: 28px; font-size: clamp(40px, min(4.45vw, 7.1vh), 64px); line-height: 1.1; letter-spacing: -0.015em; }
+.topicDesc { margin-top: 22px; max-width: 360px; font-size: clamp(15px, min(1.18vw, 1.9vh), 17px); line-height: 1.6; color: var(--color-cream-2); }
+/* two spaces, a bar, two spaces; a bar that would start a wrapped line falls outside the frame */
+.tagsFrame { margin-top: 32px; max-width: 360px; overflow: hidden; }
+.tags {
+  display: flex; flex-wrap: wrap; margin: 0 0 0 -1.7em; padding: 0; list-style: none;
+  font-family: var(--font-body); font-weight: 600; font-size: 11.5px; line-height: 1.9; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--color-cream-2);
+}
+.tags li { position: relative; padding-left: 1.7em; }
+.tags li::before { content: "|"; position: absolute; left: 0.62em; font-weight: 400; }
+.explore {
+  display: inline-flex; align-items: center; gap: 10px; padding-bottom: 6px;
+  font-size: 15px; color: var(--color-brass); text-decoration: none;
+  border-bottom: 1px solid rgba(195, 174, 135, 0.6);
+  transition: border-color var(--fast) ease, color var(--fast) ease;
+}
+.topic .action { margin-top: 40px; }
+.explore:hover { color: var(--color-brass-2); border-color: var(--color-brass); }
+.exploreIcon { width: 16px; height: 16px; transition: transform var(--fast) var(--ease-editorial); }
+.explore:hover .exploreIcon { transform: translateX(3px); }
+
+.roomH2 { margin-top: 26px; max-width: 460px; font-size: clamp(36px, min(3.9vw, 6.2vh), 56px); line-height: 1.12; letter-spacing: -0.01em; }
+.roomBody { margin-top: 30px; max-width: 340px; font-size: clamp(15px, min(1.18vw, 1.9vh), 17px); line-height: 1.6; color: var(--color-cream-3); }
+
+/* ── the window: the mark's foot, glowing amber, opening out to the full frame ── */
+.win { position: absolute; opacity: 0; pointer-events: none; }
+.winPhoto, .winEdge, .winAmber { position: absolute; inset: 0; display: block; }
+.winPhoto { overflow: hidden; background: #0b0a17; }
+.winPhoto img { position: absolute; max-width: none; object-fit: cover; }
+.winEdge { border: 1px solid var(--color-brass); }
+.winAmber {
+  opacity: 0; border: 2px solid #f2a85c; background: rgba(242, 158, 71, 0.08);
+  box-shadow: 0 0 12px rgba(242, 158, 71, 0.81), 0 0 46px 2px rgba(242, 158, 71, 0.95),
+    inset 0 0 var(--inner, 28px) 2px rgba(242, 158, 71, 0.9);
+}
+
+/* ── the experiences: three panels, placed in px; each keeps its slice of the dinner until its own photograph arrives ── */
+.cards { margin: 0; padding: 0; list-style: none; }
+.card { position: absolute; opacity: 0; overflow: hidden; background: #0b0a17; pointer-events: none; }
+.card::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  border: 1px solid rgba(195, 174, 135, var(--edge, 1));
+}
+.cardPhoto { position: absolute; left: 0; top: 0; width: 100%; height: var(--photo-h, 100%); overflow: hidden; }
+.slice { position: absolute; max-width: none; object-fit: cover; }
+.own { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: var(--own, 0); }
+/* Figma: the caption starts under the photograph (640 of 1392); the title keeps two lines */
+.caption {
+  position: absolute; left: 0; right: 0; top: calc(100% * 640 / 1392); bottom: 0;
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding: min(28px, 3.6vh) min(24px, 1.7vw) min(36px, 4.4vh);
+  opacity: var(--cap, 0); transform: translateY(calc(14px * (1 - var(--cap, 0))));
+}
+.capName { font-size: clamp(22px, min(2.08vw, 3.33vh), 30px); line-height: 1.12; letter-spacing: -0.01em; min-height: 2.24em; }
+.capText { margin-top: min(20px, 2.4vh); font-size: clamp(13.5px, min(1.08vw, 1.72vh), 15.5px); line-height: 1.6; color: var(--color-cream-2); }
+/* each experience's animated drawing fills the space under its text */
+.capVisual { flex: 1 1 auto; min-height: 0; width: min(100%, 220px); display: flex; align-items: flex-end; padding-top: min(16px, 2vh); }
+.capVisual svg { max-height: 100%; }
+
+/* ── portrait: the storyboard's 1080 × 1440 frames. --u scales sizes to fit; --v spreads the frame's
+   heights over the screen's, so a tall phone uses its whole height. Mirrors lib/signals.ts. ── */
+@media (orientation: portrait) and (prefers-reduced-motion: no-preference) {
+  .stage {
+    --u: min(100vw / 1080, 100vh / 1440);
+    --v: calc(100vh / 1440);
+    --ox: calc((100vw - 1080 * var(--u)) / 2);
+    --x0: calc(var(--ox) + 63 * var(--u));
+  }
+  .block { inset: 0; max-width: none; padding: 0; display: block; }
+  .copy, .action { position: absolute; left: var(--x0); margin: 0; }
+
+  .eyebrow { font-size: max(10px, 20 * var(--u)); }
+  .intro .copy { top: calc(315 * var(--v)); width: calc(720 * var(--u)); }
+  .introH2 { margin-top: max(16px, 32 * var(--u)); font-size: max(30px, 100 * var(--u)); }
+  .promise { margin-top: max(20px, 60 * var(--u)); max-width: calc(620 * var(--u)); font-size: max(15px, 34 * var(--u)); }
+  .intro .action { top: calc(1111 * var(--v)); }
+  .cta { height: max(44px, 85 * var(--u)); padding-inline: max(20px, 40 * var(--u)) max(18px, 36 * var(--u)); font-size: max(14px, 28 * var(--u)); gap: max(10px, 22 * var(--u)); }
+  .ctaIcon { width: max(14px, 28 * var(--u)); height: max(14px, 28 * var(--u)); }
+
+  .topic .copy { top: calc(181 * var(--v)); width: calc(450 * var(--u)); }
+  .folio { gap: max(14px, 28 * var(--u)); font-size: max(11px, 22 * var(--u)); }
+  .folio i { width: calc(180 * var(--u)); }
+  .topicName { margin-top: calc(92 * var(--u)); font-size: max(26px, 68 * var(--u)); white-space: nowrap; }
+  .topicDesc { margin-top: max(16px, 52 * var(--u)); max-width: max(132px, 360 * var(--u)); font-size: max(14px, 30 * var(--u)); }
+  .tagsFrame { margin-top: max(24px, 96 * var(--u)); max-width: max(132px, 360 * var(--u)); }
+  .tags { font-size: max(10.5px, 22 * var(--u)); letter-spacing: 0.1em; }
+  .topic .action { top: calc(1111 * var(--v)); }
+  .explore { font-size: max(14px, 30 * var(--u)); gap: max(10px, 16 * var(--u)); }
+  .exploreIcon { width: max(16px, 30 * var(--u)); height: max(16px, 30 * var(--u)); }
+
+  .room .copy { top: calc(409 * var(--v)); width: calc(520 * var(--u)); }
+  .roomH2 { margin-top: max(14px, 34 * var(--u)); max-width: none; font-size: max(24px, 50 * var(--u)); }
+  .roomBody { margin-top: max(24px, 132 * var(--u)); max-width: max(150px, 440 * var(--u)); font-size: max(14px, 26 * var(--u)); }
+
+  .caption { padding: max(16px, 56 * var(--u)) max(10px, 23 * var(--u)) max(16px, 77 * var(--u)); }
+  .capName { font-size: max(16px, 40 * var(--u)); }
+  .capText { margin-top: max(10px, 64 * var(--u)); font-size: max(12px, 24 * var(--u)); }
+
+}
+
+/* reduced motion: no pin. The intro, each theme with its photograph in a static mark, the room, then
+   three cards. The stage dissolves into the track so the "The Room" anchor can sit just above the room. */
+@media (prefers-reduced-motion: reduce) {
+  .signals { padding-block: clamp(88px, 12vw, 168px) clamp(72px, 12vw, 136px); }
+  .track { height: auto; display: flex; flex-direction: column; gap: clamp(88px, 16vw, 136px); }
+  .stage { display: contents; }
+  .mark, .win, .slice { display: none; }
+  .roomAnchor { position: static; order: 3; margin-bottom: calc(-1 * clamp(88px, 16vw, 136px)); }
+  .intro { order: 1; }
+  .topic { order: 2; }
+  .room { order: 4; }
+  .cards { order: 5; }
+
+  .block {
+    position: static; transform: none !important; opacity: 1 !important;
+    width: 100%; display: grid; gap: clamp(32px, 6vw, 48px); align-items: start;
+  }
+  .block a { pointer-events: auto; }
+  .copy { width: auto; }
+  .action { margin: 0; justify-self: start; }
+  .still { display: block; }
+  .stillGlyph { display: block; width: min(64%, 300px); height: auto; }
+  .stillSmall { width: min(36%, 160px); }
+  .introH2 { font-size: clamp(36px, 9vw, 60px); }
+  .topicName { font-size: clamp(36px, 9vw, 56px); }
+  .roomH2 { font-size: clamp(32px, 8vw, 52px); }
+  .promise, .topicDesc, .roomBody { font-size: clamp(16px, 1.15vw, 17px); }
+
+  .cards {
+    display: grid; gap: 16px; width: 100%; max-width: 1280px; margin-inline: auto;
+    padding-inline: var(--gutter); box-sizing: border-box;
+  }
+  .card { position: relative; opacity: 1 !important; pointer-events: auto !important; display: flex; flex-direction: column; }
+  .card::after { border-color: var(--color-brass); }
+  .cardPhoto { position: relative; height: auto; aspect-ratio: 4 / 3; }
+  .own { opacity: 1; }
+  .caption { position: static; opacity: 1; transform: none; padding: 28px 24px; gap: 0; }
+  .capName { font-size: clamp(24px, 6vw, 30px); min-height: 0; }
+  .capText { font-size: 15.5px; margin-top: 12px; }
+  .capVisual { flex: none; width: min(100%, 200px); padding-block: 24px 0; }
+}
+/* reduced motion on a wide screen: the storyboard's two columns, still */
+@media (min-width: 900px) and (prefers-reduced-motion: reduce) {
+  .block { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "copy fig" "action fig"; align-items: center; }
+  .copy { grid-area: copy; }
+  .action { grid-area: action; align-self: start; }
+  .still { grid-area: fig; }
+  .stillGlyph { width: min(80%, 460px); margin-inline: auto; }
+  .stillSmall { width: min(50%, 245px); }
+  .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cardPhoto { aspect-ratio: 400 / 520; }
+}

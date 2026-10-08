@@ -31,8 +31,8 @@ export const LEGAL_LINKS = [
 /** Section ids in page order — used by the progress arcs and active nav state. */
 export const SECTION_IDS = [
   "top",
-  "problem",
-  "continuation",
+  "signals",
+  "room",
   "between",
   "intelligence",
   "pulse",

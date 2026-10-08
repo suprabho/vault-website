@@ -1,5 +1,5 @@
 /**
- * Beat boundaries for the opening choreography (Hero → Problem → Continuation → Between).
+ * Beat boundaries for the opening choreography (Hero → Signals → Between).
  *
  * Every window is a fraction of its section's pinned track progress (see `trackProgress` in
  * lib/scrub.ts). Sections drive their own copy from these numbers and the motif layer
@@ -10,7 +10,7 @@
 export type Window = readonly [number, number];
 
 /** Pinned track heights, in vh. */
-export const TRACK_VH = { hero: 200, problem: 400, continuation: 1000, between: 500 } as const;
+export const TRACK_VH = { hero: 200, signals: 1200, between: 500 } as const;
 
 export const HERO = {
   /** the scroll cue gives way as soon as the page moves */
@@ -19,35 +19,38 @@ export const HERO = {
   copyOut: [0.1, 0.35] as Window,
 };
 
-export const PROBLEM = {
-  /** headline moves from the centre of the stage to its resting place above the copy */
-  headUp: [0.28, 0.5] as Window,
-  /** the promise fades in under the headline */
-  copyIn: [0.34, 0.52] as Window,
-  /** headline + copy fade while the cards stack */
-  textOut: [0.55, 0.68] as Window,
-  /** first theme lands; each following theme starts `cardStep` later */
-  cardsIn: [0.55, 0.69] as Window,
-  cardStep: 0.08,
-};
-
-export const CONTINUATION = {
-  /** 03 headline + copy clear the stage */
-  textOut: [0.08, 0.14] as Window,
-  /** "Conferences create introductions. Vault creates relationships." */
-  closeIn: [0.18, 0.22] as Window,
-  closeOut: [0.28, 0.32] as Window,
-  /** "Small by design. Relevant by construction." inside the cream ellipse */
-  roomIn: [0.38, 0.42] as Window,
-  roomOut: [0.5, 0.54] as Window,
-  /** the ellipse has covered the viewport: the stage itself turns cream from here on */
-  ground: 0.58,
-  /** captions for the three photographs */
-  cap: [
-    { in: [0.68, 0.72] as Window, out: [0.76, 0.79] as Window },
-    { in: [0.81, 0.84] as Window, out: [0.88, 0.91] as Window },
-    { in: [0.93, 0.96] as Window, out: [1.2, 1.3] as Window },
+/** 02 → 04 · the intro, the three themes inside the mark, the room, and the experiences. */
+export const SIGNALS = {
+  /** the intro copy clears */
+  introOut: [0.04, 0.08] as Window,
+  /** the mark grows from beside the intro to hold the photographs */
+  grow: [0.05, 0.12] as Window,
+  /** each theme: its photograph arrives over the last one, its copy comes in, then goes */
+  topics: [
+    { photo: [0.06, 0.12] as Window, in: [0.09, 0.13] as Window, out: [0.21, 0.245] as Window },
+    { photo: [0.225, 0.285] as Window, in: [0.26, 0.295] as Window, out: [0.375, 0.41] as Window },
+    { photo: [0.39, 0.45] as Window, in: [0.425, 0.46] as Window, out: [0.54, 0.575] as Window },
   ],
+  /** the dinner replaces the last theme inside the mark; the room's copy follows */
+  roomPhoto: [0.555, 0.615] as Window,
+  roomIn: [0.59, 0.625] as Window,
+  /** the mark's foot lights softly while the room holds */
+  glow: [0.6, 0.64] as Window,
+  /** where the "The Room" link lands: the room fully composed */
+  roomAt: 0.63,
+  /** the room's copy leaves; the mark grows to the centre, its counter empties, the foot brightens */
+  roomOut: [0.69, 0.72] as Window,
+  focus: [0.69, 0.77] as Window,
+  counterOut: [0.69, 0.74] as Window,
+  flare: [0.72, 0.77] as Window,
+  /** the foot opens into a window that grows to the full frame; the mark gives way to it */
+  expand: [0.775, 0.86] as Window,
+  markOut: [0.82, 0.86] as Window,
+  /** the frame divides into three panels */
+  split: [0.88, 0.925] as Window,
+  /** each panel becomes its experience: its own photograph, then its caption */
+  cards: [0.925, 0.97] as Window,
+  cardStep: 0.008,
 };
 
 export const BETWEEN = {

@@ -3,6 +3,14 @@
  * the call to action, the contact address, the member portal — lives here.
  */
 
+/**
+ * The public origin, used to make share-image and canonical URLs absolute. Set NEXT_PUBLIC_SITE_URL
+ * once the domain is confirmed; on Vercel the production domain is used until then.
+ */
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000");
+
 /** The one call to action, used verbatim everywhere it appears. */
 export const CTA = { label: "Request an invitation", href: "/request" } as const;
 

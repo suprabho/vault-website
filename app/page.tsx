@@ -3,8 +3,7 @@ import ProgressArcs from "@/components/layout/ProgressArcs";
 import MotifLayer from "@/components/motif/MotifLayer";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/sections/Hero";
-import Problem from "@/components/sections/Problem";
-import Continuation from "@/components/sections/Continuation";
+import Signals from "@/components/sections/Signals";
 import Between from "@/components/sections/Between";
 import Intelligence from "@/components/sections/Intelligence";
 import Pulse from "@/components/sections/Pulse";
@@ -21,8 +20,7 @@ export default function Home() {
       <main id="main">
         <MotifLayer />
         <Hero />
-        <Problem />
-        <Continuation />
+        <Signals />
         <Between />
         <Intelligence />
         <Pulse />

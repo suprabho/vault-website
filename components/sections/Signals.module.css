@@ -1,0 +1,161 @@
+/* 02 → 04 · one pinned track: the intro, the three themes inside the mark, the room, the experiences.
+   Sizes follow the 1440 × 900 storyboard; type scales down with the narrower of the two. */
+.signals { padding: 0; background: var(--color-night); }
+.track { position: relative; height: var(--track); }
+.roomAnchor { position: absolute; left: 0; top: var(--at); width: 1px; height: 1px; pointer-events: none; }
+.stage { position: sticky; top: 0; height: 100vh; z-index: 2; overflow: clip; }
+
+/* the mark, its photographs and the window are placed in px by Signals.tsx */
+.mark { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.still { display: none; margin: 0; }
+
+/* ── the copy: one column on the left of the canvas, centred on the space under the header ── */
+.block {
+  position: absolute; left: 0; right: 0; top: calc((var(--navh) + 100vh) / 2);
+  max-width: 1280px; margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box;
+  transform: translateY(-50%); will-change: opacity, transform;
+}
+.topic, .room { opacity: 0; pointer-events: none; }
+.copy { width: min(560px, 42vw); }
+
+.eyebrow {
+  font-family: var(--font-body); font-weight: 600; font-size: 11px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--color-brass);
+}
+.introH2 {
+  margin-top: 24px; font-size: clamp(40px, min(4.6vw, 7.3vh), 66px); line-height: 0.98; letter-spacing: -0.035em;
+  color: var(--color-cream);
+}
+.promise { margin-top: 28px; max-width: 420px; font-size: clamp(16px, min(1.32vw, 2.1vh), 19px); line-height: 1.5; color: var(--color-cream-2); }
+.cta { margin-top: 36px; gap: 10px; }
+.ctaIcon { width: 14px; height: 14px; }
+
+.folio { display: flex; align-items: center; gap: 16px; font-size: 12px; letter-spacing: 0.08em; color: var(--color-cream-3); }
+.folio i { display: block; width: 56px; height: 1px; background: rgba(195, 174, 135, 0.8); }
+.topicName {
+  margin-top: 28px; font-size: clamp(40px, min(4.45vw, 7.1vh), 64px); line-height: 1; letter-spacing: -0.035em;
+  color: var(--color-cream);
+}
+.topicDesc { margin-top: 22px; max-width: 360px; font-size: clamp(15px, min(1.18vw, 1.9vh), 17px); line-height: 1.6; color: var(--color-cream-2); }
+.tags {
+  display: flex; flex-wrap: wrap; margin: 32px 0 0; padding: 0; list-style: none;
+  font-family: var(--font-body); font-weight: 600; font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--color-cream-3);
+}
+/* two spaces, a bar, two spaces */
+.tags li + li::before { content: "|"; margin-inline: 0.85em; font-weight: 400; }
+.explore {
+  display: inline-flex; align-items: center; gap: 10px; margin-top: 40px; padding-bottom: 6px;
+  font-size: 15px; color: var(--color-brass); text-decoration: none;
+  border-bottom: 1px solid rgba(195, 174, 135, 0.45);
+  transition: border-color var(--fast) ease, color var(--fast) ease;
+}
+.explore:hover { color: var(--color-brass-2); border-color: var(--color-brass); }
+.exploreIcon { width: 16px; height: 16px; transition: transform var(--fast) var(--ease-editorial); }
+.explore:hover .exploreIcon { transform: translateX(3px); }
+
+.roomH2 {
+  margin-top: 26px; max-width: 440px; font-size: clamp(36px, min(3.9vw, 6.2vh), 56px); line-height: 1.02; letter-spacing: -0.035em;
+  color: var(--color-cream);
+}
+.roomBody { margin-top: 30px; max-width: 340px; font-size: clamp(15px, min(1.18vw, 1.9vh), 17px); line-height: 1.6; color: var(--color-cream-3); }
+
+/* ── the window: the mark's foot, lit amber, opening out in a brass glow to the full frame ── */
+.win { position: absolute; opacity: 0; pointer-events: none; }
+.winPhoto, .winEdge, .winAmber, .winBrass { position: absolute; inset: 0; display: block; }
+.winPhoto { overflow: hidden; background: #0b0a17; }
+.winPhoto img { position: absolute; max-width: none; object-fit: cover; }
+.winEdge { border: 1px solid var(--color-brass); }
+.winBrass { opacity: 0; box-shadow: 0 0 21.5px 1.5px rgba(195, 174, 135, 0.41), inset 0 0 14.5px rgba(195, 174, 135, 0.26); }
+.winAmber {
+  opacity: 0; border: 2px solid var(--color-brass-2); background: rgba(242, 158, 71, 0.08);
+  box-shadow: 0 0 10px rgba(242, 158, 71, 0.8), 0 0 36px 2px rgba(242, 158, 71, 0.95), inset 0 0 22px 2px rgba(242, 158, 71, 0.85);
+}
+
+/* ── the experiences: three panels, placed in px; each keeps its slice of the dinner until its own photograph arrives ── */
+.cards { margin: 0; padding: 0; list-style: none; }
+.card { position: absolute; opacity: 0; overflow: hidden; background: #0b0a17; pointer-events: none; }
+.card::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  border: 1px solid rgba(195, 174, 135, var(--edge, 1));
+}
+.cardPhoto { position: absolute; left: 0; top: 0; width: 100%; height: var(--photo-h, 100%); overflow: hidden; }
+.slice { position: absolute; max-width: none; object-fit: cover; }
+.own { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: var(--own, 0); }
+.caption {
+  position: absolute; left: 0; right: 0; top: calc(100% * 520 / 758);
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+  padding: min(28px, 3.1vh) min(24px, 1.7vw);
+  opacity: var(--cap, 0); transform: translateY(calc(14px * (1 - var(--cap, 0))));
+}
+.capName {
+  font-size: clamp(22px, min(2.08vw, 3.33vh), 30px); line-height: 1.05; letter-spacing: -0.028em; color: var(--color-cream);
+}
+.capText { margin-top: 10px; font-size: clamp(13.5px, min(1.08vw, 1.72vh), 15.5px); line-height: 1.55; color: var(--color-cream-3); }
+.capLink {
+  flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 50%; color: var(--color-brass);
+  border: 1px solid rgba(195, 174, 135, 0.5);
+  transition: background-color var(--fast) ease, border-color var(--fast) ease;
+}
+.capLink:hover { background: rgba(195, 174, 135, 0.08); border-color: var(--color-brass); }
+.capIcon { width: 18px; height: 18px; }
+
+/* ── the scroll cue, bottom right ── */
+.cue {
+  /* 84px from the edge at 1440, closing in on narrower screens so it stays clear of the mark */
+  position: absolute; right: clamp(16px, calc(17vw - 161px), 84px); bottom: clamp(24px, 7.1vh, 64px);
+  display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none;
+  font-family: var(--font-body); font-weight: 600; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--color-cream-2);
+}
+.cueRule { display: block; width: 1px; height: 44px; background: var(--color-brass); }
+.cueDot { display: block; width: 5px; height: 5px; border-radius: 50%; background: var(--color-brass); }
+.cueIcon { width: 16px; height: 16px; }
+
+/* still: no pin. The intro, each theme with its photograph in a static mark, the room, then three cards.
+   The stage dissolves into the track so the "The Room" anchor can sit in the flow just above the room. */
+@media (max-width: 899px), (prefers-reduced-motion: reduce) {
+  .signals { padding-block: clamp(88px, 12vw, 168px) clamp(72px, 12vw, 136px); }
+  .track { height: auto; display: flex; flex-direction: column; gap: clamp(88px, 16vw, 136px); }
+  .stage { display: contents; }
+  .mark, .win, .cue, .slice { display: none; }
+  .roomAnchor { position: static; order: 3; margin-bottom: calc(-1 * clamp(88px, 16vw, 136px)); }
+  .intro { order: 1; }
+  .topic { order: 2; }
+  .room { order: 4; }
+  .cards { order: 5; }
+
+  .block {
+    position: static; transform: none !important; opacity: 1 !important; pointer-events: auto !important;
+    width: 100%; display: grid; gap: clamp(40px, 8vw, 56px);
+  }
+  .copy { width: auto; }
+  .still { display: block; }
+  .stillGlyph { display: block; width: min(64%, 300px); height: auto; }
+  .stillSmall { width: min(36%, 160px); }
+  .introH2 { font-size: clamp(36px, 9vw, 58px); }
+  .topicName { font-size: clamp(36px, 9vw, 56px); }
+  .roomH2 { font-size: clamp(32px, 8vw, 52px); }
+  .promise, .topicDesc, .roomBody { font-size: clamp(16px, 1.15vw, 17px); }
+
+  .cards {
+    display: grid; gap: 16px; width: 100%; max-width: 1280px; margin-inline: auto;
+    padding-inline: var(--gutter); box-sizing: border-box;
+  }
+  .card { position: relative; opacity: 1 !important; pointer-events: auto !important; display: flex; flex-direction: column; }
+  .card::after { border-color: var(--color-brass); }
+  .cardPhoto { position: relative; height: auto; aspect-ratio: 4 / 3; }
+  .own { opacity: 1; }
+  .caption { position: static; opacity: 1; transform: none; padding: 28px 24px; }
+  .capName { font-size: clamp(24px, 6vw, 30px); }
+  .capText { font-size: 15.5px; }
+}
+/* reduced motion on a wide screen: the storyboard's two columns, still */
+@media (min-width: 900px) and (prefers-reduced-motion: reduce) {
+  .block { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; }
+  .stillGlyph { width: min(80%, 460px); margin-inline: auto; }
+  .stillSmall { width: min(50%, 245px); }
+  .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cardPhoto { aspect-ratio: 400 / 520; }
+}

@@ -14,22 +14,6 @@
   overflow: visible;
 }
 
-/* the photographs breathe: a slow zoom and pan, looping, while they are on screen */
-.photo {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: drift var(--dur) ease-in-out var(--delay) infinite alternate both;
-  animation-play-state: paused;
-}
-.layer[data-photos="on"] .photo { animation-play-state: running; }
-@keyframes drift {
-  from { transform: translate(var(--x0), var(--y0)) scale(1); }
-  to { transform: translate(var(--x1), var(--y1)) scale(1.05); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .photo { animation: none; }
-}
-
 /* The original camera continues above later section surfaces, below editorial copy. */
 .layer[data-continued="true"] { z-index: 3; }
 :global(html[data-motif-continues="true"] #intelligence),

@@ -26,13 +26,16 @@ components/
   layout/               Header (+ MobileSheet), ProgressArcs, Footer, RevealObserver, Subpage (frame for the other pages)
   forms/RequestForm.tsx the invitation request form
   type/Lines.tsx        masked headline lines for the .c5-ln reveal, with the spaces kept between them
-  motif/MotifLayer.tsx  the mark as one fixed layer travelling through sections 01–05 (see below)
+  motif/MotifLayer.tsx  the mark as one fixed layer travelling through 01 and 05 onwards; Signals draws it in between (see below)
                         (lib/motif.ts also holds INNER_LOOP + betweenPose(), which the cadence dial is drawn from)
   motif/MotifGlyph.tsx  the mark as a static picture, for narrow viewports and reduced motion
   sections/             one component (+ CSS module) per section:
     Hero            01  pinned: the copy over the aura and one button, a scroll cue at the foot; then the mark alone
-    Problem         02  pinned, inside the mark: headline, the promise, the three themes (light ground)
-    Continuation    03→04  pinned: the introduction/relationship line, the room on a cream ellipse, the three convenings
+    Signals         02→04  pinned, after the Figma storyboard "Experiment 2": the intro beside a small mark; the mark
+                        grows to hold a photograph for each theme (regulation, enforcement, financial crime) as the
+                        copy turns over; it grows around the room's dinner photograph; its foot lights and opens
+                        into a window that becomes the full photograph, splits into three panels, and each panel
+                        becomes an experience card (geometry in lib/signals.ts)
     Between         05  pinned: the mark at the left, its counter a 365-day dial; each stop lights its days
                         (52 Mondays, signals, 12 months, 4 quarters, every day) with a preview in the middle;
                         unpinned, each stop is a card headed by its preview (on a phone a swipe, with one row of
@@ -54,6 +57,7 @@ hooks/useTrackScrub.ts  rAF scroll loop for a pinned track, with the settle path
 lib/scrub.ts            progress + easing helpers for the pinned sequences
 lib/choreography.ts     beat windows for sections 01–05, shared by the sections and the motif
 lib/motif.ts            the motif camera: poses, keyframes, resolve/sample/viewBox maths
+lib/signals.ts          the Signals stage geometry: the mark's centre and sizes, the window, the panels
 lib/icons.tsx           24×24 line icons
 lib/site.ts             the call to action, contact/member-portal settings, nav + legal links, section order
 lib/briefing.ts         the sample Monday briefing shown in 06 and 07 (replace with a live edition)
@@ -71,7 +75,7 @@ public/fonts            New York (Apple) subset, 400/500/600
 - **Reveals**: add `data-reveal` to an element and `RevealObserver` gives it
   the `in` class once it scrolls into view. The `.c5-ln`, `.c5-fade`,
   `.c5-rule`, `.ap` and `.reveal` primitives respond to that class.
-- **Pinned sequences** (Hero, Problem, Continuation, Between, Process, Request) are
+- **Pinned sequences** (Hero, Signals, Between, Process, Request) are
   client components that scrub inline styles from scroll progress. Below 900px
   or with `prefers-reduced-motion`, they unpin and settle into the final frame.
 - **The motif** (sections 01–05) is a single `position: fixed` layer
@@ -81,7 +85,9 @@ public/fonts            New York (Apple) subset, 400/500/600
   crisp; its keyframes (`lib/motif.ts`) are placed relative to the
   `[data-motif-track]` sections and resolved to scroll positions on measure.
   Section copy and the mark share the beat windows in `lib/choreography.ts`,
-  so tuning a beat in one place moves both. In still mode the layer is not
+  so tuning a beat in one place moves both. Through Signals the layer hands
+  the mark to that section's own stage at the pin (same pose, from
+  `lib/signals.ts`) and picks it up again for Between. In still mode the layer is not
   mounted and each section shows a static `MotifGlyph` instead.
 - Section-specific choreography stays in the section's CSS module; Tailwind is
   used for layout and one-off spacing.

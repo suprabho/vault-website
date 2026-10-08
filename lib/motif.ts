@@ -1,4 +1,5 @@
 import { easeCubic } from "@/lib/scrub";
+import { signalsGeometry } from "@/lib/signals";
 
 /**
  * The motif camera. The monogram lives in its 662 × 827 viewBox; the fixed layer shows a
@@ -7,20 +8,13 @@ import { easeCubic } from "@/lib/scrub";
  * section tracks and resolved to absolute scroll positions at measure time.
  */
 
-export type TrackKey = "hero" | "problem" | "continuation" | "between";
+export type TrackKey = "hero" | "signals" | "between";
 export type Piece = "A" | "B" | "C" | "D";
 export type Point = { x: number; y: number };
 
 export const GLYPH_W = 662;
 export const GLYPH_H = 827;
 export const GLYPH_CENTRE: Point = { x: 331, y: 413.5 };
-
-/**
- * The cream ellipse of the "inside the room" beat, in glyph units — Figma "Ellipse 7"
- * (frame 35, node 120:2237): 443.35 × 307.21 at 0.7813 px per glyph unit, centred on the
- * mark. Kept in glyph space so it scales and sits with the mark instead of with the viewport.
- */
-export const ELLIPSE = { rx: 283.7, ry: 196.6 } as const;
 
 /**
  * The inside of the mark as one closed loop, clockwise from the top: B's inner curve, the gap to
@@ -69,11 +63,6 @@ export type MotifState = {
   /** 0 = the four outline pieces sit beyond their viewport corners; 1 = assembled */
   assemble: number;
   outline: number;
-  photo: number;
-  gold: number;
-  /** ellipse opacity, and how far it has grown (0 = its drawn size, 1 = it covers the viewport) */
-  ellipse: number;
-  ellipseCover: number;
 };
 
 type Ease = (v: number) => number;
@@ -93,57 +82,30 @@ export type Keyframe = Partial<Omit<MotifState, "ax" | "ay">> & {
 // ── the storyboard ────────────────────────────────────────────────────────────
 const CENTRE = { anchor: "centre" as const };
 const HOME = { ...CENTRE, sx: 0.47, sy: 0.53, h: 56, rot: 0 };
-/**
- * The three holds inside the photographs, fitted to the storyboard frames: a point on each band
- * (glyph units — a piece's box centre sits in the hole, these do not), where it sits on screen,
- * and the pre-rotation height of the mark (vh).
- */
-const IN_C = { anchor: { x: 112, y: 637 } as Point, sx: 0.69, sy: 0.68, h: 403 };
-const IN_D = { anchor: { x: 537, y: 596 } as Point, sx: 0.43, sy: 0.67, h: 446 };
-const IN_B = { anchor: { x: 568, y: 162 } as Point, sx: 0.525, sy: 0.54, h: 425 };
-/** where on the continuation track the camera rests in each photograph (the photos drift across these) */
-export const PHOTO_HOLDS = { C: [0.7, 0.76], D: [0.82, 0.88], B: [0.94, 1] } as const;
-const { C: HC, D: HD, B: HB } = PHOTO_HOLDS;
+/** Just past the start of a pin: the hand-off to a stage that draws the mark itself (about a pixel of scroll). */
+const HANDOFF = 0.0001;
 
-/** The storyboard for a viewport: 05 depends on its size; everything else is in viewport fractions. */
+/** The storyboard for a viewport: 02 and 05 depend on its size; everything else is in viewport fractions. */
 export const motifKeyframes = (vw: number, vh: number): Keyframe[] => {
   const between = betweenPose(vw, vh);
   const BETWEEN_KEY = { anchor: between.anchor, sx: between.sx, sy: between.sy, h: between.h };
+  const g = signalsGeometry(vw, vh);
+  const INTRO = { ...CENTRE, sx: g.cx / vw, sy: g.cy / vh, h: (g.mark.intro / vh) * 100, rot: 0 };
   return [
     // 01 · hero: the oversized pieces draw in from the corners and settle behind the departing copy
-    { track: "hero", at: 0, ...HOME, h: 170, assemble: 0, outline: 1, photo: 0, gold: 0, ellipse: 0, ellipseCover: 0 },
+    { track: "hero", at: 0, ...HOME, h: 170, assemble: 0, outline: 1 },
     { track: "hero", at: 0.56, ...HOME, h: 50, assemble: 1, outline: 1 },
     { track: "hero", at: 1, ...HOME },
-    // 02 · problem: it swells to frame the headline while the cream sheet slides up
-    { track: "problem", at: 0, ...CENTRE, sx: 0.5, sy: 0.61, h: 142 },
-    { track: "problem", at: 1, ...CENTRE, sx: 0.5, sy: 0.61, h: 146 },
-    // 03 · continuation: it withdraws to the right of the headline
-    { track: "continuation", at: 0, ...CENTRE, sx: 0.71, sy: 0.57, h: 49 },
-    { track: "continuation", at: 0.1, ...CENTRE, sx: 0.71, sy: 0.57, h: 49 },
-    // turns on its side and grows around the closing line
-    { track: "continuation", at: 0.18, ...CENTRE, sx: 0.5, sy: 0.57, h: 89, rot: 90 },
-    { track: "continuation", at: 0.3, ...CENTRE, sx: 0.5, sy: 0.57, h: 89 },
-    // 04 · settles a little so the ellipse can sit in its centre
-    { track: "continuation", at: 0.36, ...CENTRE, sx: 0.5, sy: 0.57, h: 74 },
-    { track: "continuation", at: 0.4, ...CENTRE, sx: 0.5, sy: 0.57, h: 74, ellipse: 1, ellipseCover: 0 },
-    { track: "continuation", at: 0.52, ...CENTRE, sx: 0.5, sy: 0.57, h: 74, ellipse: 1, ellipseCover: 0 },
-    // the ellipse becomes the ground; the photographs arrive
-    { track: "continuation", at: 0.58, ...CENTRE, sx: 0.5, sy: 0.57, h: 74, ellipseCover: 1, photo: 1, gold: 1 },
-    // the camera dives into the photographs: each one framed off-centre so the caption sits on cream;
-    // between pieces it pulls back a little so the move reads as one camera, not a cut.
-    // C holds the dinner, D the breakfast, B the roundtable — the order the captions run in.
-    { track: "continuation", at: HC[0], ...IN_C, ellipse: 0, outline: 0 },
-    { track: "continuation", at: HC[1], ...IN_C },
-    { track: "continuation", at: 0.79, ...CENTRE, sx: 0.5, sy: 0.5, h: 150, ease: linear },
-    { track: "continuation", at: HD[0], ...IN_D, ease: linear },
-    { track: "continuation", at: HD[1], ...IN_D },
-    { track: "continuation", at: 0.91, ...CENTRE, sx: 0.5, sy: 0.5, h: 150, ease: linear },
-    { track: "continuation", at: HB[0], ...IN_B, ease: linear },
-    { track: "continuation", at: HB[1], ...IN_B },
-    // 05 · between: upright again, outline only, at the left, framing the cadence dial
-    { track: "between", at: 0, ...BETWEEN_KEY, rot: 0, outline: 1, photo: 0, gold: 0, ellipseCover: 0 },
+    // 02 · signals: it shrinks to the right of the intro as the section rises, then the stage takes
+    // over. From the pin on, Signals.tsx draws the mark at exactly this pose (lib/signals.ts) and
+    // carries it through the themes, the room and the experiences; the layer stays dark meanwhile.
+    { track: "signals", at: 0, ...INTRO, outline: 1 },
+    { track: "signals", at: HANDOFF, ...INTRO, outline: 0 },
+    // 05 · between: waits, unseen, where the cadence needs it, and lights as that section arrives
+    { track: "signals", at: 1, ...BETWEEN_KEY, outline: 0 },
+    { track: "between", at: -0.35, ...BETWEEN_KEY, outline: 0 },
+    { track: "between", at: 0, ...BETWEEN_KEY, outline: 1 },
     { track: "between", at: 1, ...BETWEEN_KEY, outline: 1 },
-
   ];
 };
 
@@ -166,8 +128,7 @@ export function resolve(keys: Keyframe[], tracks: TrackRects, vh: number, pieces
   for (const k of keys) {
     const { track, at, anchor, ease, ...pose } = k;
     const base: MotifState = prev ?? {
-      ax: GLYPH_CENTRE.x, ay: GLYPH_CENTRE.y, sx: 0.5, sy: 0.5, h: 56, rot: 0,
-      assemble: 0, outline: 0, photo: 0, gold: 0, ellipse: 0, ellipseCover: 0,
+      ax: GLYPH_CENTRE.x, ay: GLYPH_CENTRE.y, sx: 0.5, sy: 0.5, h: 56, rot: 0, assemble: 0, outline: 0,
     };
     const a = anchor === undefined ? null : anchor === "centre" ? GLYPH_CENTRE : typeof anchor === "string" ? pieces[anchor] : anchor;
     const state: MotifState = { ...base, ...pose, ...(a ? { ax: a.x, ay: a.y } : {}) };
@@ -198,8 +159,7 @@ export function sample(frames: Resolved[], y: number): MotifState {
     ax: mix(A.ax, B.ax, e), ay: mix(A.ay, B.ay, e),
     sx: mix(A.sx, B.sx, e), sy: mix(A.sy, B.sy, e),
     h: mixLog(A.h, B.h, e), rot: mix(A.rot, B.rot, e), assemble: mix(A.assemble, B.assemble, e),
-    outline: mix(A.outline, B.outline, outlineE), photo: mix(A.photo, B.photo, e), gold: mix(A.gold, B.gold, e),
-    ellipse: mix(A.ellipse, B.ellipse, e), ellipseCover: mix(A.ellipseCover, B.ellipseCover, e),
+    outline: mix(A.outline, B.outline, outlineE),
   };
 }
 
@@ -219,25 +179,6 @@ export function camera(state: MotifState, vw: number, vh: number) {
   const x = p.x - state.sx * w, y = p.y - state.sy * h;
   return { viewBox: `${x.toFixed(2)} ${y.toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)}`, rotate: state.rot, x, y, w, h };
 }
-
-/**
- * The ellipse's radii in glyph units. At `ellipseCover` 0 it is the size Figma draws it;
- * at 1 it just contains the viewport, which depends on the viewport's aspect and on where
- * the mark's centre currently sits — hence computed per frame rather than a fixed scale.
- */
-export function ellipseRadii(state: MotifState, vw: number, vh: number) {
-  const px = ((state.h / 100) * vh) / GLYPH_H; // px per glyph unit
-  const cx = state.sx * vw, cy = state.sy * vh;
-  let k = 1;
-  for (const x of [-cx, vw - cx]) {
-    for (const y of [-cy, vh - cy]) {
-      k = Math.max(k, Math.hypot(x / (ELLIPSE.rx * px), y / (ELLIPSE.ry * px)));
-    }
-  }
-  const grow = 1 + (k - 1) * state.ellipseCover;
-  return { rx: ELLIPSE.rx * grow, ry: ELLIPSE.ry * grow };
-}
-
 
 export type MotifDock = { x: number; y: number; height: number };
 export type LaterGeometry = {

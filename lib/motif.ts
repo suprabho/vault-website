@@ -89,8 +89,8 @@ const HANDOFF = 0.0001;
 export const motifKeyframes = (vw: number, vh: number): Keyframe[] => {
   const between = betweenPose(vw, vh);
   const BETWEEN_KEY = { anchor: between.anchor, sx: between.sx, sy: between.sy, h: between.h };
-  const g = signalsGeometry(vw, vh);
-  const INTRO = { ...CENTRE, sx: g.cx / vw, sy: g.cy / vh, h: (g.mark.intro / vh) * 100, rot: 0 };
+  const { intro } = signalsGeometry(vw, vh).mark;
+  const INTRO = { ...CENTRE, sx: intro.cx / vw, sy: intro.cy / vh, h: (intro.h / vh) * 100, rot: 0 };
   return [
     // 01 · hero: the oversized pieces draw in from the corners and settle behind the departing copy
     { track: "hero", at: 0, ...HOME, h: 170, assemble: 0, outline: 1 },

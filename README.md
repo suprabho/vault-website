@@ -31,11 +31,12 @@ components/
   motif/MotifGlyph.tsx  the mark as a static picture, for narrow viewports and reduced motion
   sections/             one component (+ CSS module) per section:
     Hero            01  pinned: the copy over the aura and one button, a scroll cue at the foot; then the mark alone
-    Signals         02→04  pinned, after the Figma storyboard "Experiment 2": the intro beside a small mark; the mark
-                        grows to hold a photograph for each theme (regulation, enforcement, financial crime) as the
-                        copy turns over; it grows around the room's dinner photograph; its foot lights and opens
-                        into a window that becomes the full photograph, splits into three panels, and each panel
-                        becomes an experience card (geometry in lib/signals.ts)
+    Signals         02→04  pinned, after the Figma "The Vault — Scroll storyboard": the intro beside a small mark;
+                        the mark grows to hold a photograph for each theme (regulation, enforcement, financial crime),
+                        filling its counter too, as the copy turns over; the dinner replaces them and the mark's foot
+                        starts to glow; the mark grows to the centre, its foot opens into a window that becomes the
+                        full photograph, splits into three panels, and each panel becomes an experience card.
+                        Landscape and portrait screens each have their own arrangement (geometry in lib/signals.ts)
     Between         05  pinned: the mark at the left, its counter a 365-day dial; each stop lights its days
                         (52 Mondays, signals, 12 months, 4 quarters, every day) with a preview in the middle;
                         unpinned, each stop is a card headed by its preview (on a phone a swipe, with one row of
@@ -77,7 +78,9 @@ public/fonts            New York (Apple) subset, 400/500/600
   `.c5-rule`, `.ap` and `.reveal` primitives respond to that class.
 - **Pinned sequences** (Hero, Signals, Between, Process, Request) are
   client components that scrub inline styles from scroll progress. Below 900px
-  or with `prefers-reduced-motion`, they unpin and settle into the final frame.
+  or with `prefers-reduced-motion`, they unpin and settle into the final frame
+  (Signals stays pinned on narrow screens, in its portrait arrangement, and only
+  unpins for reduced motion).
 - **The motif** (sections 01–05) is a single `position: fixed` layer
   (`components/motif/MotifLayer.tsx`) painted between the section backgrounds
   and their copy: sections keep their background, pinned stages sit at

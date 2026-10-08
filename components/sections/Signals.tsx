@@ -9,7 +9,8 @@ import { useTrackScrub } from "@/hooks/useTrackScrub";
 import { SIGNALS, TRACK_VH, type Window } from "@/lib/choreography";
 import { Icon } from "@/lib/icons";
 import { easeCubic, easeQuad, t } from "@/lib/scrub";
-import { footRect, lerpRect, markTransform, signalsGeometry, type Rect } from "@/lib/signals";
+import { INNER_LOOP } from "@/lib/motif";
+import { footRect, lerpRect, markTransform, mixPose, signalsGeometry, type Rect } from "@/lib/signals";
 import { CTA } from "@/lib/site";
 import styles from "./Signals.module.css";
 
@@ -44,7 +45,7 @@ const DINNER = "/images/private-dinner.webp";
 const EXPERIENCES = [
   {
     name: "Private dinners",
-    text: "Twelve seats. A private table. One topic everyone in the room has a reason to care about.",
+    text: "Twelve seats. One topic everyone has a reason to care about.",
     photo: DINNER,
     alt: "Guests in conversation around a candlelit dinner table.",
   },
@@ -64,8 +65,8 @@ const EXPERIENCES = [
 
 const PIECES = ["A", "B", "C", "D"] as const;
 const STROKE = { fill: "none", stroke: "#C3AE87", strokeWidth: 1, strokeLinejoin: "round" as const, vectorEffect: "non-scaling-stroke" as const };
-/** Figma: each experience's photograph takes the top 520 of the panel's 758 */
-const CARD_PHOTO = 520 / 758;
+/** Figma: each experience's photograph takes the top 640 of the panel's 1392 */
+const CARD_PHOTO = 640 / 1392;
 /** a theme's photograph settles from this scale as it arrives */
 const SETTLE = 0.06;
 
@@ -77,22 +78,27 @@ const box = (el: HTMLElement, r: Rect) => {
 };
 
 /**
- * 02 → 04 · one pinned track, after the Figma storyboard "Experiment 2". The mark arrives from the
- * hero beside the intro; it grows to hold a photograph for each of the three themes while their
- * copy turns over on the left; it grows again around the room. Then the foot of the mark lights,
- * opens into a window that becomes the full photograph, the photograph divides into three panels,
- * and each panel becomes one of the experiences.
+ * 02 → 04 · one pinned track, after the Figma storyboard "The Vault — Scroll storyboard". The mark
+ * arrives from the hero beside the intro; it grows to hold a photograph for each of the three themes,
+ * filling its counter too, while their copy turns over on the left; the room's dinner replaces them
+ * and the mark's foot starts to glow. Then the mark grows to the centre, its counter empties, and the
+ * foot opens into a window that becomes the full photograph, divides into three panels, and each
+ * panel becomes one of the experiences.
  *
- * The motif layer hands the mark over at the pin (lib/motif.ts): this stage draws it from there at
- * the same pose (lib/signals.ts). In still mode the beats stack: each theme and the room carry a
- * static mark with their photograph, and the experiences are three cards.
+ * Landscape screens and portrait screens place the beats differently (lib/signals.ts; the portrait
+ * copy layout is in the CSS). On wide screens the motif layer hands the mark over at the pin
+ * (lib/motif.ts) and this stage draws it from there at the same pose; on narrow ones the stage draws
+ * it from the start. With reduced motion the beats stack: each theme and the room carry a static
+ * mark with their photograph, and the experiences are three cards.
  */
 export default function Signals() {
-  const still = useStillMedia();
-  const clip = useId();
+  const still = useStillMedia("(prefers-reduced-motion:reduce)");
+  const ids = useId();
+  const maskId = `${ids}mask`;
   const track = useRef<HTMLDivElement>(null);
   const markG = useRef<SVGGElement>(null);
-  const clipPaths = useRef<(SVGPathElement | null)[]>([]);
+  const maskPaths = useRef<(SVGPathElement | null)[]>([]);
+  const counter = useRef<SVGPathElement>(null);
   const glyphG = useRef<SVGGElement>(null);
   const outline = useRef<SVGGElement>(null);
   const layers = useRef<(SVGGElement | null)[]>([]);
@@ -100,7 +106,6 @@ export default function Signals() {
   const win = useRef<HTMLDivElement>(null);
   const winImg = useRef<HTMLImageElement>(null);
   const amber = useRef<HTMLSpanElement>(null);
-  const brass = useRef<HTMLSpanElement>(null);
   const intro = useRef<HTMLDivElement>(null);
   const topics = useRef<(HTMLDivElement | null)[]>([]);
   const room = useRef<HTMLDivElement>(null);
@@ -108,7 +113,8 @@ export default function Signals() {
   const cards = useRef<(HTMLLIElement | null)[]>([]);
 
   const at = useCallback((p: number) => {
-    const g = signalsGeometry(window.innerWidth, window.innerHeight);
+    const vw = window.innerWidth;
+    const g = signalsGeometry(vw, window.innerHeight);
     const q = (w: Window) => easeQuad(t(p, w[0], w[1]));
     const c = (w: Window) => easeCubic(t(p, w[0], w[1]));
     // copy arrives from below and leaves upwards
@@ -116,22 +122,26 @@ export default function Signals() {
       if (!el) return;
       const v = vin * (1 - vout);
       el.style.opacity = v.toFixed(3);
-      el.style.transform = `translateY(calc(-50% + ${(16 * (1 - vin) - 16 * vout).toFixed(1)}px))`;
-      el.style.pointerEvents = v < 0.5 ? "none" : "";
+      el.style.transform = `translateY(${(16 * (1 - vin) - 16 * vout).toFixed(1)}px)`;
+      el.style.setProperty("--pe", v < 0.5 ? "none" : "auto");
     };
     copy(intro.current, 1, q(SIGNALS.introOut));
     SIGNALS.topics.forEach((w, i) => copy(topics.current[i], q(w.in), q(w.out)));
     copy(room.current, q(SIGNALS.roomIn), q(SIGNALS.roomOut));
     if (cue.current) cue.current.style.opacity = (1 - q(SIGNALS.roomOut)).toFixed(3);
 
-    // the mark: one centre, three sizes; it shows from the pin, when the motif layer lets go of it
-    const m = g.mark;
-    const h = m.intro * Math.pow(m.topic / m.intro, c(SIGNALS.grow)) * Math.pow(m.room / m.topic, c(SIGNALS.roomGrow));
-    const tf = markTransform(g.cx, g.cy, h);
-    clipPaths.current.forEach((path) => path?.setAttribute("transform", tf));
+    // the mark: beside the intro, then holding the photographs, then grown to the centre. On wide
+    // screens it shows from the pin, when the motif layer lets go of it; on narrow ones, throughout.
+    const { intro: m0, topic: m1, focus: m2 } = g.mark;
+    const pose = mixPose(mixPose(m0, m1, c(SIGNALS.grow)), m2, c(SIGNALS.focus));
+    const tf = markTransform(pose);
+    maskPaths.current.forEach((path) => path?.setAttribute("transform", tf));
+    counter.current?.setAttribute("transform", tf);
+    // the counter holds the photograph too, until the mark moves to the centre
+    counter.current?.setAttribute("fill-opacity", (1 - q(SIGNALS.counterOut)).toFixed(3));
     glyphG.current?.setAttribute("transform", tf);
     outline.current?.setAttribute("transform", tf);
-    if (markG.current) markG.current.style.opacity = p > 0 ? (1 - q(SIGNALS.markOut)).toFixed(3) : "0";
+    if (markG.current) markG.current.style.opacity = p > 0 || vw < 900 ? (1 - q(SIGNALS.markOut)).toFixed(3) : "0";
     SIGNALS.topics.forEach((w, i) => {
       const el = layers.current[i];
       if (!el) return;
@@ -149,18 +159,22 @@ export default function Signals() {
       d.style.opacity = q(SIGNALS.roomPhoto).toFixed(3);
     }
 
-    // the window: the mark's foot, lit, then opening out to the full frame
+    // the window: the mark's foot, glowing softly in the room and brighter as the mark centres,
+    // then opening out to the full frame while the glow dies away
     const split = c(SIGNALS.split);
     const W = win.current;
     if (W) {
-      const r = lerpRect(footRect(g.cx, g.cy, m.room), g.window, c(SIGNALS.expand));
+      const r = lerpRect(footRect(pose), g.window, c(SIGNALS.expand));
       box(W, r);
       W.style.opacity = p >= SIGNALS.glow[0] ? (1 - split).toFixed(3) : "0";
       if (winImg.current) box(winImg.current, { x: ph.x - r.x, y: ph.y - r.y, w: ph.w, h: ph.h });
       const [e0, e1] = SIGNALS.expand;
-      if (amber.current) amber.current.style.opacity = (q(SIGNALS.glow) * (1 - q([e0, e0 + (e1 - e0) * 0.45]))).toFixed(3);
-      const u = t(p, e0, e1);
-      if (brass.current) brass.current.style.opacity = (4 * u * (1 - u)).toFixed(3);
+      const glow = (0.55 * q(SIGNALS.glow) + 0.45 * q(SIGNALS.flare)) * (1 - q([e0 + (e1 - e0) * 0.3, e1]));
+      if (amber.current) {
+        amber.current.style.opacity = glow.toFixed(3);
+        // Figma: the inner light's blur is 18% of the window's width at every size
+        amber.current.style.setProperty("--inner", `${(r.w * 0.18).toFixed(1)}px`);
+      }
     }
 
     // the three panels: they tile the window at the split, part, then each becomes its experience
@@ -207,14 +221,15 @@ export default function Signals() {
           {/* the mark, and what it holds: the themes in its own frame, the dinner pinned to the screen */}
           <svg className={styles.mark} aria-hidden="true">
             <defs>
-              <clipPath id={clip} clipPathUnits="userSpaceOnUse">
+              <mask id={maskId} maskUnits="userSpaceOnUse" x="-10000" y="-10000" width="20000" height="20000">
                 {PIECES.map((k, i) => (
-                  <path key={k} d={MONOGRAM[k]} ref={(el) => { clipPaths.current[i] = el; }} />
+                  <path key={k} d={MONOGRAM[k]} fill="#fff" ref={(el) => { maskPaths.current[i] = el; }} />
                 ))}
-              </clipPath>
+                <path ref={counter} d={INNER_LOOP} fill="#fff" />
+              </mask>
             </defs>
             <g ref={markG} style={{ opacity: 0 }}>
-              <g clipPath={`url(#${clip})`}>
+              <g mask={`url(#${maskId})`}>
                 <g ref={glyphG}>
                   {TOPICS.map((tp, i) => (
                     <g key={tp.name} ref={(el) => { layers.current[i] = el; }} style={{ opacity: 0 }}>
@@ -239,7 +254,6 @@ export default function Signals() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img ref={winImg} src={DINNER} alt="" decoding="async" />
             </span>
-            <span className={styles.winBrass} ref={brass} />
             <span className={styles.winEdge} />
             <span className={styles.winAmber} ref={amber} />
           </div>
@@ -248,15 +262,16 @@ export default function Signals() {
           <div className={`${styles.block} ${styles.intro}`} ref={intro}>
             <div className={styles.copy}>
               <p className={styles.eyebrow}>Real conversations</p>
-              <h2 className={styles.introH2} data-reveal>
-                <Lines lines={["Crypto compliance", "does not wait for", "the next conference."]} />
+              {/* the serif finds its own line breaks: five on a portrait screen, as the storyboard has it */}
+              <h2 className={`c5-fade ${styles.introH2}`} data-reveal>
+                Crypto compliance does not wait for the next conference.
               </h2>
               <p className={styles.promise}>Know first. Understand faster. Act earlier.</p>
-              <a className={`btn btn-brass ${styles.cta}`} href={CTA.href}>
-                {CTA.label}
-                <Icon name="arrow" className={styles.ctaIcon} />
-              </a>
             </div>
+            <a className={`btn btn-brass ${styles.action} ${styles.cta}`} href={CTA.href}>
+              {CTA.label}
+              <Icon name="arrow" className={styles.ctaIcon} />
+            </a>
             <figure className={styles.still} aria-hidden="true">
               <MotifGlyph className={`${styles.stillGlyph} ${styles.stillSmall}`} />
             </figure>
@@ -274,16 +289,19 @@ export default function Signals() {
                 </p>
                 <h3 className={styles.topicName}>{tp.name}</h3>
                 <p className={styles.topicDesc}>{tp.desc}</p>
-                <ul className={styles.tags} aria-label={tp.tagLabel}>
-                  {tp.tags.map((tag) => (
-                    <li key={tag}>{tag}</li>
-                  ))}
-                </ul>
-                <a className={styles.explore} href="#intelligence">
-                  Explore our intelligence
-                  <Icon name="arrow" className={styles.exploreIcon} />
-                </a>
+                {/* the bar that would start a wrapped line is clipped by the frame round the list */}
+                <div className={styles.tagsFrame}>
+                  <ul className={styles.tags} aria-label={tp.tagLabel}>
+                    {tp.tags.map((tag) => (
+                      <li key={tag}>{tag}</li>
+                    ))}
+                  </ul>
+                </div>
               </div>
+              <a className={`${styles.action} ${styles.explore}`} href="#intelligence">
+                Explore our intelligence
+                <Icon name="arrow" className={styles.exploreIcon} />
+              </a>
               <figure className={styles.still} aria-hidden="true">
                 <MotifGlyph className={styles.stillGlyph} photo={tp.photo} />
               </figure>
@@ -315,10 +333,8 @@ export default function Signals() {
                   <img className={styles.own} src={x.photo} alt={x.alt} loading="lazy" decoding="async" />
                 </div>
                 <div className={styles.caption}>
-                  <div>
-                    <h3 className={styles.capName}>{x.name}</h3>
-                    <p className={styles.capText}>{x.text}</p>
-                  </div>
+                  <h3 className={styles.capName}>{x.name}</h3>
+                  <p className={styles.capText}>{x.text}</p>
                   <a className={styles.capLink} href={CTA.href} aria-label={`${x.name}: ${CTA.label.toLowerCase()}`}>
                     <Icon name="arrow" className={styles.capIcon} />
                   </a>

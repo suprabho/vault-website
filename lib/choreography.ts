@@ -31,22 +31,25 @@ export const SIGNALS = {
     { photo: [0.225, 0.285] as Window, in: [0.26, 0.295] as Window, out: [0.375, 0.41] as Window },
     { photo: [0.39, 0.45] as Window, in: [0.425, 0.46] as Window, out: [0.54, 0.575] as Window },
   ],
-  /** the mark grows again and the dinner replaces the last theme; the room's copy follows */
-  roomGrow: [0.54, 0.62] as Window,
+  /** the dinner replaces the last theme inside the mark; the room's copy follows */
   roomPhoto: [0.555, 0.615] as Window,
   roomIn: [0.59, 0.625] as Window,
+  /** the mark's foot lights softly while the room holds */
+  glow: [0.6, 0.64] as Window,
   /** where the "The Room" link lands: the room fully composed */
   roomAt: 0.63,
-  /** the room's copy and the scroll cue leave; the foot of the mark lights */
+  /** the room's copy and the scroll cue leave; the mark grows to the centre, its counter empties, the foot brightens */
   roomOut: [0.69, 0.72] as Window,
-  glow: [0.7, 0.74] as Window,
+  focus: [0.69, 0.77] as Window,
+  counterOut: [0.69, 0.74] as Window,
+  flare: [0.72, 0.77] as Window,
   /** the foot opens into a window that grows to the full frame; the mark gives way to it */
-  expand: [0.745, 0.845] as Window,
-  markOut: [0.8, 0.845] as Window,
+  expand: [0.775, 0.86] as Window,
+  markOut: [0.82, 0.86] as Window,
   /** the frame divides into three panels */
-  split: [0.87, 0.92] as Window,
+  split: [0.88, 0.925] as Window,
   /** each panel becomes its experience: its own photograph, then its caption */
-  cards: [0.92, 0.965] as Window,
+  cards: [0.925, 0.97] as Window,
   cardStep: 0.008,
 };
 

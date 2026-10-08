@@ -1,9 +1,10 @@
 import { useId } from "react";
 import { MONOGRAM, MONOGRAM_VIEWBOX } from "@/components/brand/monogram";
+import { INNER_LOOP } from "@/lib/motif";
 
 type Props = {
   className?: string;
-  /** a photograph to fill the whole mark with, as the Signals stage does at each theme and in the room */
+  /** a photograph to fill the mark and its counter with, as the Signals stage does at each theme and in the room */
   photo?: string;
   title?: string;
 };
@@ -33,6 +34,7 @@ export default function MotifGlyph({ className, photo, title }: Props) {
               {PIECES.map((k) => (
                 <path key={k} d={MONOGRAM[k]} />
               ))}
+              <path d={INNER_LOOP} />
             </clipPath>
           </defs>
           <g clipPath={`url(#${id})`}>

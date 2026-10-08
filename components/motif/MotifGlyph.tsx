@@ -1,10 +1,11 @@
 import { useId } from "react";
 import { MONOGRAM, MONOGRAM_VIEWBOX } from "@/components/brand/monogram";
 import { INNER_LOOP } from "@/lib/motif";
+import { blurred } from "@/lib/signals";
 
 type Props = {
   className?: string;
-  /** a photograph to fill the mark and its counter with, as the Signals stage does at each theme and in the room */
+  /** a photograph to fill the mark with — frosted in the strokes, sharp in the counter — as the Signals stage does */
   photo?: string;
   title?: string;
 };
@@ -30,14 +31,21 @@ export default function MotifGlyph({ className, photo, title }: Props) {
       {photo && (
         <>
           <defs>
-            <clipPath id={id} clipPathUnits="userSpaceOnUse">
+            <clipPath id={`${id}s`} clipPathUnits="userSpaceOnUse">
               {PIECES.map((k) => (
                 <path key={k} d={MONOGRAM[k]} />
               ))}
+            </clipPath>
+            <clipPath id={`${id}c`} clipPathUnits="userSpaceOnUse">
               <path d={INNER_LOOP} />
             </clipPath>
           </defs>
-          <g clipPath={`url(#${id})`}>
+          {/* frosted in the strokes, sharp in the counter */}
+          <g clipPath={`url(#${id}s)`}>
+            <rect width="662" height="827" fill="#0b0a17" />
+            <image width="662" height="827" preserveAspectRatio="xMidYMid slice" href={blurred(photo)} />
+          </g>
+          <g clipPath={`url(#${id}c)`}>
             <rect width="662" height="827" fill="#0b0a17" />
             <image width="662" height="827" preserveAspectRatio="xMidYMid slice" href={photo} />
           </g>

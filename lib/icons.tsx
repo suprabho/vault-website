@@ -8,12 +8,6 @@ export const ICONS = {
       <path d="M13.6 6.4 19.2 12l-5.6 5.6" />
     </>
   ),
-  arrowDown: (
-    <>
-      <path d="M12 4v15" />
-      <path d="M6.4 13.6 12 19.2l5.6-5.6" />
-    </>
-  ),
   arrowLong: (
     <>
       <path d="M3.6 12h16" />

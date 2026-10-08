@@ -97,18 +97,6 @@
 .capVisual { flex: 1 1 auto; min-height: 0; width: min(100%, 220px); display: flex; align-items: flex-end; padding-top: min(16px, 2vh); }
 .capVisual svg { max-height: 100%; }
 
-/* ── the scroll cue, bottom right ── */
-.cue {
-  /* 84px from the edge at 1440, closing in on narrower screens so it stays clear of the mark */
-  position: absolute; right: clamp(16px, calc(17vw - 161px), 84px); bottom: clamp(24px, 7.1vh, 64px);
-  display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none;
-  font-family: var(--font-body); font-weight: 600; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--color-cream-2);
-}
-.cueRule { display: block; width: 1px; height: 44px; background: var(--color-cream-3); }
-.cueDot { display: block; width: 5px; height: 5px; border-radius: 50%; background: var(--color-cream); }
-.cueIcon { width: 16px; height: 16px; color: var(--color-brass); }
-
 /* ── portrait: the storyboard's 1080 × 1440 frames. --u scales sizes to fit; --v spreads the frame's
    heights over the screen's, so a tall phone uses its whole height. Mirrors lib/signals.ts. ── */
 @media (orientation: portrait) and (prefers-reduced-motion: no-preference) {
@@ -148,13 +136,6 @@
   .capName { font-size: max(16px, 40 * var(--u)); }
   .capText { margin-top: max(10px, 64 * var(--u)); font-size: max(12px, 24 * var(--u)); }
 
-  .cue {
-    right: calc(var(--ox) + 74 * var(--u)); bottom: calc(37 * var(--v));
-    gap: max(6px, 16 * var(--u)); font-size: max(10px, 20 * var(--u));
-  }
-  .cueRule { height: max(36px, 96 * var(--u)); }
-  .cueDot { width: max(5px, 9 * var(--u)); height: max(5px, 9 * var(--u)); }
-  .cueIcon { width: max(14px, 34 * var(--u)); height: max(14px, 34 * var(--u)); }
 }
 
 /* reduced motion: no pin. The intro, each theme with its photograph in a static mark, the room, then
@@ -163,7 +144,7 @@
   .signals { padding-block: clamp(88px, 12vw, 168px) clamp(72px, 12vw, 136px); }
   .track { height: auto; display: flex; flex-direction: column; gap: clamp(88px, 16vw, 136px); }
   .stage { display: contents; }
-  .mark, .win, .cue, .slice { display: none; }
+  .mark, .win, .slice { display: none; }
   .roomAnchor { position: static; order: 3; margin-bottom: calc(-1 * clamp(88px, 16vw, 136px)); }
   .intro { order: 1; }
   .topic { order: 2; }

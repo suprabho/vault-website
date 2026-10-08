@@ -103,3 +103,6 @@ export const lerpRect = (a: Rect, b: Rect, e: number): Rect => ({
   w: a.w + (b.w - a.w) * e,
   h: a.h + (b.h - a.h) * e,
 });
+
+/** The frosted copy of a photograph, shown inside the mark's strokes (built by scripts/blur-photos.py). */
+export const blurred = (src: string) => src.replace(/\.webp$/, "-blur.webp");

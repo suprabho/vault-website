@@ -63,6 +63,7 @@ lib/icons.tsx           24×24 line icons
 lib/site.ts             the call to action, contact/member-portal settings, nav + legal links, section order
 lib/briefing.ts         the sample Monday briefing shown in 06 and 07 (replace with a live edition)
 public/images           photographs extracted from the wireframe
+                        (*-blur.webp: frosted copies for the mark's strokes, built by scripts/blur-photos.py)
 public/fonts            New York (Apple) subset, 400/500/600
 ```
 

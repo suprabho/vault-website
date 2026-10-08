@@ -38,7 +38,7 @@ export const SIGNALS = {
   glow: [0.6, 0.64] as Window,
   /** where the "The Room" link lands: the room fully composed */
   roomAt: 0.63,
-  /** the room's copy and the scroll cue leave; the mark grows to the centre, its counter empties, the foot brightens */
+  /** the room's copy leaves; the mark grows to the centre, its counter empties, the foot brightens */
   roomOut: [0.69, 0.72] as Window,
   focus: [0.69, 0.77] as Window,
   counterOut: [0.69, 0.74] as Window,

@@ -10,7 +10,7 @@ import { SIGNALS, TRACK_VH, type Window } from "@/lib/choreography";
 import { Icon } from "@/lib/icons";
 import { easeCubic, easeQuad, t } from "@/lib/scrub";
 import { INNER_LOOP } from "@/lib/motif";
-import { footRect, lerpRect, markTransform, mixPose, signalsGeometry, type Rect } from "@/lib/signals";
+import { blurred, footRect, lerpRect, markTransform, mixPose, signalsGeometry, type Rect } from "@/lib/signals";
 import { CTA } from "@/lib/site";
 import ConveningVisual from "./ConveningVisual";
 import styles from "./Signals.module.css";
@@ -68,8 +68,8 @@ const PIECES = ["A", "B", "C", "D"] as const;
 const STROKE = { fill: "none", stroke: "#C3AE87", strokeWidth: 1, strokeLinejoin: "round" as const, vectorEffect: "non-scaling-stroke" as const };
 /** Figma: each experience's photograph takes the top 640 of the panel's 1392 */
 const CARD_PHOTO = 640 / 1392;
-/** a theme's photograph settles from this scale as it arrives */
-const SETTLE = 0.06;
+/** each theme's photograph slowly zooms in by this much over its time in the mark */
+const ZOOM = 0.16;
 
 const box = (el: HTMLElement, r: Rect) => {
   el.style.left = `${r.x.toFixed(1)}px`;
@@ -95,22 +95,23 @@ const box = (el: HTMLElement, r: Rect) => {
 export default function Signals() {
   const still = useStillMedia("(prefers-reduced-motion:reduce)");
   const ids = useId();
-  const maskId = `${ids}mask`;
+  const clipId = `${ids}strokes`;
+  const maskId = `${ids}counter`;
   const track = useRef<HTMLDivElement>(null);
   const markG = useRef<SVGGElement>(null);
-  const maskPaths = useRef<(SVGPathElement | null)[]>([]);
+  const clipPaths = useRef<(SVGPathElement | null)[]>([]);
   const counter = useRef<SVGPathElement>(null);
-  const glyphG = useRef<SVGGElement>(null);
+  /** the photographs twice over: frosted in the strokes [0], sharp in the counter [1] */
+  const glyphG = useRef<(SVGGElement | null)[]>([]);
   const outline = useRef<SVGGElement>(null);
   const layers = useRef<(SVGGElement | null)[]>([]);
-  const dinner = useRef<SVGImageElement>(null);
+  const dinner = useRef<(SVGImageElement | null)[]>([]);
   const win = useRef<HTMLDivElement>(null);
   const winImg = useRef<HTMLImageElement>(null);
   const amber = useRef<HTMLSpanElement>(null);
   const intro = useRef<HTMLDivElement>(null);
   const topics = useRef<(HTMLDivElement | null)[]>([]);
   const room = useRef<HTMLDivElement>(null);
-  const cue = useRef<HTMLDivElement>(null);
   const cards = useRef<(HTMLLIElement | null)[]>([]);
 
   const at = useCallback((p: number) => {
@@ -129,36 +130,39 @@ export default function Signals() {
     copy(intro.current, 1, q(SIGNALS.introOut));
     SIGNALS.topics.forEach((w, i) => copy(topics.current[i], q(w.in), q(w.out)));
     copy(room.current, q(SIGNALS.roomIn), q(SIGNALS.roomOut));
-    if (cue.current) cue.current.style.opacity = (1 - q(SIGNALS.roomOut)).toFixed(3);
 
     // the mark: beside the intro, then holding the photographs, then grown to the centre. On wide
     // screens it shows from the pin, when the motif layer lets go of it; on narrow ones, throughout.
     const { intro: m0, topic: m1, focus: m2 } = g.mark;
     const pose = mixPose(mixPose(m0, m1, c(SIGNALS.grow)), m2, c(SIGNALS.focus));
     const tf = markTransform(pose);
-    maskPaths.current.forEach((path) => path?.setAttribute("transform", tf));
+    clipPaths.current.forEach((path) => path?.setAttribute("transform", tf));
     counter.current?.setAttribute("transform", tf);
     // the counter holds the photograph too, until the mark moves to the centre
     counter.current?.setAttribute("fill-opacity", (1 - q(SIGNALS.counterOut)).toFixed(3));
-    glyphG.current?.setAttribute("transform", tf);
+    glyphG.current.forEach((el) => el?.setAttribute("transform", tf));
     outline.current?.setAttribute("transform", tf);
     if (markG.current) markG.current.style.opacity = p > 0 || vw < 900 ? (1 - q(SIGNALS.markOut)).toFixed(3) : "0";
+    // each theme's photograph zooms in from its arrival until the next one has covered it
     SIGNALS.topics.forEach((w, i) => {
-      const el = layers.current[i];
-      if (!el) return;
+      const end = (SIGNALS.topics[i + 1]?.photo ?? SIGNALS.roomPhoto)[1];
       const v = q(w.photo);
-      el.style.opacity = v.toFixed(3);
-      el.setAttribute("transform", `translate(331 413.5) scale(${(1 + SETTLE * (1 - v)).toFixed(4)}) translate(-331 -413.5)`);
+      const zoom = `translate(331 413.5) scale(${(1 + ZOOM * t(p, w.photo[0], end)).toFixed(4)}) translate(-331 -413.5)`;
+      [layers.current[i], layers.current[i + TOPICS.length]].forEach((el) => {
+        if (!el) return;
+        el.style.opacity = v.toFixed(3);
+        el.setAttribute("transform", zoom);
+      });
     });
     const ph = g.photo;
-    const d = dinner.current;
-    if (d) {
+    dinner.current.forEach((d) => {
+      if (!d) return;
       d.setAttribute("x", ph.x.toFixed(1));
       d.setAttribute("y", ph.y.toFixed(1));
       d.setAttribute("width", ph.w.toFixed(1));
       d.setAttribute("height", ph.h.toFixed(1));
       d.style.opacity = q(SIGNALS.roomPhoto).toFixed(3);
-    }
+    });
 
     // the window: the mark's foot, glowing softly in the room and brighter as the mark centres,
     // then opening out to the full frame while the glow dies away
@@ -202,7 +206,7 @@ export default function Signals() {
   }, []);
 
   const settle = useCallback(() => {
-    const els = [intro.current, room.current, cue.current, win.current, winImg.current, ...topics.current, ...cards.current];
+    const els = [intro.current, room.current, win.current, winImg.current, ...topics.current, ...cards.current];
     els.forEach((el) => el?.removeAttribute("style"));
     cards.current.forEach((el) => el?.querySelector("[data-slice]")?.removeAttribute("style"));
   }, []);
@@ -223,25 +227,35 @@ export default function Signals() {
           {/* the mark, and what it holds: the themes in its own frame, the dinner pinned to the screen */}
           <svg className={styles.mark} aria-hidden="true">
             <defs>
-              <mask id={maskId} maskUnits="userSpaceOnUse" x="-10000" y="-10000" width="20000" height="20000">
+              <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
                 {PIECES.map((k, i) => (
-                  <path key={k} d={MONOGRAM[k]} fill="#fff" ref={(el) => { maskPaths.current[i] = el; }} />
+                  <path key={k} d={MONOGRAM[k]} ref={(el) => { clipPaths.current[i] = el; }} />
                 ))}
+              </clipPath>
+              <mask id={maskId} maskUnits="userSpaceOnUse" x="-10000" y="-10000" width="20000" height="20000">
                 <path ref={counter} d={INNER_LOOP} fill="#fff" />
               </mask>
             </defs>
             <g ref={markG} style={{ opacity: 0 }}>
-              <g mask={`url(#${maskId})`}>
-                <g ref={glyphG}>
-                  {TOPICS.map((tp, i) => (
-                    <g key={tp.name} ref={(el) => { layers.current[i] = el; }} style={{ opacity: 0 }}>
-                      {i === 0 && <rect width="662" height="827" fill="#0b0a17" />}
-                      <image width="662" height="827" preserveAspectRatio="xMidYMid slice" href={tp.photo} />
-                    </g>
-                  ))}
+              {/* frosted in the strokes, sharp in the counter: the same photographs, two files */}
+              {[clipId, maskId].map((id, k) => (
+                <g key={id} clipPath={k === 0 ? `url(#${id})` : undefined} mask={k === 1 ? `url(#${id})` : undefined}>
+                  <g ref={(el) => { glyphG.current[k] = el; }}>
+                    {TOPICS.map((tp, i) => (
+                      <g key={tp.name} ref={(el) => { layers.current[i + k * TOPICS.length] = el; }} style={{ opacity: 0 }}>
+                        {i === 0 && <rect width="662" height="827" fill="#0b0a17" />}
+                        <image width="662" height="827" preserveAspectRatio="xMidYMid slice" href={k === 0 ? blurred(tp.photo) : tp.photo} />
+                      </g>
+                    ))}
+                  </g>
+                  <image
+                    ref={(el) => { dinner.current[k] = el; }}
+                    preserveAspectRatio="xMidYMid slice"
+                    href={k === 0 ? blurred(DINNER) : DINNER}
+                    style={{ opacity: 0 }}
+                  />
                 </g>
-                <image ref={dinner} preserveAspectRatio="xMidYMid slice" href={DINNER} style={{ opacity: 0 }} />
-              </g>
+              ))}
               <g ref={outline}>
                 {PIECES.map((k) => (
                   <path key={k} d={MONOGRAM[k]} {...STROKE} />
@@ -345,13 +359,6 @@ export default function Signals() {
             ))}
           </ul>
 
-          {/* the scroll cue, at the foot of the stage until the room clears */}
-          <div className={styles.cue} ref={cue} aria-hidden="true">
-            <i className={styles.cueRule} />
-            <i className={styles.cueDot} />
-            <span>Scroll</span>
-            <Icon name="arrowDown" className={styles.cueIcon} />
-          </div>
         </div>
       </div>
     </section>

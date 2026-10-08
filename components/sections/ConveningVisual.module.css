@@ -1,0 +1,21 @@
+/* on the experience cards' dark ground: brass lines, with the drawing's heavier strokes in cream */
+.visual {
+  display: block; width: 100%; height: auto; overflow: visible; pointer-events: none;
+  color: var(--color-brass); stroke: currentColor; stroke-width: 1;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.visual * { animation-play-state: var(--visual-play, running); }
+.faint { opacity: 0.3; }
+.ink { stroke: var(--color-cream); stroke-opacity: 0.45; }
+.dot { fill: currentColor; stroke: none; }
+.seat { fill: currentColor; stroke: none; animation: breathe 6s ease-in-out infinite; animation-delay: var(--delay); }
+.trace { stroke-dasharray: 0.18 0.82; animation: trace 14s linear infinite; }
+.sun { animation: dawn 7s ease-in-out infinite; }
+.orbit { transform-origin: 120px 56px; animation: orbit 32s linear infinite; }
+@keyframes breathe { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+@keyframes trace { to { stroke-dashoffset: -1; } }
+@keyframes dawn { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes orbit { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .visual * { animation: none; }
+}

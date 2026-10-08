@@ -84,7 +84,7 @@
 .cardPhoto { position: absolute; left: 0; top: 0; width: 100%; height: var(--photo-h, 100%); overflow: hidden; }
 .slice { position: absolute; max-width: none; object-fit: cover; }
 .own { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: var(--own, 0); }
-/* Figma: the caption starts under the photograph (640 of 1392); the title keeps two lines, the arrow sits at the foot */
+/* Figma: the caption starts under the photograph (640 of 1392); the title keeps two lines */
 .caption {
   position: absolute; left: 0; right: 0; top: calc(100% * 640 / 1392); bottom: 0;
   display: flex; flex-direction: column; align-items: flex-start;
@@ -93,14 +93,9 @@
 }
 .capName { font-size: clamp(22px, min(2.08vw, 3.33vh), 30px); line-height: 1.12; letter-spacing: -0.01em; min-height: 2.24em; }
 .capText { margin-top: min(20px, 2.4vh); font-size: clamp(13.5px, min(1.08vw, 1.72vh), 15.5px); line-height: 1.6; color: var(--color-cream-2); }
-.capLink {
-  flex: none; display: inline-flex; align-items: center; justify-content: center; margin-top: auto;
-  width: 48px; height: 48px; border-radius: 50%; color: var(--color-brass);
-  border: 1px solid var(--color-brass);
-  transition: background-color var(--fast) ease, border-color var(--fast) ease;
-}
-.capLink:hover { background: rgba(195, 174, 135, 0.1); border-color: var(--color-brass-2); }
-.capIcon { width: 18px; height: 18px; }
+/* each experience's animated drawing fills the space under its text */
+.capVisual { flex: 1 1 auto; min-height: 0; width: min(100%, 220px); display: flex; align-items: flex-end; padding-top: min(16px, 2vh); }
+.capVisual svg { max-height: 100%; }
 
 /* ── the scroll cue, bottom right ── */
 .cue {
@@ -152,8 +147,6 @@
   .caption { padding: max(16px, 56 * var(--u)) max(10px, 23 * var(--u)) max(16px, 77 * var(--u)); }
   .capName { font-size: max(16px, 40 * var(--u)); }
   .capText { margin-top: max(10px, 64 * var(--u)); font-size: max(12px, 24 * var(--u)); }
-  .capLink { width: max(36px, 96 * var(--u)); height: max(36px, 96 * var(--u)); }
-  .capIcon { width: max(16px, 36 * var(--u)); height: max(16px, 36 * var(--u)); }
 
   .cue {
     right: calc(var(--ox) + 74 * var(--u)); bottom: calc(37 * var(--v));
@@ -203,7 +196,7 @@
   .caption { position: static; opacity: 1; transform: none; padding: 28px 24px; gap: 0; }
   .capName { font-size: clamp(24px, 6vw, 30px); min-height: 0; }
   .capText { font-size: 15.5px; margin-top: 12px; }
-  .capLink { margin-top: 28px; }
+  .capVisual { flex: none; width: min(100%, 200px); padding-block: 24px 0; }
 }
 /* reduced motion on a wide screen: the storyboard's two columns, still */
 @media (min-width: 900px) and (prefers-reduced-motion: reduce) {

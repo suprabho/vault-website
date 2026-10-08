@@ -12,6 +12,7 @@ import { easeCubic, easeQuad, t } from "@/lib/scrub";
 import { INNER_LOOP } from "@/lib/motif";
 import { footRect, lerpRect, markTransform, mixPose, signalsGeometry, type Rect } from "@/lib/signals";
 import { CTA } from "@/lib/site";
+import ConveningVisual from "./ConveningVisual";
 import styles from "./Signals.module.css";
 
 const TOPICS = [
@@ -195,7 +196,8 @@ export default function Signals() {
       el.style.setProperty("--own", v.toFixed(3));
       const cap = easeQuad(t(p, s0 + (s1 - s0) * 0.4, s1));
       el.style.setProperty("--cap", cap.toFixed(3));
-      el.style.pointerEvents = cap > 0.5 ? "" : "none";
+      // the drawing only animates once its caption is up
+      el.style.setProperty("--visual-play", cap > 0.01 ? "running" : "paused");
     });
   }, []);
 
@@ -335,9 +337,9 @@ export default function Signals() {
                 <div className={styles.caption}>
                   <h3 className={styles.capName}>{x.name}</h3>
                   <p className={styles.capText}>{x.text}</p>
-                  <a className={styles.capLink} href={CTA.href} aria-label={`${x.name}: ${CTA.label.toLowerCase()}`}>
-                    <Icon name="arrow" className={styles.capIcon} />
-                  </a>
+                  <div className={styles.capVisual}>
+                    <ConveningVisual variant={i} />
+                  </div>
                 </div>
               </li>
             ))}
